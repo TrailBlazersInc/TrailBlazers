@@ -17,9 +17,9 @@ Post and view leaderboard ranking - Vinny
 Find jog buddies - use smart recommendation system - Vinny
 
 
-### **3.2. Actors Description** //Amanvir
-1. **User**:
-2. **App Admin**:
+### **3.2. Actors Description**
+1. **User**: A person who uses the app to locate and connect with others users nearby, ultilizes leaderboards and update their personal information.
+2. **App Admin**: A person who has higher privileges to moderate the app by reviewing reports from users and issues bans to offenders.
 
 ### **3.3. Functional Requirements**
 <a name="fr1"></a>
@@ -28,6 +28,8 @@ Find jog buddies - use smart recommendation system - Vinny
     - **Overview**:
         1. **Reporting Users**
         2. **Banning Users (Admin Side)**
+        3. **Find Joggers Nearby**
+        4. **Login/Sign up -> Update profile**
     
     - **Detailed Flow for Each Independent Scenario**: 
         1. **Reporting Users**:
@@ -59,6 +61,28 @@ Find jog buddies - use smart recommendation system - Vinny
                 - 1b. Unauthorized access: Display "You do not have permission to perform this action."
         3. **Find Joggers Nearby**:
             - **Description**: This feature lists Joggers 
+        4. **Login/Sign up -> Update profile**:
+            - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
+            - **Primary actor(s)**: User
+            - **Main success scenario**:
+                1. Successful Sign-Up
+                    - User submits sign up form, then the system creates an account in database and confirms with the user the sign up was successful
+                2. Successful Login
+                    - User enters login credentials and system authenticates use, allowing user to access app and modify account
+                3. Successfully saved profile changes
+                    - User modifies profile details and saves changes, system updates information in database and confirms the save was successful with user
+            - **Failure scenario(s)**:
+                1. Sign-Up Error
+                    - Email is already in system
+                    - Invalid email entered
+                    - Unable to connect to server
+                2. Login Error
+                    - Invalid Credentials entered
+                    - Banned Account email entered
+                    - Email is not signed up for app
+                3. Profile changes not saved
+                    - Invalid characters entered in profile details
+                    - Unable to connect to server, failure to save details
 
 
 ### **3.4. Screen Mockups**
@@ -68,8 +92,8 @@ Find jog buddies - use smart recommendation system - Vinny
 <a name="nfr1"></a>
 
 1. **Location Accuracy** - Amanvir
-    - **Description**: ...
-    - **Justification**: ...
+    - **Description**: The location of the user must be given with an accuracy of <=20 meters.
+    - **Justification**: Location Accuracy ensures users are only matched with other users within their specified connection radius and their distance traveled on runs is accurate. Inaccuracy can cause user disatifaction due to unfair leaderboard times and inaccurate partner locations.
 2. **Security** - Vinny 
     - **TBA**: ...
     - **Encrypted**: ...
@@ -93,11 +117,12 @@ Justification: Protect user privacy and prevent data breaches.
         2. Back-end token management (JWT)
         3. Recommendation Engine
 2. **Messaging** - Amanvir
-    - **Purpose**:
+    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc.
     - **Interfaces**: 
-        1. ...
-            - **Purpose**: ...
-        2. ...
+        1. Node.js (Websocket library)
+            - **Purpose**: Allows message exchange between users ensuring rapid communication
+        2. MongoDB database
+            - **Purpose**: Store chat history between users
 3. **Recommended Jogging Partners** // Vinny
     - **Purpose**:
     - **Interfaces**: 
@@ -171,8 +196,8 @@ Purpose: Track user performance and rankings.
 
 
 ### **4.7. Non-Functional Requirements Design**
-1. [**Performance: Finding Buddies must take at most 15s**](#nfr1)
-    - **Validation**: ...
+1. [**Location Accuracy: User Location should be accurate within 20 meters**](#nfr1)
+    - **Validation**: Use simulated and real world testing to ensure the app only accepts location data within the threshold and provides a warning to the user when location accuracy is poor. Additionally we will log location data to make sure the error rate is <10%.
 2. ...
 
 
