@@ -30,6 +30,7 @@ Find jog buddies - use smart recommendation system - Vinny
         2. **Banning Users (Admin Side)**
         3. **Find Joggers Nearby**
         4. **Login/Sign up -> Update profile**
+        5. **Post and View Leaderboard Ranking**
     
     - **Detailed Flow for Each Independent Scenario**: 
         1. **Reporting Users**:
@@ -60,7 +61,19 @@ Find jog buddies - use smart recommendation system - Vinny
                 - 1a. Database error: Display "Failed to ban user. Please try again later."
                 - 1b. Unauthorized access: Display "You do not have permission to perform this action."
         3. **Find Joggers Nearby**:
-            - **Description**: This feature lists Joggers 
+            - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
+            - **Primary actor(s)**: User
+            - **Main success scenario**:
+                1. User navigates to the "Find Joggers Nearby" section.
+                2. User inputs their location and preferred jogging time.
+                3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
+                4. User selects a jogger from the list to view their profile.
+                5. User sends a connection request or message to the selected jogger.
+                6. If the jogger accepts, the system confirms the connection, allowing further communication.
+            - **Failure scenario(s)**:
+                - 3a. No suitable matches found: Display "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+                - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
+                - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
         4. **Login/Sign up -> Update profile**:
             - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
             - **Primary actor(s)**: User
@@ -83,6 +96,20 @@ Find jog buddies - use smart recommendation system - Vinny
                 3. Profile changes not saved
                     - Invalid characters entered in profile details
                     - Unable to connect to server, failure to save details
+        5. **Post and View Leaderboard Ranking**:
+            - **Description**: This feature allows users to post and view leaderboard rankings based on their jogging performance.Users can compare their progress with others and motivate themselves to improve.
+            - **Primary actor(s)**: User
+            - **Main success scenario**:
+                1. User navigates to the "Leaderboard" section.
+                2. System retrieves and displays the leaderboard rankings based on jogging performance.
+                3. User posts their latest jogging statistics (e.g., distance, time, pace).
+                4. System updates the leaderboard and reflects the new ranking.
+                5. User reviews their position on the leaderboard and compares with others.
+            - **Failure scenario(s)**:
+                - 3a. No leaderboard data available: Display "No rankings available at the moment. Start jogging and post your stats to see your ranking!"
+                - 3b. Database error: Display "Unable to retrieve leaderboard rankings. Please try again later."
+                - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
+                - 3d. Failed to post jogging stats: Display "Unable to post your jogging stats. Please check your input and try again."
 
 
 ### **3.4. Screen Mockups**
@@ -124,7 +151,7 @@ Justification: Protect user privacy and prevent data breaches.
         2. MongoDB database
             - **Purpose**: Store chat history between users
 3. **Recommended Jogging Partners** // Vinny
-    - **Purpose**:
+    - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
         1. ...
             - **Purpose**: ...
@@ -152,30 +179,17 @@ GPS location services for proximity calculations
 Messages
 
 ### **4.2. Databases**
-1. **[WRITE_NAME_HERE]**
-    - **Purpose**: ...
-2. ...
-Users - personal info
-Messaging
-Leaderboard - jogging speed etc
-
-
-4.2 Databases
-Users Database
-
-Purpose: Store user credentials, preferences, and profiles.
-Messages Database
-
-Purpose: Store chat logs and metadata.
-Leaderboard Database
-
-Purpose: Track user performance and rankings.
+1. **Users DB**
+    - **Purpose**: To store user credentials, preferences, and profiles.
+2. **Messaging DB**
+    - **Purpose**: To store chat logs and metadata.
+3. **Leaderboard DB**
+    - **Purpose**: To store user's running performance, and ranking.
 
 
 ### **4.3. External Modules**
 1. **Google Map API** 
-    - **Purpose**: ...
-
+    - **Purpose**: To provide location services and map functionalities.
     
 
 ### **4.4. Frameworks**
@@ -236,10 +250,10 @@ Purpose: Track user performance and rankings.
 - Yu Qian Yi
   - Functional requirement: Post and view leaderboard ranking 
   - Functional requirement: Find jog buddies 
-  - Non-functional requirement: Security 
+  - Database design & External modules description
   - Main component - Recommended Jogging Partners 
   - Do corresponding sequence diagram for requirement
-  - Do corresponding non-functional requirement
+  - Do corresponding sequence diagram non-functional requirement
 - William Sun
   - Functional Requirements and sequence diagram (4.6)
     - reporting users
