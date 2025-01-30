@@ -10,11 +10,12 @@ An application that connects nearby users to jog/run together adapting to their 
 ### **3.1. Use-Case Diagram**
 
 ![Use Case Diagram](images/UseCaseDiagram.png)
-Login/Sign up -> Update profile - Amanvir
+Authenticate -> Update profile - Amanvir
+Find jog buddies - use smart recommendation system - Vinny
+Message
+Manage profile
 Report users - William
 Ban Users (admin side) - William
-Post and view leaderboard ranking - Vinny
-Find jog buddies - use smart recommendation system - Vinny
 
 
 ### **3.2. Actors Description**
@@ -51,6 +52,7 @@ Find jog buddies - use smart recommendation system - Vinny
    - **Failure scenario(s)**:
        - 1a. Database error: Display "Failed to ban user. Please try again later."
        - 1b. Unauthorized access: Display "You do not have permission to perform this action."
+
 3. **Find Joggers Nearby**:
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
@@ -115,25 +117,17 @@ Find jog buddies - use smart recommendation system - Vinny
 ### **3.5. Non-Functional Requirements**
 <a name="nfr1"></a>
 
-1. **Location Accuracy** - Amanvir
-    - **Description**: The location of the user must be given with an accuracy of <=20 meters.
-    - **Justification**: Location Accuracy ensures users are only matched with other users within their specified connection radius and their distance traveled on runs is accurate. Inaccuracy can cause user disatifaction due to unfair leaderboard times and inaccurate partner locations.
-2. **Security** - Vinny 
-    - **TBA**: ...
-    - **Encrypted**: ...
-3. **Finding Buddies Performance** 
+1. **Security**  
+    - **Description**: The application will ensure that user data and communications are encrypted, and secure protocols (e.g., HTTPS) will be used.
+    - **Justification**: Security is a key aspect of any application that handles user data. It ensures that users' personal information is protected from unauthorized access and potential breaches. This is crucial for building trust and maintaining user confidence in the application.
+2. **Finding Buddies Performance** 
     - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 15 seconds.
     - **Justification**: The finding application must be responsive and having customers wait for long periods of time negatively affetcts their experience as an user. Therefore, it is important to ensure that the most complex functionality is capped to a reasonable response time. To improve performance, when the functionality is taking too long, it might return the list with the remaining users  unsorted or return a shorter list of found users.
-
-Security
-
-Description: All user data and communications must be encrypted, and secure protocols (e.g., HTTPS) must be used.
-Justification: Protect user privacy and prevent data breaches.
 
 
 ## 4. Designs Specification
 ### **4.1. Main Components** 
-1. **User Management**
+1. **Users**
     - **Purpose**: Provide authentication, manage sessions, manage passwords, and ensure users can only access resources they have permission for. 
     - **Interfaces**: 
         1. Front-end form validation
@@ -149,12 +143,12 @@ Justification: Protect user privacy and prevent data breaches.
             - **Purpose**: Allows message exchange between users ensuring rapid communication
         2. MongoDB database
             - **Purpose**: Store chat history between users
-3. **Recommended Jogging Partners** // Vinny
+3. **Recommendations** // Vinny
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
         1. ...
             - **Purpose**: ...
-        2. ...
+        2. MongoDB database
 4. **Leaderboard** //William
     - **Purpose**:
     - **Interfaces**: 
@@ -172,11 +166,9 @@ Messages
 
 ### **4.2. Databases**
 1. **Users DB**
-    - **Purpose**: To store user credentials, preferences, and profiles.
+    - **Purpose**: To store user credentials, preferences, and running performance.
 2. **Messaging DB**
     - **Purpose**: To store chat logs and metadata.
-3. **Leaderboard DB**
-    - **Purpose**: To store user's running performance, and ranking.
 
 
 ### **4.3. External Modules**
@@ -200,6 +192,8 @@ Messages
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 2. [**Users can access a recommendation list of jogger profiles**](#fr2)
 ![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
+2. [**Users can find jogger buddies and access a recommendation list of jogger profiles**](#fr3)
+![Recommendation Sequence Diagram](images/FindJogBuddySequenceDiagram.png)
 
 
 ### **4.7. Non-Functional Requirements Design**
@@ -216,10 +210,46 @@ Messages
     - **Input**: ...
     - **Output**: ...
     - **Main computational logic**: ...
-    - **Pseudo-code**: ...
-        ```
-        
-        ```
+    - **Pseudo-code**: 
+        Algorithm findJogBuddies(ShortListedBuddies, userLocation, userTime, userSpeed)
+            Input: ShortListedBuddies (List of profiles), userLocation (latitude, longitude), userTime, userSpeed
+            Output: Top 5 best-matched jog buddies
+
+            Define matches as an empty list
+
+            For each buddy in ShortListedBuddies:
+                Calculate distanceScore = calculateDistance(userLocation, buddy.location)
+                Calculate timeDifference = abs(userTime - buddy.time)
+                Calculate speedDifference = abs(userSpeed - buddy.speed)
+
+                If timeDifference ≤ thresholdTime AND speedDifference ≤ thresholdSpeed:
+                    Compute matchScore = (1 / (1 + distanceScore)) * weightLocation + 
+                                        (1 / (1 + timeDifference)) * weightTime + 
+                                        (1 / (1 + speedDifference)) * weightSpeed
+
+                    Add (buddy, matchScore) to matches list
+
+            Sort matches in descending order by matchScore
+
+            Return top 5 buddies from matches (if available)
+        End Algorithm
+
+
+        Function calculateDistance(location1, location2)
+            Input: location1 (lat1, lon1), location2 (lat2, lon2)
+            Output: Distance between two locations in km
+
+            Apply Haversine Formula:
+            R = 6371 (Earth’s radius in km)
+            dLat = toRadians(lat2 - lat1)
+            dLon = toRadians(lon2 - lon1)
+            
+            a = sin²(dLat / 2) + cos(toRadians(lat1)) * cos(toRadians(lat2)) * sin²(dLon / 2)
+            c = 2 * atan2(sqrt(a), sqrt(1-a))
+
+            Return R * c
+        End Function
+
 
 
 ## 5. Contributions
@@ -232,7 +262,6 @@ Messages
     - Performance 
   - Main Component:
     - User Management
-- 
 - Amanvir Samra
   - Main Actors
   - Login Use Case Description
@@ -241,12 +270,12 @@ Messages
   - Do corresponding sequence diagram for requirement
   - Do corresponding non-functional requirement
 - Yu Qian Yi
-  - Functional requirement: Post and view leaderboard ranking 
   - Functional requirement: Find jog buddies 
   - Database design & External modules description
-  - Main component - Recommended Jogging Partners 
+  - Main component - Recommendation
   - Do corresponding sequence diagram for requirement
   - Do corresponding sequence diagram non-functional requirement
+  - Pseudocode 
 - William Sun
   - Functional Requirements and sequence diagram (4.6)
     - reporting users
