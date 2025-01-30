@@ -24,56 +24,7 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-
-1. **Reporting Users**<a id="fr1"></a>:
-   - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
-   - **Primary actor(s)**: User
-   - **Main success scenario**:
-       1. User navigates to the profile or message thread of the offending user.
-       2. User selects the "Report" option.
-       3. User chooses a reason from a predefined list (e.g., harassment, spam, inappropriate content).
-       4. User submits the report.
-       5. System confirms submission and stores the report in the database.
-       6. Admin is notified of the new report.
-   - **Failure scenario(s)**:
-       - 1a. No internet connection: Display "Failed to submit report. Please try again."
-       - 1b. Report submission error: Display "An error occurred. Please try again later."
-
-2. **Banning Users (Admin Side)**:
-   - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
-   - **Primary actor(s)**: App Admin
-   - **Main success scenario**:
-       1. Admin logs into the admin panel.
-       2. Admin reviews a list of reported users with details of the reports.
-       3. Admin selects a user to ban.
-       4. Admin clicks the "Ban User" button.
-       5. System updates the user's status to "Banned" and restricts access to the app.
-       6. User receives a notification or email explaining the reason for the ban.
-   - **Failure scenario(s)**:
-       - 1a. Database error: Display "Failed to ban user. Please try again later."
-       - 1b. Unauthorized access: Display "You do not have permission to perform this action."
-
-3. **Find Joggers Nearby**:
-    - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
-    - **Primary actor(s)**: User
-    - **Main success scenario**:
-        1. User navigates to the "Find Joggers Nearby" section.
-        2. User inputs their location and preferred jogging time.
-        3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
-    - **Failure scenario(s)**:
-        - 3a. No suitable matches found: Display "No joggers available for the selected time and location. Please try again later or adjust your preferences."
-        - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
-        - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
-4. **Join/Create Chat Group**
-    - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
-    - **Primary Actors**: User(s)
-    - **Main Success Scenario**:
-        1. User clicks on an User Profile
-        2. User sends a connection request or message to create a chat join a group chat with the jogger.
-        3. If the jogger accepts, the system confirms the connection, allowing further communication.
-    - **Failure Scenarios**:
-    - 2a. User is not connected to the internet
-5. **Login/Sign up -> Update profile**:
+1. **Login/Sign up -> Update profile**:
    - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -95,20 +46,56 @@ Ban Users (admin side) - William
        3. Profile changes not saved
            - Invalid characters entered in profile details
            - Unable to connect to server, failure to save details
-6. **Post and View Leaderboard Ranking**:
-    - **Description**: This feature allows users to post and view leaderboard rankings based on their jogging performance.Users can compare their progress with others and motivate themselves to improve.
+
+2. **Find Joggers Nearby**:
+    - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
-        1. User navigates to the "Leaderboard" section.
-        2. System retrieves and displays the leaderboard rankings based on jogging performance.
-        3. User posts their latest jogging statistics (e.g., distance, time, pace).
-        4. System updates the leaderboard and reflects the new ranking.
-        5. User reviews their position on the leaderboard and compares with others.
+        1. User navigates to the "Find Joggers Nearby" section.
+        2. User click on the "Find Joggers" button.
+        3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
     - **Failure scenario(s)**:
-        - 3a. No leaderboard data available: Display "No rankings available at the moment. Start jogging and post your stats to see your ranking!"
-        - 3b. Database error: Display "Unable to retrieve leaderboard rankings. Please try again later."
+        - 3a. No suitable matches found: Display "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+        - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
         - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
-        - 3d. Failed to post jogging stats: Display "Unable to post your jogging stats. Please check your input and try again."
+
+3. **Join/Create Chat Group**
+    - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
+    - **Primary Actors**: User(s)
+    - **Main Success Scenario**:
+        1. User clicks on an User Profile
+        2. User sends a connection request or message to create a chat join a group chat with the jogger.
+        3. If the jogger accepts, the system confirms the connection, allowing further communication.
+    - **Failure Scenarios**:
+    - 2a. User is not connected to the internet
+
+4. **Reporting Users**<a id="fr1"></a>:
+   - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
+   - **Primary actor(s)**: User
+   - **Main success scenario**:
+       1. User navigates to the profile or message thread of the offending user.
+       2. User selects the "Report" option.
+       3. User chooses a reason from a predefined list (e.g., harassment, spam, inappropriate content).
+       4. User submits the report.
+       5. System confirms submission and stores the report in the database.
+       6. Admin is notified of the new report.
+   - **Failure scenario(s)**:
+       - 1a. No internet connection: Display "Failed to submit report. Please try again."
+       - 1b. Report submission error: Display "An error occurred. Please try again later."
+
+5. **Banning Users (Admin Side)**:
+   - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
+   - **Primary actor(s)**: App Admin
+   - **Main success scenario**:
+       1. Admin logs into the admin panel.
+       2. Admin reviews a list of reported users with details of the reports.
+       3. Admin selects a user to ban.
+       4. Admin clicks the "Ban User" button.
+       5. System updates the user's status to "Banned" and restricts access to the app.
+       6. User receives a notification or email explaining the reason for the ban.
+   - **Failure scenario(s)**:
+       - 1a. Database error: Display "Failed to ban user. Please try again later."
+       - 1b. Unauthorized access: Display "You do not have permission to perform this action."
 
 
 ### **3.4. Screen Mockups**
@@ -201,9 +188,8 @@ Messages
 
 
 ### **4.7. Non-Functional Requirements Design**
-1. [**Location Accuracy: User Location should be accurate within 20 meters**](#nfr1)
-    - **Validation**: Use simulated and real world testing to ensure the app only accepts location data within the threshold and provides a warning to the user when location accuracy is poor. Additionally we will log location data to make sure the error rate is <10%.
-2. ...
+1. [**Security: Encryption of user data**](#nfr1)
+    - **Validation**: All user data and communications will be encrypted using HTTPS to ensure secure data transmission. Passwords will be securely hashed before storage, and database encryption will be applied for sensitive information. 
 
 
 ### **4.8. Main Project Complexity Design**
