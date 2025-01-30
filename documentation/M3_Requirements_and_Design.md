@@ -200,8 +200,10 @@ Messages
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 2. [**Users can access a recommendation list of jogger profiles**](#fr2)
 ![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
-3. [**Users can report profiles and admin can ban profiles**](#fr2)
-![Recommendation Sequence Diagram](images/Reporting_and_banning_users3.png)
+3. [**Users can report profiles**](#fr2)
+![Reporting Users Sequence Diagram](images/Reporting_users.png)
+3. [**Admin can ban profiles**](#fr2)
+![Banning Users Sequence Diagram](images/Banning_users.png)
 
 
 
