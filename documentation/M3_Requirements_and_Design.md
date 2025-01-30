@@ -192,7 +192,11 @@ Messages
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 2. [**Users can access a recommendation list of jogger profiles**](#fr2)
 ![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
-2. [**Users can find jogger buddies and access a recommendation list of jogger profiles**](#fr3)
+3. [**Users can report profiles**](#fr2)
+![Reporting Users Sequence Diagram](images/Reporting_users.png)
+4. [**Admin can ban profiles**](#fr2)
+![Banning Users Sequence Diagram](images/Banning_users.png)
+5. [**Users can find jogger buddies and access a recommendation list of jogger profiles**](#fr3)
 ![Recommendation Sequence Diagram](images/FindJogBuddySequenceDiagram.png)
 
 
