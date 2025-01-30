@@ -9,7 +9,7 @@ An application that connects nearby users to jog/run together adapting to their 
 ## 3. Requirements Specification
 ### **3.1. Use-Case Diagram**
 
-![alt text](images/UseCaseDiagram.png)
+![Use Case Diagram](images/UseCaseDiagram.png)
 Login/Sign up -> Update profile - Amanvir
 Report users - William
 Ban Users (admin side) - William
@@ -22,6 +22,7 @@ Find jog buddies - use smart recommendation system - Vinny
 2. **App Admin**: A person who has higher privileges to moderate the app by reviewing reports from users and issues bans to offenders.
 
 ### **3.3. Functional Requirements**
+
 
 1. **Reporting Users**<a id="fr1"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
@@ -57,14 +58,20 @@ Find jog buddies - use smart recommendation system - Vinny
         1. User navigates to the "Find Joggers Nearby" section.
         2. User inputs their location and preferred jogging time.
         3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
-        4. User selects a jogger from the list to view their profile.
-        5. User sends a connection request or message to the selected jogger.
-        6. If the jogger accepts, the system confirms the connection, allowing further communication.
     - **Failure scenario(s)**:
         - 3a. No suitable matches found: Display "No joggers available for the selected time and location. Please try again later or adjust your preferences."
         - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
         - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
-4. **Login/Sign up -> Update profile**:
+4. **Join/Create Chat Group**
+    - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
+    - **Primary Actors**: User(s)
+    - **Main Success Scenario**:
+        1. User clicks on an User Profile
+        2. User sends a connection request or message to create a chat join a group chat with the jogger.
+        3. If the jogger accepts, the system confirms the connection, allowing further communication.
+    - **Failure Scenarios**:
+    - 2a. User is not connected to the internet
+5. **Login/Sign up -> Update profile**:
    - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -86,7 +93,7 @@ Find jog buddies - use smart recommendation system - Vinny
        3. Profile changes not saved
            - Invalid characters entered in profile details
            - Unable to connect to server, failure to save details
-5. **Post and View Leaderboard Ranking**:
+6. **Post and View Leaderboard Ranking**:
     - **Description**: This feature allows users to post and view leaderboard rankings based on their jogging performance.Users can compare their progress with others and motivate themselves to improve.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -189,9 +196,10 @@ Messages
 
 
 ### **4.6. Functional Requirements Sequence Diagram**
-1. [**[WRITE_NAME_HERE]**](#fr1)
-[SEQUENCE_DIAGRAM_HERE]
-2. ...
+1. [**Users can join/create a chat group of joggers**](#fr1)
+![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+2. [**Users can access a recommendation list of jogger profiles**](#fr2)
+![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
 
 
 ### **4.7. Non-Functional Requirements Design**
