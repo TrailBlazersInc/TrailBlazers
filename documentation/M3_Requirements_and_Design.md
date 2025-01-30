@@ -24,7 +24,7 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-1. **Login/Sign up -> Update profile**:
+1. **Login/Sign up**:
    - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -47,7 +47,19 @@ Ban Users (admin side) - William
            - Invalid characters entered in profile details
            - Unable to connect to server, failure to save details
 
-2. **Find Joggers Nearby**:
+2. **Update profile**:
+   - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
+   - **Primary actor(s)**: User
+   - **Main success scenario**:
+       1. User navigates to the profile section.
+       2. User inputs their personal information and jogging preferences.
+       3. User clicks on the "Save" button.
+       4. System updates the user's profile in the database.
+   - **Failure scenario(s)**:
+       - 4a. Invalid input: Invalid characters entered in profile details.
+       - 4b. Network issue: Display "Network error. Please check your internet connection and try again."
+
+3. **Find Joggers Nearby**:
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -59,7 +71,7 @@ Ban Users (admin side) - William
         - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
         - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
 
-3. **Join/Create Chat Group**
+4. **Join/Create Chat Group**
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
@@ -69,7 +81,7 @@ Ban Users (admin side) - William
     - **Failure Scenarios**:
     - 2a. User is not connected to the internet
 
-4. **Reporting Users**<a id="fr1"></a>:
+5. **Reporting Users**<a id="fr1"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -83,7 +95,7 @@ Ban Users (admin side) - William
        - 1a. No internet connection: Display "Failed to submit report. Please try again."
        - 1b. Report submission error: Display "An error occurred. Please try again later."
 
-5. **Banning Users (Admin Side)**:
+6. **Banning Users (Admin Side)**:
    - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
    - **Primary actor(s)**: App Admin
    - **Main success scenario**:
@@ -177,8 +189,6 @@ Messages
 ![Reporting Users Sequence Diagram](images/Reporting_users.png)
 4. [**Admin can ban profiles**](#fr2)
 ![Banning Users Sequence Diagram](images/Banning_users.png)
-5. [**Users can find jogger buddies and access a recommendation list of jogger profiles**](#fr3)
-![Recommendation Sequence Diagram](images/FindJogBuddySequenceDiagram.png)
 
 
 ### **4.7. Non-Functional Requirements Design**
