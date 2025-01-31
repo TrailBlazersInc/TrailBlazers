@@ -159,12 +159,14 @@ Messages
 
 ### **4.2. Databases**
 1. **Users DB**
-    - **Purpose**: To store user credentials, preferences, and running performance.
+    - **Purpose**: To store user credentials, running preferences, and running performance.
 2. **Messaging DB**
     - **Purpose**: To store chat logs and metadata.
 
 
 ### **4.3. External Modules**
+1. **Google Sign in API** 
+    - **Purpose**: To provide user authentication service.
 1. **Google Map API** 
     - **Purpose**: To provide location services and map functionalities.
     
@@ -205,45 +207,54 @@ Messages
     - **Output**: ...
     - **Main computational logic**: ...
     - **Pseudo-code**: 
-        Algorithm findJogBuddies(ShortListedBuddies, userLocation, userTime, userSpeed)
-            Input: ShortListedBuddies (List of profiles), userLocation (latitude, longitude), userTime, userSpeed
-            Output: Top 5 best-matched jog buddies
 
-            Define matches as an empty list
+```
+Algorithm findJogBuddies(ShortListedBuddies, userLocation, userTime, userSpeed)
+    Input: 
+        ShortListedBuddies (List of profiles)
+        userLocation (latitude, longitude)
+        userTime
+        userSpeed
+    Output: 
+        Top 5 best-matched jog buddies
 
-            For each buddy in ShortListedBuddies:
-                Calculate distanceScore = calculateDistance(userLocation, buddy.location)
-                Calculate timeDifference = abs(userTime - buddy.time)
-                Calculate speedDifference = abs(userSpeed - buddy.speed)
+    Define matches as an empty list
 
-                If timeDifference ≤ thresholdTime AND speedDifference ≤ thresholdSpeed:
-                    Compute matchScore = (1 / (1 + distanceScore)) * weightLocation + 
-                                        (1 / (1 + timeDifference)) * weightTime + 
-                                        (1 / (1 + speedDifference)) * weightSpeed
+    For each buddy in ShortListedBuddies:
+        Calculate distanceScore = calculateDistance(userLocation, buddy.location)
+        Calculate timeDifference = abs(userTime - buddy.time)
+        Calculate speedDifference = abs(userSpeed - buddy.speed)
 
-                    Add (buddy, matchScore) to matches list
+        If timeDifference ≤ thresholdTime AND speedDifference ≤ thresholdSpeed:
+            Compute matchScore = (1 / (1 + distanceScore)) * weightLocation + 
+                                (1 / (1 + timeDifference)) * weightTime + 
+                                (1 / (1 + speedDifference)) * weightSpeed
 
-            Sort matches in descending order by matchScore
+            Add (buddy, matchScore) to matches list
 
-            Return top 5 buddies from matches (if available)
-        End Algorithm
+    Sort matches in descending order by matchScore
 
+    Return top 5 buddies from matches (if available)
+End Algorithm
 
-        Function calculateDistance(location1, location2)
-            Input: location1 (lat1, lon1), location2 (lat2, lon2)
-            Output: Distance between two locations in km
+Function calculateDistance(location1, location2)
+    Input: 
+        location1 (lat1, lon1)
+        location2 (lat2, lon2)
+    Output: 
+        Distance between two locations in km
 
-            Apply Haversine Formula:
-            R = 6371 (Earth’s radius in km)
-            dLat = toRadians(lat2 - lat1)
-            dLon = toRadians(lon2 - lon1)
-            
-            a = sin²(dLat / 2) + cos(toRadians(lat1)) * cos(toRadians(lat2)) * sin²(dLon / 2)
-            c = 2 * atan2(sqrt(a), sqrt(1-a))
+    Apply Haversine Formula:
+        R = 6371 (Earth’s radius in km)
+        dLat = toRadians(lat2 - lat1)
+        dLon = toRadians(lon2 - lon1)
 
-            Return R * c
-        End Function
+        a = sin²(dLat / 2) + cos(toRadians(lat1)) * cos(toRadians(lat2)) * sin²(dLon / 2)
+        c = 2 * atan2(sqrt(a), sqrt(1-a))
 
+    Return R * c
+End Function
+```
 
 
 ## 5. Contributions
