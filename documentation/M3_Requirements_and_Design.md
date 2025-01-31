@@ -24,28 +24,35 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-1. **Login/Sign up**:
-   - **Description**: This feature allows users to create an account or log in to an existing account on the app and update their profile to help personalize their nearby buddy recommendations
-   - **Primary actor(s)**: User
-   - **Main success scenario**:
-       1. Successful Sign-Up
-           - User submits sign up form, then the system creates an account in database and confirms with the user the sign up was successful
-       2. Successful Login
-           - User enters login credentials and system authenticates use, allowing user to access app and modify account
-       3. Successfully saved profile changes
-           - User modifies profile details and saves changes, system updates information in database and confirms the save was successful with user
-   - **Failure scenario(s)**:
-       1. Sign-Up Error
-           - Email is already in system
-           - Invalid email entered
-           - Unable to connect to server
-       2. Login Error
-           - Invalid Credentials entered
-           - Banned Account email entered
-           - Email is not signed up for app
-       3. Profile changes not saved
-           - Invalid characters entered in profile details
-           - Unable to connect to server, failure to save details
+1. **User Authentication**:
+   1. **Sign Up**:
+        - **Description**: This feature allows users to create an account on the app using Google Sign In API.
+        - **Primary actor(s)**: User
+        - **Main success scenario**:
+            - Successful Sign-Up
+                - User submits sign up form, then the system creates an account in database and confirms with the user the sign up was successful
+        - **Failure scenario(s)**:
+            - Sign-Up Error
+                - Invalid email entered
+                - Unable to connect to server
+    2. **Sign Up**:
+        - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
+        - **Primary actor(s)**: User
+        - **Main success scenario**:
+            - Successful Login
+                - User enters login credentials and system authenticates use, creating a new session within the app
+        - **Failure scenario(s)**:
+            - Login Error
+                - Invalid Credentials entered
+    3. **Sign Out**:
+        - **Description**: This feature allows users to log out from the app and close their current session.
+        - **Primary actor(s)**: User
+        - **Main success scenario**:
+            - Successful Sign Out
+                - User clicks sign out button, system uses User token to close user session and confirms with User once log out is successful
+        - **Failure scenario(s)**:
+            - Sign-Out Error
+                - Unable to connect to server
 
 2. **Update profile**:
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
@@ -180,18 +187,32 @@ Messages
     - **Reason**: ...
 
 ### **4.5. Dependencies Diagram**
-
+![Dependencies Diagram](images/Dependency_diagram.drawio.png)
 
 ### **4.6. Functional Requirements Sequence Diagram**
 1. [**Users can join/create a chat group of joggers**](#fr1)
+
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+
 2. [**Users can access a recommendation list of jogger profiles**](#fr2)
+
 ![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
+
 3. [**Users can report profiles**](#fr2)
+
 ![Reporting Users Sequence Diagram](images/Reporting_users.png)
+
 4. [**Admin can ban profiles**](#fr2)
+
 ![Banning Users Sequence Diagram](images/Banning_users.png)
 
+5. [**User Login/Sign up**](#fr5)
+
+![Banning Users Sequence Diagram](images/login_jog.drawio.png)
+
+6. [**User Sign out**](#fr5)
+
+![Banning Users Sequence Diagram](images/SignOut_jog.drawio.png)
 
 ### **4.7. Non-Functional Requirements Design**
 1. [**Security: Encryption of user data**](#nfr1)
