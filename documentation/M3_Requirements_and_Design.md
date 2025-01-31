@@ -195,29 +195,33 @@ Messages
 ![Dependencies Diagram](images/Dependency_diagram.png)
 
 ### **4.6. Functional Requirements Sequence Diagram**
-1. [**Users can join/create a chat group of joggers**](#fr1)
-
-![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
-
-2. [**Users can access a recommendation list of jogger profiles**](#fr2)
-
-![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
-
-3. [**Users can report profiles**](#fr2)
-
-![Reporting Users Sequence Diagram](images/Reporting_users.png)
-
-4. [**Admin can ban profiles**](#fr2)
-
-![Banning Users Sequence Diagram](images/Banning_users.png)
-
-5. [**User Login/Sign up**](#fr5)
+1. [**User Login/Sign up**](#fr5)
 
 ![Login/Sign Up Sequence Diagram](images/login_jog.png)
 
-6. [**User Sign out**](#fr5)
+2. [**User Sign out**](#fr5)
 
 ![Sign Out Sequence Diagram](images/SignOut_jog.png)
+
+3. [**Update Profile**](#fr5)
+
+![Sign Out Sequence Diagram](images/UpdateProfileSequenceDiagram.png)
+
+4. [**Users can access a recommendation list of jogger profiles**](#fr2)
+
+![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
+
+5. [**Users can join/create a chat group of joggers**](#fr1)
+
+![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+
+6. [**Users can report profiles**](#fr2)
+
+![Reporting Users Sequence Diagram](images/Reporting_users.png)
+
+7. [**Admin can ban profiles**](#fr2)
+
+![Banning Users Sequence Diagram](images/Banning_users.png)
 
 
 ### **4.7. Non-Functional Requirements Design**
