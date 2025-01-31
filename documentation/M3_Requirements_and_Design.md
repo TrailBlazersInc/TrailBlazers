@@ -83,10 +83,12 @@ Ban Users (admin side) - William
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
         1. User clicks on an User Profile
-        2. User sends a connection request or message to create a chat join a group chat with the jogger.
+        2. User sends a connection request or message to create a chat or join a group chat with the jogger.
         3. If the jogger accepts, the system confirms the connection, allowing further communication.
     - **Failure Scenarios**:
-    - 2a. User is not connected to the internet
+    - 2a. Jogger/Group does not exist: Display "Error: Group/Jogger does not Exist"
+    - 2b. User is not logged in: Display "Error: Please Log in again"
+    - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
 
 5. **Reporting Users**<a id="fr1"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
@@ -132,6 +134,7 @@ Ban Users (admin side) - William
 
 
 ## 4. Designs Specification
+The design focuses on enabling the general user to
 ### **4.1. Main Components** 
 1. **Users**
     - **Purpose**: Provide authentication, manage sessions, manage passwords, and ensure users can only access resources they have permission for. 
@@ -210,7 +213,7 @@ Messages
 
 ![Sign Out Sequence Diagram](images/UpdateProfileSequenceDiagram.png)
 
-4. [**Users can access a recommendation list of jogger profiles**](#fr2)
+4. [**Recommend Jogging Buddies**](#fr2)
 
 ![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
 
@@ -248,10 +251,10 @@ Messages
     - **Input**: 
         - ShortListedBuddies: List of user profiles filtered by basic constraints (e.g., active users, within a certain radius).
         - UserLocation: The latitude and longitude of the user.
-        - UserTime: The preferred jogging time.
+        - UserAvaliability: A schedule that shows times the user is available throughout the week.
         - UserSpeed: The user’s average jogging speed.
     - **Output**: 
-        - A list of top 5 best-matched jog buddies, ranked based on a computed match score.
+        - A list of the top 5 best-matched jog buddies, ranked based on a computed match score.
     - **Main computational logic**: 
         - Distance Calculation: Uses the Haversine formula to compute the real-world distance between the user and each buddy.
         - Time and Speed Compatibility: Calculates the absolute difference in preferred jogging time and speed.
@@ -261,11 +264,11 @@ Messages
     - **Pseudo-code**: 
 
 ```
-Algorithm findJogBuddies(ShortListedBuddies, userLocation, userTime, userSpeed)
+Algorithm findJogBuddies(ShortListedBuddies, userLocation, userAvailability, userSpeed)
     Input: 
         ShortListedBuddies (List of profiles)
         userLocation (latitude, longitude)
-        userTime
+        userAvailability
         userSpeed
     Output: 
         Top 5 best-matched jog buddies
@@ -274,7 +277,7 @@ Algorithm findJogBuddies(ShortListedBuddies, userLocation, userTime, userSpeed)
 
     For each buddy in ShortListedBuddies:
         Calculate distanceScore = calculateDistance(userLocation, buddy.location)
-        Calculate timeDifference = abs(userTime - buddy.time)
+        Calculate timeDifference = abs(userAvailability - buddy.Availability)
         Calculate speedDifference = abs(userSpeed - buddy.speed)
 
         If timeDifference ≤ thresholdTime AND speedDifference ≤ thresholdSpeed:
