@@ -217,6 +217,8 @@ Messages
 ### **4.7. Non-Functional Requirements Design**
 1. [**Security: Encryption of user data**](#nfr1)
     - **Validation**: All user data and communications will be encrypted using HTTPS to ensure secure data transmission. Passwords will be securely hashed before storage, and database encryption will be applied for sensitive information. 
+2. [**Performance: Find Buddies Does must not take more than 15s**](#nfr2)
+    - **Validation**: The time algorithm  for finding buddies will be capped to 12 seconds and will be constrained to selecting at most ten profiles from a list of at most 100 users. In addition, the front end will have a timer and return failure if no response is received by those 15 seconds. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
 
 
 ### **4.8. Main Project Complexity Design**
