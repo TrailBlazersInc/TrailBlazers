@@ -4,7 +4,7 @@
 <!-- Leave blank for M3 -->
 
 ## 2. Project Description
-An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel. In addition, encouraging competitive joggers to thrive by hosting a leaderboard. 
+An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
 
 ## 3. Requirements Specification
 ### **3.1. Use-Case Diagram**
