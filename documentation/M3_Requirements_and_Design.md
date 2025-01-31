@@ -175,8 +175,20 @@ Messages
 ### **4.2. Databases**
 1. **Users DB**
     - **Purpose**: To store user credentials, running preferences, and running performance.
+    - **Representation**: The user database will store the User object which includes both General Users and Admin as depicted in the class diagram below:
+<div align="center">
+<img src= "images/userProfile.png" alt="Chat Image"/>
+</div>
+
+
 2. **Messaging DB**
     - **Purpose**: To store chat logs and metadata.
+    - **Representation**: The database will store Chat objects as depicted in the following class diagram:
+
+<div align="center">
+<img src= "images/ChatClassDiagram.png" alt="Chat Image"/>
+</div>
+
 
 
 ### **4.3. External Modules**
