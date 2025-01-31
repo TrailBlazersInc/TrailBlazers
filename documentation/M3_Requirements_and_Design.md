@@ -185,11 +185,14 @@ Messages
 
 ### **4.4. Frameworks**
 1. **Microsoft Azure**
-    - **Purpose**: ...
-    - **Reason**: ...
-2. ****
-    - **Purpose**: ...
-    - **Reason**: ...
+    - **Purpose**: It is our cloud provider, used to host our server.
+    - **Reason**: We want to experiment with it and learn about using it as usually it costs a lot of money but we have access to it for free.
+2. **MongoDB**
+    - **Purpose**: It will be used for our all of our databases
+    - **Reason**: It is dynamic and always you to retrieve objects as JSON, additionally MongoDB has better performance than most other database options we have access to.
+2. **ExpressJS**
+    - **Purpose**: We will use it to build RESTful APIs
+    - **Reason**: It allows us to easily and rapidly set up a REST API. Also it is lightweight and works with MongoDB,
 
 ### **4.5. Dependencies Diagram**
 ![Dependencies Diagram](images/Dependency_diagram.png)
