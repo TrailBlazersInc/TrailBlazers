@@ -200,11 +200,11 @@ Messages
 
 3. [**Users can report profiles**](#fr2)
 
-![Reporting Users Sequence Diagram](images/Reporting_Users.png)
+![Reporting Users Sequence Diagram](images/Reporting_users.png)
 
 4. [**Admin can ban profiles**](#fr2)
 
-![Banning Users Sequence Diagram](images/Banning_Users.png)
+![Banning Users Sequence Diagram](images/Banning_users.png)
 
 5. [**User Login/Sign up**](#fr5)
 
