@@ -187,7 +187,7 @@ Messages
     - **Reason**: ...
 
 ### **4.5. Dependencies Diagram**
-![Dependencies Diagram](images/Dependency_diagram.drawio.png)
+![Dependencies Diagram](images/Dependency_diagram.png)
 
 ### **4.6. Functional Requirements Sequence Diagram**
 1. [**Users can join/create a chat group of joggers**](#fr1)
@@ -208,11 +208,11 @@ Messages
 
 5. [**User Login/Sign up**](#fr5)
 
-![Banning Users Sequence Diagram](images/login_jog.drawio.png)
+![Banning Users Sequence Diagram](images/login_jog.png)
 
 6. [**User Sign out**](#fr5)
 
-![Banning Users Sequence Diagram](images/SignOut_jog.drawio.png)
+![Banning Users Sequence Diagram](images/SignOut_jog.png)
 
 ### **4.7. Non-Functional Requirements Design**
 1. [**Security: Encryption of user data**](#nfr1)
