@@ -210,26 +210,36 @@ Messages
     - **Reason**: It allows us to easily and rapidly set up a REST API. Also it is lightweight and works with MongoDB,
 
 ### **4.5. Dependencies Diagram**
-![Dependencies Diagram](images/Dependency_diagram.png)
+
+<div align="center">
+<img src= "images/Dependency_diagram.png" alt="Chat Image"/>
+</div>
+
 
 ### **4.6. Functional Requirements Sequence Diagram**
-1. [**User Login/Sign up**](#fr5)
+1. [**User Authentication**](#fr1)
+- [**User Login/Sign up**](#f1)
+<div align="center">
+<img src= "images/login_jog.png" alt="Login/Sign Up Sequence Diagram"/>
+</div>
 
-![Login/Sign Up Sequence Diagram](images/login_jog.png)
+- [**User Sign out**](#fr1)
+<div align="center">
+<img src= "images/SignOut_jog.png" alt="Sign Out Sequence Diagram"/>
+</div>
 
-2. [**User Sign out**](#fr5)
+2. [**Update Profile**](#fr2)
 
-![Sign Out Sequence Diagram](images/SignOut_jog.png)
+<div align="center">
+<img src= "images/UpdateProfileSequenceDiagram.png" alt="Update Profile Diagram"/>
+</div>
 
-3. [**Update Profile**](#fr5)
+3. [**Recommend Jogging Buddies**](#fr3)
+<div align="center">
+<img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
+</div>
 
-![Sign Out Sequence Diagram](images/UpdateProfileSequenceDiagram.png)
-
-4. [**Recommend Jogging Buddies**](#fr2)
-
-![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
-
-5. [**Users can join/create a chat group of joggers**](#fr1)
+1. [**Users can join/create a chat group of joggers**](#fr1)
 
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 
