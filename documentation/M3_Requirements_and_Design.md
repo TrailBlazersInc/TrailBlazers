@@ -233,12 +233,28 @@ Messages
 
 ### **4.8. Main Project Complexity Design**
 **[WRITE_NAME_HERE]**
-- **Description**: ...
-- **Why complex?**: ...
+- **Description**: The jogger recommendation system helps users find compatible running partners based on location, jogging speed, and preferred running time. The system processes user profiles and ranks potential jogging buddies using a weighted scoring mechanism. The recommendation process needs to be efficient, scalable, and provide relevant matches in real-time.
+
+- **Why complex?**: 
+    - Geospatial Calculations: The system must compute distances between users using latitude and longitude, requiring efficient algorithms like the Haversine formula.
+    - Multi-Factor Matching: Users are not just matched based on distance but also jogging speed and time compatibility, requiring multi-variable optimization.
+    - Efficient Sorting & Filtering: Since the system might need to process thousands of users, ranking and filtering must be optimized.
+    - Scalability: As more users join, the system must handle increased computations without degrading performance.
+
 - **Design**:
-    - **Input**: ...
-    - **Output**: ...
-    - **Main computational logic**: ...
+    - **Input**: 
+        - ShortListedBuddies: List of user profiles filtered by basic constraints (e.g., active users, within a certain radius).
+        - UserLocation: The latitude and longitude of the user.
+        - UserTime: The preferred jogging time.
+        - UserSpeed: The user’s average jogging speed.
+    - **Output**: 
+        - A list of top 5 best-matched jog buddies, ranked based on a computed match score.
+    - **Main computational logic**: 
+        - Distance Calculation: Uses the Haversine formula to compute the real-world distance between the user and each buddy.
+        - Time and Speed Compatibility: Calculates the absolute difference in preferred jogging time and speed.
+        - Scoring System: Assigns weighted scores based on proximity, time similarity, and speed similarity.
+        - Sorting and Selection: Ranks the top 5 most compatible jogging partners.
+
     - **Pseudo-code**: 
 
 ```
