@@ -149,12 +149,17 @@ Ban Users (admin side) - William
             - **Purpose**: Allows message exchange between users ensuring rapid communication
         2. MongoDB database
             - **Purpose**: Store chat history between users
-3. **Recommendations** // Vinny
+3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
-        1. ...
-            - **Purpose**: ...
-        2. MongoDB database
+        1. **`boolean authenticated(String userId, String tkn)`**
+        - **Purpose**: Validates the user’s authentication token before processing their request.
+
+        2. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
+        - **Purpose**: Retrieves joggers located within a specified distance from the user.
+
+        3. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
+        - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
 
 Recommendation
 Purpose: Match users with nearby jogging buddies based on preferences (e.g., schedule, distance).
@@ -208,11 +213,12 @@ Messages
 
 5. [**User Login/Sign up**](#fr5)
 
-![Banning Users Sequence Diagram](images/login_jog.png)
+![Login/Sign Up Sequence Diagram](images/login_jog.png)
 
 6. [**User Sign out**](#fr5)
 
-![Banning Users Sequence Diagram](images/SignOut_jog.png)
+![Sign Out Sequence Diagram](images/SignOut_jog.png)
+
 
 ### **4.7. Non-Functional Requirements Design**
 1. [**Security: Encryption of user data**](#nfr1)
@@ -298,7 +304,7 @@ End Function
   - Do corresponding sequence diagram for requirement
   - Do corresponding non-functional requirement
 - Yu Qian Yi
-  - Functional requirement: Find jog buddies 
+  - Functional requirement: Update Profile & Find Joggers Nearby 
   - Database design & External modules description
   - Main component - Recommendation
   - Do corresponding sequence diagram for requirement
