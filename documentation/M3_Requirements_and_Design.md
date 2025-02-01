@@ -314,7 +314,7 @@ The design focuses on enabling the general user to
 
 6. [**Ban Users**](#fr6)
 <div align="center">
-<img src= "images/Banning_user.png" alt="Banning Users Sequence Diagram"/>
+<img src= "images/Banning_User.png" alt="Banning Users Sequence Diagram"/>
 </div>
 
 
