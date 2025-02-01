@@ -101,31 +101,33 @@ Ban Users (admin side) - William
             - 3c2. App prompts user to try again after a set time period.
 
 4. **Join/Create and send message to Chat Group**:<a id="fr4"></a>
-    - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
-    - **Primary Actors**: User(s)
-    - **Main Success Scenario**:
-        1. User clicks on an User Profile
-        2. User sends a connection request or message to create a chat or join a group chat with the jogger.
-        3. If the jogger accepts, the system confirms the connection, allowing further communication.
-    - **Failure Scenarios**:
-    - 2a. Jogger/Group does not exist: Display "Error: Group/Jogger does not Exist"
-    - 2b. User is not logged in: Display "Error: Please Log in again"
-    - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
-    - **Description**: This feature allows users to message other users.
-    - **Primary Actors**: User(s)
-    - **Main Success Scenario**:
-        1. User enters message into textbox and clicks send
-        2. System ensures message contains valid content
-        3. System sends the message to the recipient with WebSocket
-        4. System takes message and stores it in message DB
-        5. System confirms to User the message was delivered successfully and updates displayed messages
-    - **Failure Scenarios**:
-        - 2a. Invalid content in message
-            - 2a1. An error message is displayed telling user of the error
-            - 2a2. User is prompted to re-enter message with valid characters
-        - 3a. Message can not be sent due to network issues
-            - 3a1. An error message is displayed telling user of the error
-            - 3a2. User is prompted to try again after a set period of time
+    1. Join/Create to Chat Group
+        - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
+        - **Primary Actors**: User(s)
+        - **Main Success Scenario**:
+            1. User clicks on an User Profile
+            2. User sends a connection request or message to create a chat or join a group chat with the jogger.
+            3. If the jogger accepts, the system confirms the connection, allowing further communication.
+        - **Failure Scenarios**:
+        - 2a. Jogger/Group does not exist: Display "Error: Group/Jogger does not Exist"
+        - 2b. User is not logged in: Display "Error: Please Log in again"
+        - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
+    2. Send message
+        - **Description**: This feature allows users to message other users.
+        - **Primary Actors**: User(s)
+        - **Main Success Scenario**:
+            1. User enters message into textbox and clicks send
+            2. System ensures message contains valid content
+            3. System sends the message to the recipient(s) with WebSocket
+            4. System takes message and stores it in message DB
+            5. System confirms to User the message was delivered successfully and updates displayed messages
+        - **Failure Scenarios**:
+            - 2a. Invalid content in message
+                - 2a1. An error message is displayed telling user of the error
+                - 2a2. User is prompted to re-enter message with valid characters
+            - 3a. Message can not be sent due to network issues
+                - 3a1. An error message is displayed telling user of the error
+                - 3a2. User is prompted to try again after a set period of time
 
 5. **Report Users**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
