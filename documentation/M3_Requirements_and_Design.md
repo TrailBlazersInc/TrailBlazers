@@ -29,30 +29,42 @@ Ban Users (admin side) - William
         - **Description**: This feature allows users to create an account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
-            - Successful Sign-Up
-                - User submits sign up form, then the system creates an account in database and confirms with the user the sign up was successful
+            1. User enters credentials in Google Sign In
+            2. The system generates a token for the user
+            3. The user is added to the User DB 
+            4. User gets confirmation the sign up was successful
+            5. New session is started
         - **Failure scenario(s)**:
-            - Sign-Up Error
-                - Invalid email entered
-                - Unable to connect to server
+            - 1a. Invalid email:
+                - 1a1. An error message is displayed telling user of the error
+                - 1a2. App prompts user to re-enter a valid email
+            - 3a. Unable to connect to server to add User
+                - 3a1. An error message is displayed telling user of the error
+                - 3a2. App prompts user to try again after a set time period
     2. **Sign Up**:
         - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
-            - Successful Login
-                - User enters login credentials and system authenticates use, creating a new session within the app
+            1. User enters credentials in Google Sign In
+            2. The system fetches a token for the user
+            3. System checks User is in the Database
+            4. A new session is created for the user 
+            5. User gets confirmation the Login was successful
         - **Failure scenario(s)**:
-            - Login Error
-                - Invalid Credentials entered
+            - 3a. Unable to connect to server to check User data in DB
+                - 3a1. An error message is displayed telling user of the error
+                - 3a2. App prompts user to try again after a set time period
     3. **Sign Out**:
         - **Description**: This feature allows users to log out from the app and close their current session.
         - **Primary actor(s)**: User
         - **Main success scenario**:
-            - Successful Sign Out
-                - User clicks sign out button, system uses User token to close user session and confirms with User once log out is successful
+            1. User clicks sign out button
+            2. System uses User token and sessionID to close user session
+            3. User gets confirmation the Sign Out was successful and is taken back to login screen
         - **Failure scenario(s)**:
-            - Sign-Out Error
-                - Unable to connect to server
+            - 2a. Unable to connect to close user session due to network problems
+                - 2a1. An error message is displayed telling user of the error
+                - 2a2. App prompts user to try again after a set time period
 
 2. **Update profile**:
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
@@ -203,26 +215,36 @@ The design focuses on enabling the general user to
     - **Reason**: It allows us to easily and rapidly set up a REST API. Also it is lightweight and works with MongoDB,
 
 ### **4.5. Dependencies Diagram**
-![Dependencies Diagram](images/Dependency_diagram.png)
+
+<div align="center">
+<img src= "images/Dependency_diagram.png" alt="Chat Image"/>
+</div>
+
 
 ### **4.6. Functional Requirements Sequence Diagram**
-1. [**User Login/Sign up**](#fr5)
+1. [**User Authentication**](#fr1)
+- [**User Login/Sign up**](#f1)
+<div align="center">
+<img src= "images/login_jog.png" alt="Login/Sign Up Sequence Diagram"/>
+</div>
 
-![Login/Sign Up Sequence Diagram](images/login_jog.png)
+- [**User Sign out**](#fr1)
+<div align="center">
+<img src= "images/SignOut_jog.png" alt="Sign Out Sequence Diagram"/>
+</div>
 
-2. [**User Sign out**](#fr5)
+2. [**Update Profile**](#fr2)
 
-![Sign Out Sequence Diagram](images/SignOut_jog.png)
+<div align="center">
+<img src= "images/UpdateProfileSequenceDiagram.png" alt="Update Profile Diagram"/>
+</div>
 
-3. [**Update Profile**](#fr5)
+3. [**Recommend Jogging Buddies**](#fr3)
+<div align="center">
+<img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
+</div>
 
-![Sign Out Sequence Diagram](images/UpdateProfileSequenceDiagram.png)
-
-4. [**Recommend Jogging Buddies**](#fr2)
-
-![Recommendation Sequence Diagram](images/RecommendationsSequenceDiagram.png)
-
-5. [**Users can join/create a chat group of joggers**](#fr1)
+1. [**Users can join/create a chat group of joggers**](#fr1)
 
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 
