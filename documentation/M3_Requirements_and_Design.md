@@ -199,12 +199,18 @@ The design focuses on enabling the general user to
     - **Interfaces**: 
         1. **`Chat *createNewChat(String myId, String budId)`**
         - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
-        1. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        2. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
         - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
-        1. **`Bool deleteChat(String chatId)`**
+        3. **`Bool deleteChat(String chatId)`**
         - **Purpose**: Deletes Chat with Id matching "chatId"
-        1. **`Bool addUserToChat(String myId, String chatId)`**
-        - **Purpose**: Adds user to Chat with Id matching "chatId"
+        4. **`Bool addUserToChat(String myId, String chatId)`**
+        - **Purpose**: Adds user to Chat with Id matching "chatId" 
+        5. **`Bool ValidateMessage(String Message)`**
+        - **Purpose**: Checks if "Message" has any invalid characters in it
+        6. **`Bool SendMessage(String UserId, String ChatId, String Message)`**
+        - **Purpose**: Sends "Message" using WebSocket to all Users in chat with id, "ChatId"
+        7. **`Bool AddMessageToChat(String UserId, String ChatId, String Message)`**
+        - **Purpose**: Stores "Message" in the Messaging DB
         
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
