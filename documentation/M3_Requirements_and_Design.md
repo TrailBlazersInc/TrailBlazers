@@ -199,11 +199,11 @@ The design focuses on enabling the general user to
     - **Interfaces**: 
         1. **`Chat *createNewChat(String myId, String budId)`**
         - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
-        1. **`bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        1. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
         - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
-        1. **`bool deleteChat(String chatId)`**
+        1. **`Bool deleteChat(String chatId)`**
         - **Purpose**: Deletes Chat with Id matching "chatId"
-        1. **`bool addUserToChat(String myId, String chatId)`**
+        1. **`Bool addUserToChat(String myId, String chatId)`**
         - **Purpose**: Adds user to Chat with Id matching "chatId"
         
 3. **Recommendations** 
@@ -286,10 +286,15 @@ The design focuses on enabling the general user to
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-4. [**Join/Create Chat Group**](#fr4)
-
+4. [**Join/Create and Send Messages to Chat Group**](#fr4)
+- [**Join/Create Chat Group**](#fr4)
 <div align="center">
 <img src= "images/Join_Create_Group_Seq_Diagram.png" alt="Chat Sequence Diagram"/>
+</div>
+
+- [**Send Messages to Chat Group**](#fr4)
+<div align="center">
+<img src= "images/Messaging.png" alt="Chat Sequence Diagram"/>
 </div>
 
 5. [**Report Users**](#fr5)
