@@ -150,23 +150,33 @@ The design focuses on enabling the general user to
 ### **4.1. Main Components** 
 1. **Users**
     - **Purpose**: Provide authentication, manage sessions, manage passwords, and ensure users can only access resources they have permission for. 
-    - **Interfaces**: 
-        1. Front-end form validation
-            - **Purpose**: Provide authentication needed to start an user session.
-        2. Back-end token management (JWT)
-            -**Purpose**: Keep user session updated.
-        3. Recommendation Engine:
-            -**Purpose**: Handle the public data of other users that would be ideal to connect with the current user.
-2. **Messaging** - Amanvir
+    - **Interfaces**:
+        1. **`Tkn Login(Email, password)`**:
+            - **Purpose**: Returns a valid token to keep session with the user if the user is able to successfully authenticate.
+        2. **`Tkn Token(auth_code: string)`**:
+           - **Purpose**: Get an authentication token directly from Google Oauth. 
+        3. **`bool checkCredentials(token: Tkn)`**:
+            - **Purpose**: Check that the token given by Google Oauth is valid.
+        4. **`int LogoutUser()`**:
+            -**Purpose**: Ends user session by invalidating session token.
+        5. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule))`**:
+        - **Purpose**: Updates User Profile and Schedule. 
+        6. **`bool checkCredetials(userId: int, tkn Tkn)`**:
+        - **Purpose**: Check that the user is logged in and holding a valid session id.
+        7. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
+        - **Purpose**: adds an user to the chat described by the chatId to the user's profil.
+        8. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
+        - **Purpose**: adds the chat described by the chat Id to both user profiles.
+2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
         1. **`Chat *createNewChat(String myId, String budId)`**
         - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
-        2. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        1. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
         - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
-        3. **`Bool deleteChat(String chatId)`**
+        1. **`Bool deleteChat(String chatId)`**
         - **Purpose**: Deletes Chat with Id matching "chatId"
-        4. **`Bool addUserToChat(String myId, String chatId)`**
+        1. **`Bool addUserToChat(String myId, String chatId)`**
         - **Purpose**: Adds user to Chat with Id matching "chatId"
         
 3. **Recommendations** 
@@ -175,10 +185,10 @@ The design focuses on enabling the general user to
         1. **`boolean authenticated(String userId, String tkn)`**
         - **Purpose**: Validates the user’s authentication token before processing their request.
 
-        2. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
+        1. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
         - **Purpose**: Retrieves joggers located within a specified distance from the user.
 
-        3. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
+        1. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
         - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
 
 
