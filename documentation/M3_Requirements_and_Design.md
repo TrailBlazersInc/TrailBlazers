@@ -24,7 +24,7 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-1. **User Authentication**:
+1. **User Authentication**:<a id="fr1"></a>
    1. **Sign Up**:
         - **Description**: This feature allows users to create an account on the app using Google Sign In API.
         - **Primary actor(s)**: User
@@ -41,7 +41,7 @@ Ban Users (admin side) - William
             - 3a. Unable to connect to server to add User
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    2. **Sign Up**:
+    2. **Sign Up**: 
         - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
@@ -66,7 +66,7 @@ Ban Users (admin side) - William
                 - 2a1. An error message is displayed telling user of the error
                 - 2a2. App prompts user to try again after a set time period
 
-2. **Update profile**:
+2. **Update profile**:<a id="fr2"></a>
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -82,7 +82,7 @@ Ban Users (admin side) - William
             - 4a1. Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
             - 4a2. App prompts user to try again after a set time period.
 
-3. **Find Joggers Nearby**:
+3. **Recommend Jogger Buddies**:<a id="fr3"></a>
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -100,7 +100,7 @@ Ban Users (admin side) - William
             - 3c1. System displays error message saying "Network error. Please check your internet connection and try again."
             - 3c2. App prompts user to try again after a set time period.
 
-4. **Join/Create Chat Group**
+4. **Join/Create Chat Group**:<a id="fr4"></a>
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
@@ -112,7 +112,7 @@ Ban Users (admin side) - William
     - 2b. User is not logged in: Display "Error: Please Log in again"
     - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
 
-5. **Reporting Users**<a id="fr1"></a>:
+5. **Report Users**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -126,7 +126,7 @@ Ban Users (admin side) - William
        - 1a. No internet connection: Display "Failed to submit report. Please try again."
        - 1b. Report submission error: Display "An error occurred. Please try again later."
 
-6. **Banning Users (Admin Side)**:
+6. **Ban Users (Admin Side)**:<a id="fr6"></a>
    - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
    - **Primary actor(s)**: App Admin
    - **Main success scenario**:
@@ -168,12 +168,17 @@ The design focuses on enabling the general user to
         3. Recommendation Engine:
             -**Purpose**: Handle the public data of other users that would be ideal to connect with the current user.
 2. **Messaging** - Amanvir
-    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc.
+    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
-        1. Node.js (Websocket library)
-            - **Purpose**: Allows message exchange between users ensuring rapid communication
-        2. MongoDB database
-            - **Purpose**: Store chat history between users
+        1. **`Chat *createNewChat(String myId, String budId)`**
+        - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
+        2. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
+        3. **`Bool deleteChat(String chatId)`**
+        - **Purpose**: Deletes Chat with Id matching "chatId"
+        4. **`Bool addUserToChat(String myId, String chatId)`**
+        - **Purpose**: Adds user to Chat with Id matching "chatId"
+        
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
@@ -254,17 +259,21 @@ The design focuses on enabling the general user to
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-1. [**Users can join/create a chat group of joggers**](#fr1)
+4. [**Join/Create Chat Group**](#fr4)
 
-![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+<div align="center">
+<img src= "images/Join_Create_Group_Seq_Diagram.png" alt="Chat Sequence Diagram"/>
+</div>
 
-6. [**Users can report profiles**](#fr2)
+5. [**Report Users**](#fr5)
+<div align="center">
+<img src= "images/Reporting_users.png" alt="Reporting Users Sequence Diagram"/>
+</div>
 
-![Reporting Users Sequence Diagram](images/Reporting_users.png)
-
-7. [**Admin can ban profiles**](#fr2)
-
-![Banning Users Sequence Diagram](images/Banning_users.png)
+6. [**Ban Users**](#fr6)
+<div align="center">
+<img src= "images/Banning_users.png" alt="Banning Users Sequence Diagram"/>
+</div>
 
 
 ### **4.7. Non-Functional Requirements Design**
