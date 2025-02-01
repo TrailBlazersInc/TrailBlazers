@@ -90,7 +90,7 @@ Ban Users (admin side) - William
         - 3b. Database error: System displays error message saying "Unable to retrieve joggers. Please try again later."
         - 3c. Network issue: System displays error message saying "Network error. Please check your internet connection and try again."
 
-4. **Join/Create Chat Group**
+4. **Join/Create and send message to Chat Group**
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
@@ -101,6 +101,21 @@ Ban Users (admin side) - William
     - 2a. Jogger/Group does not exist: Display "Error: Group/Jogger does not Exist"
     - 2b. User is not logged in: Display "Error: Please Log in again"
     - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
+    - **Description**: This feature allows users to message other users.
+    - **Primary Actors**: User(s)
+    - **Main Success Scenario**:
+        1. User enters message into textbox and clicks send
+        2. System ensures message contains valid content
+        3. System sends the message to the recipient with WebSocket
+        4. System takes message and stores it in message DB
+        5. System confirms to User the message was delivered successfully and updates displayed messages
+    - **Failure Scenarios**:
+        - 2a. Invalid content in message
+            - 2a1. An error message is displayed telling user of the error
+            - 2a2. User is prompted to re-enter message with valid characters
+        - 3a. Message can not be sent due to network issues
+            - 3a1. An error message is displayed telling user of the error
+            - 3a2. User is prompted to try again after a set period of time
 
 5. **Reporting Users**<a id="fr1"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
