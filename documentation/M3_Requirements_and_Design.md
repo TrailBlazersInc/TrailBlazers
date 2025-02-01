@@ -218,10 +218,10 @@ The design focuses on enabling the general user to
         1. **`bool authenticated(String userId, String tkn)`**
         - **Purpose**: Validates the user’s authentication token before processing their request.
 
-        1. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
+        2. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
         - **Purpose**: Retrieves joggers located within a specified distance from the user.
 
-        1. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
+        3. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
         - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
 
 
