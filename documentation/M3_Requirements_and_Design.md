@@ -10,12 +10,6 @@ An application that connects nearby users to jog/run together adapting to their 
 ### **3.1. Use-Case Diagram**
 
 ![Use Case Diagram](images/UseCaseDiagram.png)
-Authenticate -> Update profile - Amanvir
-Find jog buddies - use smart recommendation system - Vinny
-Message
-Manage profile
-Report users - William
-Ban Users (admin side) - William
 
 
 ### **3.2. Actors Description**
@@ -407,12 +401,7 @@ End Function
   - Main Component:
     - User Management
 - Amanvir Samra
-  - Main Actors
-  - Login Use Case Description
-  - Non-functional requirement: Location Accuracy
-  - Main Component: Messaging
-  - Do corresponding sequence diagram for requirement
-  - Do corresponding non-functional requirement
+    - Completed Main Actor section, User Authentication and Messaging Functional Requirements and Sequence Diagrams. Also did the Messaging Main Component description and Frameworks section. I've spent approxiametly 5 hours on the project.
 - Yu Qian Yi
   - I contributed to the project by designing and implementing the Update Profile and Find Joggers Nearby functionalities, including their sequence diagrams, database structure, and external module interactions. Additionally, I ensured non-functional requirements such as security were met, developed pseudocode for the recommendation algorithm, and defined key interfaces for the Recommendation component. I've spent approximately 3 to 4 hours to complete and refine M3 project.
 - William Sun
