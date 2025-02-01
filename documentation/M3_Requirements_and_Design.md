@@ -276,10 +276,15 @@ The design focuses on enabling the general user to
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-4. [**Join/Create Chat Group**](#fr4)
-
+4. [**Join/Create and Send Messages to Chat Group**](#fr4)
+- [**Join/Create Chat Group**](#fr4)
 <div align="center">
 <img src= "images/Join_Create_Group_Seq_Diagram.png" alt="Chat Sequence Diagram"/>
+</div>
+
+- [**Send Messages to Chat Group**](#fr4)
+<div align="center">
+<img src= "images/Messaging.png" alt="Chat Sequence Diagram"/>
 </div>
 
 5. [**Report Users**](#fr5)
