@@ -322,7 +322,7 @@ The design focuses on enabling the general user to
 
 
 ### **4.8. Main Project Complexity Design**
-**[WRITE_NAME_HERE]**
+**Jogger Recommendation System**
 - **Description**: The jogger recommendation system helps users find compatible running partners based on location, jogging speed, and preferred running time. The system processes user profiles and ranks potential jogging buddies using a weighted scoring mechanism. The recommendation process needs to be efficient, scalable, and provide relevant matches in real-time.
 
 - **Why complex?**: 
