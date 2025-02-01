@@ -24,7 +24,7 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-1. **User Authentication**:
+1. **User Authentication**:<a id="fr1"></a>
    1. **Sign Up**:
         - **Description**: This feature allows users to create an account on the app using Google Sign In API.
         - **Primary actor(s)**: User
@@ -41,7 +41,7 @@ Ban Users (admin side) - William
             - 3a. Unable to connect to server to add User
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    2. **Sign Up**:
+    2. **Sign Up**: 
         - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
@@ -66,7 +66,7 @@ Ban Users (admin side) - William
                 - 2a1. An error message is displayed telling user of the error
                 - 2a2. App prompts user to try again after a set time period
 
-2. **Update profile**:
+2. **Update profile**:<a id="fr2"></a>
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -78,7 +78,7 @@ Ban Users (admin side) - William
        - 4a. Invalid input: Invalid characters entered in profile details.
        - 4b. Network issue: Display "Network error. Please check your internet connection and try again."
 
-3. **Find Joggers Nearby**:
+3. **Recommend Jogger Buddies**:<a id="fr3"></a>
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -90,7 +90,7 @@ Ban Users (admin side) - William
         - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
         - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
 
-4. **Join/Create Chat Group**
+4. **Join/Create Chat Group**:<a id="fr4"></a>
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
@@ -102,7 +102,7 @@ Ban Users (admin side) - William
     - 2b. User is not logged in: Display "Error: Please Log in again"
     - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
 
-5. **Reporting Users**<a id="fr1"></a>:
+5. **Report Users**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -116,7 +116,7 @@ Ban Users (admin side) - William
        - 1a. No internet connection: Display "Failed to submit report. Please try again."
        - 1b. Report submission error: Display "An error occurred. Please try again later."
 
-6. **Banning Users (Admin Side)**:
+6. **Ban Users (Admin Side)**:<a id="fr6"></a>
    - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
    - **Primary actor(s)**: App Admin
    - **Main success scenario**:
@@ -251,17 +251,21 @@ Messages
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-1. [**Users can join/create a chat group of joggers**](#fr1)
+4. [**Join/Create Chat Group**](#fr4)
 
-![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+<div align="center">
+<img src= "images/Join_Create_Group_Seq_Diagram.png" alt="Chat Sequence Diagram"/>
+</div>
 
-6. [**Users can report profiles**](#fr2)
+5. [**Report Users**](#fr5)
+<div align="center">
+<img src= "images/Reporting_users.png" alt="Reporting Users Sequence Diagram"/>
+</div>
 
-![Reporting Users Sequence Diagram](images/Reporting_users.png)
-
-7. [**Admin can ban profiles**](#fr2)
-
-![Banning Users Sequence Diagram](images/Banning_users.png)
+6. [**Ban Users**](#fr6)
+<div align="center">
+<img src= "images/Banning_users.png" alt="Banning Users Sequence Diagram"/>
+</div>
 
 
 ### **4.7. Non-Functional Requirements Design**
