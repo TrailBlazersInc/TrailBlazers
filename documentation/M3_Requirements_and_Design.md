@@ -70,25 +70,25 @@ Ban Users (admin side) - William
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
    - **Primary actor(s)**: User
    - **Main success scenario**:
-       1. User navigates to the profile section.
-       2. User inputs their personal information and jogging preferences.
-       3. User clicks on the "Save" button.
-       4. System updates the user's profile in the database.
+       - 1. User navigates to the profile section.
+       - 2. User inputs their personal information and jogging preferences.
+       - 3. User clicks on the "Save" button.
+       - 4. System updates the user's profile in the database.
    - **Failure scenario(s)**:
-       - 4a. Invalid input: Invalid characters entered in profile details.
-       - 4b. Network issue: Display "Network error. Please check your internet connection and try again."
+       - 2a. Invalid input: System displays error message saying invalid character is entered.
+       - 4b. Network issue: Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
 
 3. **Recommend Jogger Buddies**:<a id="fr3"></a>
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
-        1. User navigates to the "Find Joggers Nearby" section.
-        2. User click on the "Find Joggers" button.
-        3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
+        - 1. User navigates to the "Find Joggers Nearby" section.
+        - 2. User click on the "Find Joggers" button.
+        - 3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
     - **Failure scenario(s)**:
-        - 3a. No suitable matches found: Display "No joggers available for the selected time and location. Please try again later or adjust your preferences."
-        - 3b. Database error: Display "Unable to retrieve joggers. Please try again later."
-        - 3c. Network issue: Display "Network error. Please check your internet connection and try again."
+        - 3a. No suitable matches are found: System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+        - 3b. Database error: System displays error message saying "Unable to retrieve joggers. Please try again later."
+        - 3c. Network issue: System displays error message saying "Network error. Please check your internet connection and try again."
 
 4. **Join/Create Chat Group**:<a id="fr4"></a>
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
@@ -158,12 +158,17 @@ The design focuses on enabling the general user to
         3. Recommendation Engine:
             -**Purpose**: Handle the public data of other users that would be ideal to connect with the current user.
 2. **Messaging** - Amanvir
-    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc.
+    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
-        1. Node.js (Websocket library)
-            - **Purpose**: Allows message exchange between users ensuring rapid communication
-        2. MongoDB database
-            - **Purpose**: Store chat history between users
+        1. **`Chat *createNewChat(String myId, String budId)`**
+        - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
+        2. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
+        3. **`Bool deleteChat(String chatId)`**
+        - **Purpose**: Deletes Chat with Id matching "chatId"
+        4. **`Bool addUserToChat(String myId, String chatId)`**
+        - **Purpose**: Adds user to Chat with Id matching "chatId"
+        
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
@@ -176,13 +181,6 @@ The design focuses on enabling the general user to
         3. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
         - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
 
-Recommendation
-Purpose: Match users with nearby jogging buddies based on preferences (e.g., schedule, distance).
-Interfaces:
-Database queries for user preferences
-GPS location services for proximity calculations
-
-Messages
 
 ### **4.2. Databases**
 1. **Users DB**
