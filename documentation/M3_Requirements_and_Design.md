@@ -185,31 +185,31 @@ The design focuses on enabling the general user to
         3. **`bool checkCredentials(token: Tkn)`**:
             - **Purpose**: Check that the token given by Google Oauth is valid.
         4. **`int LogoutUser()`**:
-            -**Purpose**: Ends user session by invalidating session token.
-        5. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule))`**:
-        - **Purpose**: Updates User Profile and Schedule. 
+            - **Purpose**: Ends user session by invalidating session token.
+        5. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule), tkn: Tkn)`**:
+           - **Purpose**: Updates User Profile and Schedule. 
         6. **`bool checkCredetials(userId: int, tkn Tkn)`**:
         - **Purpose**: Check that the user is logged in and holding a valid session id.
-        7. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
+        1. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
         - **Purpose**: adds an user to the chat described by the chatId to the user's profil.
-        8. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
+        1. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
         - **Purpose**: adds the chat described by the chat Id to both user profiles.
 2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
         1. **`Chat *createNewChat(String myId, String budId)`**
         - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
-        1. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        1. **`bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
         - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
-        1. **`Bool deleteChat(String chatId)`**
+        1. **`bool deleteChat(String chatId)`**
         - **Purpose**: Deletes Chat with Id matching "chatId"
-        1. **`Bool addUserToChat(String myId, String chatId)`**
+        1. **`bool addUserToChat(String myId, String chatId)`**
         - **Purpose**: Adds user to Chat with Id matching "chatId"
         
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
-        1. **`boolean authenticated(String userId, String tkn)`**
+        1. **`bool authenticated(String userId, String tkn)`**
         - **Purpose**: Validates the user’s authentication token before processing their request.
 
         1. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
