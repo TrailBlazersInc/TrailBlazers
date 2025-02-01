@@ -24,7 +24,7 @@ Ban Users (admin side) - William
 
 ### **3.3. Functional Requirements**
 
-1. **User Authentication**:
+1. **User Authentication**:<a id="fr1"></a>
    1. **Sign Up**:
         - **Description**: This feature allows users to create an account on the app using Google Sign In API.
         - **Primary actor(s)**: User
@@ -41,7 +41,7 @@ Ban Users (admin side) - William
             - 3a. Unable to connect to server to add User
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    2. **Sign Up**:
+    2. **Sign Up**: 
         - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
@@ -66,7 +66,7 @@ Ban Users (admin side) - William
                 - 2a1. An error message is displayed telling user of the error
                 - 2a2. App prompts user to try again after a set time period
 
-2. **Update profile**:
+2. **Update profile**:<a id="fr2"></a>
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -75,10 +75,14 @@ Ban Users (admin side) - William
        - 3. User clicks on the "Save" button.
        - 4. System updates the user's profile in the database.
    - **Failure scenario(s)**:
-       - 2a. Invalid input: System displays error message saying invalid character is entered.
-       - 4b. Network issue: Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
+       - 2a. Invalid input: 
+            - 2a1. System displays error message saying invalid character is entered.
+            - 2a2. App prompts user to input valid information.
+       - 4b. Network issue: 
+            - 4a1. Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
+            - 4a2. App prompts user to try again after a set time period.
 
-3. **Find Joggers Nearby**:
+3. **Recommend Jogger Buddies**:<a id="fr3"></a>
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -86,11 +90,17 @@ Ban Users (admin side) - William
         - 2. User click on the "Find Joggers" button.
         - 3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
     - **Failure scenario(s)**:
-        - 3a. No suitable matches are found: System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
-        - 3b. Database error: System displays error message saying "Unable to retrieve joggers. Please try again later."
-        - 3c. Network issue: System displays error message saying "Network error. Please check your internet connection and try again."
+        - 3a. No suitable matches are found: 
+            - 3a1. System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+            - 3a2. App prompts user to try again after adjusting preference.
+        - 3b. Database error: 
+            - 3b1. System displays error message saying "Unable to retrieve joggers. Please try again later."
+            - 3b2. App prompts user to try again after a set time period.
+        - 3c. Network issue: 
+            - 3c1. System displays error message saying "Network error. Please check your internet connection and try again."
+            - 3c2. App prompts user to try again after a set time period.
 
-4. **Join/Create and send message to Chat Group**
+4. **Join/Create and send message to Chat Group**:<a id="fr4"></a>
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
     - **Primary Actors**: User(s)
     - **Main Success Scenario**:
@@ -117,7 +127,7 @@ Ban Users (admin side) - William
             - 3a1. An error message is displayed telling user of the error
             - 3a2. User is prompted to try again after a set period of time
 
-5. **Reporting Users**<a id="fr1"></a>:
+5. **Report Users**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -131,7 +141,7 @@ Ban Users (admin side) - William
        - 1a. No internet connection: Display "Failed to submit report. Please try again."
        - 1b. Report submission error: Display "An error occurred. Please try again later."
 
-6. **Banning Users (Admin Side)**:
+6. **Ban Users (Admin Side)**:<a id="fr6"></a>
    - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
    - **Primary actor(s)**: App Admin
    - **Main success scenario**:
@@ -264,17 +274,21 @@ The design focuses on enabling the general user to
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-4. [**Users can join/create a chat group of joggers**](#fr1)
+4. [**Join/Create Chat Group**](#fr4)
 
-![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
+<div align="center">
+<img src= "images/Join_Create_Group_Seq_Diagram.png" alt="Chat Sequence Diagram"/>
+</div>
 
-5. [**Users can report profiles**](#fr2)
+5. [**Report Users**](#fr5)
+<div align="center">
+<img src= "images/Reporting_users.png" alt="Reporting Users Sequence Diagram"/>
+</div>
 
-![Reporting Users Sequence Diagram](images/Reporting_users.png)
-
-6. [**Admin can ban profiles**](#fr2)
-
-![Banning Users Sequence Diagram](images/Banning_users.png)
+6. [**Ban Users**](#fr6)
+<div align="center">
+<img src= "images/Banning_users.png" alt="Banning Users Sequence Diagram"/>
+</div>
 
 
 ### **4.7. Non-Functional Requirements Design**
@@ -377,12 +391,7 @@ End Function
   - Do corresponding sequence diagram for requirement
   - Do corresponding non-functional requirement
 - Yu Qian Yi
-  - Functional requirement: Update Profile & Find Joggers Nearby 
-  - Database design & External modules description
-  - Main component - Recommendation
-  - Do corresponding sequence diagram for requirement
-  - Do corresponding sequence diagram non-functional requirement
-  - Pseudocode 
+  - I contributed to the project by designing and implementing the Update Profile and Find Joggers Nearby functionalities, including their sequence diagrams, database structure, and external module interactions. Additionally, I ensured non-functional requirements such as security were met, developed pseudocode for the recommendation algorithm, and defined key interfaces for the Recommendation component. I've spent approximately 3 to 4 hours to complete and refine M3 project.
 - William Sun
   - Functional Requirements and sequence diagram (4.6)
     - reporting users
