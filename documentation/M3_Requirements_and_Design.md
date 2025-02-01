@@ -249,15 +249,15 @@ The design focuses on enabling the general user to
 <img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
-1. [**Users can join/create a chat group of joggers**](#fr1)
+4. [**Users can join/create a chat group of joggers**](#fr1)
 
 ![Chat Sequence Diagram](images/Join_Create_Group_Seq_Diagram.png)
 
-6. [**Users can report profiles**](#fr2)
+5. [**Users can report profiles**](#fr2)
 
 ![Reporting Users Sequence Diagram](images/Reporting_users.png)
 
-7. [**Admin can ban profiles**](#fr2)
+6. [**Admin can ban profiles**](#fr2)
 
 ![Banning Users Sequence Diagram](images/Banning_users.png)
 
