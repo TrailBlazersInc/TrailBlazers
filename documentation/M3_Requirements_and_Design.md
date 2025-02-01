@@ -10,12 +10,6 @@ An application that connects nearby users to jog/run together adapting to their 
 ### **3.1. Use-Case Diagram**
 
 ![Use Case Diagram](images/UseCaseDiagram.png)
-Authenticate -> Update profile - Amanvir
-Find jog buddies - use smart recommendation system - Vinny
-Message
-Manage profile
-Report users - William
-Ban Users (admin side) - William
 
 
 ### **3.2. Actors Description**
