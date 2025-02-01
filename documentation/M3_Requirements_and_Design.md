@@ -158,12 +158,17 @@ The design focuses on enabling the general user to
         3. Recommendation Engine:
             -**Purpose**: Handle the public data of other users that would be ideal to connect with the current user.
 2. **Messaging** - Amanvir
-    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc.
+    - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
-        1. Node.js (Websocket library)
-            - **Purpose**: Allows message exchange between users ensuring rapid communication
-        2. MongoDB database
-            - **Purpose**: Store chat history between users
+        1. **`Chat *createNewChat(String myId, String budId)`**
+        - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
+        2. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
+        - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
+        3. **`Bool deleteChat(String chatId)`**
+        - **Purpose**: Deletes Chat with Id matching "chatId"
+        4. **`Bool addUserToChat(String myId, String chatId)`**
+        - **Purpose**: Adds user to Chat with Id matching "chatId"
+        
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
