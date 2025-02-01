@@ -179,14 +179,14 @@ The design focuses on enabling the general user to
         3. **`bool checkCredentials(token: Tkn)`**:
             - **Purpose**: Check that the token given by Google Oauth is valid.
         4. **`int LogoutUser()`**:
-            -**Purpose**: Ends user session by invalidating session token.
-        5. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule))`**:
-        - **Purpose**: Updates User Profile and Schedule. 
+            - **Purpose**: Ends user session by invalidating session token.
+        5. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule), tkn: Tkn)`**:
+           - **Purpose**: Updates User Profile and Schedule. 
         6. **`bool checkCredetials(userId: int, tkn Tkn)`**:
         - **Purpose**: Check that the user is logged in and holding a valid session id.
-        7. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
+        1. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
         - **Purpose**: adds an user to the chat described by the chatId to the user's profil.
-        8. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
+        1. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
         - **Purpose**: adds the chat described by the chat Id to both user profiles.
 2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
@@ -209,7 +209,7 @@ The design focuses on enabling the general user to
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
-        1. **`boolean authenticated(String userId, String tkn)`**
+        1. **`bool authenticated(String userId, String tkn)`**
         - **Purpose**: Validates the user’s authentication token before processing their request.
 
         2. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
@@ -401,12 +401,7 @@ End Function
   - Main Component:
     - User Management
 - Amanvir Samra
-  - Main Actors
-  - Login Use Case Description
-  - Non-functional requirement: Location Accuracy
-  - Main Component: Messaging
-  - Do corresponding sequence diagram for requirement
-  - Do corresponding non-functional requirement
+    - Completed Main Actor section, User Authentication and Messaging Functional Requirements and Sequence Diagrams. Also did the Messaging Main Component description and Frameworks section. I've spent approxiametly 5 hours on the project.
 - Yu Qian Yi
   - I contributed to the project by designing and implementing the Update Profile and Find Joggers Nearby functionalities, including their sequence diagrams, database structure, and external module interactions. Additionally, I ensured non-functional requirements such as security were met, developed pseudocode for the recommendation algorithm, and defined key interfaces for the Recommendation component. I've spent approximately 3 to 4 hours to complete and refine M3 project.
 - William Sun
