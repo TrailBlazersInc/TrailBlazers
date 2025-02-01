@@ -75,8 +75,12 @@ Ban Users (admin side) - William
        - 3. User clicks on the "Save" button.
        - 4. System updates the user's profile in the database.
    - **Failure scenario(s)**:
-       - 2a. Invalid input: System displays error message saying invalid character is entered.
-       - 4b. Network issue: Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
+       - 2a. Invalid input: 
+            - 2a1. System displays error message saying invalid character is entered.
+            - 2a2. App prompts user to input valid information.
+       - 4b. Network issue: 
+            - 4a1. Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
+            - 4a2. App prompts user to try again after a set time period.
 
 3. **Find Joggers Nearby**:
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
@@ -86,9 +90,15 @@ Ban Users (admin side) - William
         - 2. User click on the "Find Joggers" button.
         - 3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
     - **Failure scenario(s)**:
-        - 3a. No suitable matches are found: System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
-        - 3b. Database error: System displays error message saying "Unable to retrieve joggers. Please try again later."
-        - 3c. Network issue: System displays error message saying "Network error. Please check your internet connection and try again."
+        - 3a. No suitable matches are found: 
+            - 3a1. System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+            - 3a2. App prompts user to try again after adjusting preference.
+        - 3b. Database error: 
+            - 3b1. System displays error message saying "Unable to retrieve joggers. Please try again later."
+            - 3b2. App prompts user to try again after a set time period.
+        - 3c. Network issue: 
+            - 3c1. System displays error message saying "Network error. Please check your internet connection and try again."
+            - 3c2. App prompts user to try again after a set time period.
 
 4. **Join/Create Chat Group**
     - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
@@ -357,12 +367,7 @@ End Function
   - Do corresponding sequence diagram for requirement
   - Do corresponding non-functional requirement
 - Yu Qian Yi
-  - Functional requirement: Update Profile & Find Joggers Nearby 
-  - Database design & External modules description
-  - Main component - Recommendation
-  - Do corresponding sequence diagram for requirement
-  - Do corresponding sequence diagram non-functional requirement
-  - Pseudocode 
+  - I contributed to the project by designing and implementing the Update Profile and Find Joggers Nearby functionalities, including their sequence diagrams, database structure, and external module interactions. Additionally, I ensured non-functional requirements such as security were met, developed pseudocode for the recommendation algorithm, and defined key interfaces for the Recommendation component. I've spent approximately 3 to 4 hours to complete and refine M3 project.
 - William Sun
   - Functional Requirements and sequence diagram (4.6)
     - reporting users
