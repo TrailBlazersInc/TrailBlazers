@@ -236,6 +236,14 @@ The design focuses on enabling the general user to
 <img src= "images/ChatClassDiagram.png" alt="Chat Image"/>
 </div>
 
+3. **Reports DB**
+    - **Purpose**: To store reports on certain users committed by other users.
+    - **Representation**: The database will store reports on certain users as depicted in the following class diagram:
+
+<div align="center">
+<img src= "images/ReportDB.png" alt="Chat Image"/>
+</div>
+
 
 
 ### **4.3. External Modules**
@@ -405,8 +413,4 @@ End Function
 - Yu Qian Yi
   - I contributed to the project by designing and implementing the Update Profile and Find Joggers Nearby functionalities, including their sequence diagrams, database structure, and external module interactions. Additionally, I ensured non-functional requirements such as security were met, developed pseudocode for the recommendation algorithm, and defined key interfaces for the Recommendation component. I've spent approximately 3 to 4 hours to complete and refine M3 project.
 - William Sun
-  - Functional Requirements and sequence diagram (4.6)
-    - reporting users
-    - banning users
-  - Main Components - Leaderboard
-  - 4.8
+  - I did the functional requirements and the subsequent sequence diagrams for both reporting users and banning users. I make the aesthetics and images of the presentation slides and added content to the last slide. I also wrote up the Main Project Complexity Design (4.8)
