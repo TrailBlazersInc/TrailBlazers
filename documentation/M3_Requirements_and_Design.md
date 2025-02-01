@@ -392,14 +392,7 @@ End Function
 
 ## 5. Contributions
 - Alfredo del Rayo:
-  - Use-Case Diagram
-  - Use-Case Description: 
-    - Find Joggers Nearby and Create/Join Chat
-    - Corresponding Sequence Diagram
-  - Non functional Requirement:
-    - Performance 
-  - Main Component:
-    - User Management
+  - Created the use-case diagram, added the Recommend Jogger Buddies and Create/Join Chat functional requirements, and created their sequence diagram. In addition, added the performance non functional requirement, User component and created the Class Diagrams for the User and Message Databases. Overall he spent around 10 hours.
 - Amanvir Samra
     - Completed Main Actor section, User Authentication and Messaging Functional Requirements and Sequence Diagrams. Also did the Messaging Main Component description and Frameworks section. I've spent approxiametly 5 hours on the project.
 - Yu Qian Yi
