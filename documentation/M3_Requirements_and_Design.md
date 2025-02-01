@@ -1,4 +1,5 @@
-# M3 - Requirements and Design
+# M3 - TrailBlazers Requirements and Design
+####  William Sun, Yu Qian Yi, Amanvir Samra, Alfredo del Rayo
 
 ## 1. Change History
 <!-- Leave blank for M3 -->
@@ -9,7 +10,9 @@ An application that connects nearby users to jog/run together adapting to their 
 ## 3. Requirements Specification
 ### **3.1. Use-Case Diagram**
 
-![Use Case Diagram](images/UseCaseDiagram.png)
+<div align="center">
+<img src= "images/UseCaseDiagram.png" alt="Use Case Diagram"/>
+</div>
 
 
 ### **3.2. Actors Description**
