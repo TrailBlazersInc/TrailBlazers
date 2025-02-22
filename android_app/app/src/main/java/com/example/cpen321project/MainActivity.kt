@@ -107,9 +107,9 @@ class MainActivity : AppCompatActivity() {
                             "Received Google ID token: ${googleIdTokenCredential.idToken.take(10)}"
                         )
                         //updateWelcomeMessage(googleIdTokenCredential.displayName.toString())
-                        //val intent = Intent(this, InformationActivity::class.java)
+                        val intent = Intent(this, ManageProfile::class.java)
                         //intent.putExtra("name",googleIdTokenCredential.displayName.toString())
-                        //startActivity(intent)
+                        startActivity(intent)
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e(TAG, "Received an invalid google id token response", e)
                     }
