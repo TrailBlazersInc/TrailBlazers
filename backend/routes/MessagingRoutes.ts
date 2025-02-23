@@ -5,8 +5,8 @@ const controllers = new MessagingControllers()
 export const MessagingRoutes = [
     {
         method: "get",
-        route: "/chat",
-        action: controllers.getChat,
+        route: "/chats",
+        action: controllers.getChats,
         validation: []
     }
 ]
