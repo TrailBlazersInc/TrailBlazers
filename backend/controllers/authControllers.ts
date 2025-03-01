@@ -11,6 +11,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 //https://stackoverflow.com/questions/58666691/verify-google-id-token-with-node-js
 export class authenticate {
     async authId(req: Request, res: Response) {
+        let new_user = false;
         const { googleId } = req.body;
         if (!googleId) {
           return res.status(400).json({ status: 'error', error: 'ID is required' });
@@ -43,6 +44,7 @@ export class authenticate {
             };
 
             await client.db("test").collection("users").insertOne(user);
+            new_user = true;
           }
 
           if (!user) {
@@ -51,7 +53,7 @@ export class authenticate {
 
           const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
-          res.status(200).json({ status: 'success', token });
+          res.status(200).json({ status: 'success', token, new_user });
         } catch (error) {
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });
         }

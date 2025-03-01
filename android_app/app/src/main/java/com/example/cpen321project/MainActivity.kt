@@ -153,16 +153,25 @@ class MainActivity : AppCompatActivity() {
                                         try {
                                             val jsonObject = JSONObject(responseString)
                                             val tkn = jsonObject.optString("token", "")
+                                            val newUser = jsonObject.optBoolean("new_user", false)
                                             // Store the token for use with Recommendation activity
                                             userToken = tkn
                                             userEmail = googleIdTokenCredential.id
 
                                             //TO DO: IF statement for if account already exists or not to take to different page
                                             runOnUiThread {
-                                                val intent = Intent(this@MainActivity, ManageProfile::class.java)
-                                                intent.putExtra("tkn", tkn)
-                                                intent.putExtra("email", googleIdTokenCredential.id)
-                                                startActivity(intent)
+                                                if(newUser){
+                                                    val intent = Intent(this@MainActivity, ManageProfile::class.java)
+                                                    intent.putExtra("tkn", tkn)
+                                                    intent.putExtra("email", googleIdTokenCredential.id)
+                                                    startActivity(intent)
+                                                }
+                                                else{
+                                                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                                                    intent.putExtra("tkn", tkn)
+                                                    intent.putExtra("email", googleIdTokenCredential.id)
+                                                    startActivity(intent)
+                                                }
                                             }
                                         } catch (e: Exception) {
                                             Log.e(TAG, "JSON Parsing error: ${e.message}")
