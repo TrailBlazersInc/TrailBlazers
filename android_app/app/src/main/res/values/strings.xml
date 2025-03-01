@@ -6,6 +6,15 @@
     <string name="pace">Pace:</string>
     <string name="km_h">km/h</string>
     <string name="save_changes">Save Changes</string>
+    <string name="active_10m_ago">Active 10 minutes Ago</string>
+    <string name="community_group"> Community Group</string>
+    <string name="chevron_left_thin">chevron_left_thin</string>
+    <string name="vector">vector</string>
+    <string name="vector_ek1">vector_ek1</string>
+    <string name="vector_ek2">vector_ek2</string>
+    <string name="vector_ek3">vector_ek3</string>
+    <string name="message_placeholder">Message...</string>
+    <string name="send_message">send message</string>
     <string-array name="RunDistance">
         <item>Short (&lt;5 km)</item>
         <item>Medium (5–10 km)</item>

@@ -5,6 +5,8 @@ import {Chat} from "../models/chat";
 
 export class MessagingControllers {
     async getChats(req: Request, res: Response, next: NextFunction){
+        
+        chats = Chat.find()
         res.status(200).send('hello')
     }
     async postMessage(req: Request, res: Response, next: NextFunction){

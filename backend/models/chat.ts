@@ -4,8 +4,8 @@ const {Schema} = mongoose;
 
 const ChatSchema = new Schema({
     title: String,
-    members: [mongoose.Types.ObjectId],
-    messages:[Message]
+    members: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    messages:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }]
 })
 
 export const Chat = mongoose.model("Chat", ChatSchema);

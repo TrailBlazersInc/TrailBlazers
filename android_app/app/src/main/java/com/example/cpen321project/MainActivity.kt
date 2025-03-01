@@ -41,6 +41,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        findViewById<Button>(R.id.chat_button).setOnClickListener() {
+            val intent = Intent(this, ChatActivity::class.java);
+            startActivity(intent)
+
+        }
+
         findViewById<Button>(R.id.Sign_In_Button).setOnClickListener() {
             Log.d(TAG, "Sign In Button Clicked")
             Log.d(TAG, "WEB_CLIENT_ID: ${BuildConfig.WEB_CLIENT_ID}")
