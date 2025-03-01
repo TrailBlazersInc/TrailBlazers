@@ -14,12 +14,20 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
+import com.example.cpen321andriodapp.ApiService
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.security.MessageDigest
 import java.util.UUID
 
@@ -33,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -67,22 +76,6 @@ class MainActivity : AppCompatActivity() {
                         request = request,
                         context = this@MainActivity,
                     )
-                    val credential = result.credential
-                    if (credential is CustomCredential &&
-                        credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                        try {
-                            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                            val idToken = googleIdTokenCredential.idToken
-                            val email = googleIdTokenCredential.id
-                            Log.d(TAG, "ID: $idToken")
-                            Log.d(TAG, "Email: $email")
-                            // Use idToken and email as needed
-                        } catch (e: GoogleIdTokenParsingException) {
-                            // Handle parsing exception
-                        }
-                    } else {
-                        // Handle unexpected credential type
-                    }
                     handleSignIn(result)
                 } catch (e: GetCredentialException) {
                     handleFailure(e)
@@ -106,16 +99,63 @@ class MainActivity : AppCompatActivity() {
                     try {
                         // Use googleIdTokenCredential and extract id to validate and
                         // authenticate on your server.
+                        val retrofit = Retrofit.Builder()
+                            .baseUrl("http://10.0.2.2:3000/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build()
+
+                        val apiService = retrofit.create(ApiService::class.java)
+                        var token: String
+
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)
+                        val idToken = googleIdTokenCredential.idToken
+                        Log.d(TAG, "ID: $idToken")
+
+                        val jsonObject = JSONObject()
+                        jsonObject.put("googleId", idToken)
+
+                        val requestBody = RequestBody.create(
+                            MediaType.parse("application/json"),
+                            jsonObject.toString()
+                        )
+
+                        val call = apiService.postUser(requestBody)
+
+                        call.enqueue(object : retrofit2.Callback<ResponseBody> {
+                            override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
+                                if (response.isSuccessful) {
+                                    val responseString = response.body()?.string()
+                                    Log.d(TAG, "Response: $responseString")
+                                    if (!responseString.isNullOrEmpty()) {
+                                        try {
+                                            val jsonObject = JSONObject(responseString)
+                                            val tkn = jsonObject.optString("token", "")
+                                            //TO DO: IF statement for if account already exists or not to take to different page
+                                            runOnUiThread {
+                                                val intent = Intent(this@MainActivity, ManageProfile::class.java)
+                                                intent.putExtra("tkn", tkn)
+                                                intent.putExtra("email", googleIdTokenCredential.id)
+                                                startActivity(intent)
+                                            }
+                                        } catch (e: Exception) {
+                                            Log.e(TAG, "JSON Parsing error: ${e.message}")
+                                        }
+                                    } else {
+                                        Log.e(TAG, "Response body is empty or null")
+                                    }
+                                } else {
+                                    Log.d(TAG, "Request failed: ${response.code()}")
+                                }
+                            }
+                            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                                Log.d(TAG,"Request failed: ${t.message}")
+                            }
+                        })
                         Log.d(
                             TAG,
                             "Received Google ID token: ${googleIdTokenCredential.idToken.take(10)}"
                         )
-                        //updateWelcomeMessage(googleIdTokenCredential.displayName.toString())
-                        val intent = Intent(this, ManageProfile::class.java)
-                        //intent.putExtra("name",googleIdTokenCredential.displayName.toString())
-                        startActivity(intent)
                     } catch (e: GoogleIdTokenParsingException) {
                         Log.e(TAG, "Received an invalid google id token response", e)
                     }
