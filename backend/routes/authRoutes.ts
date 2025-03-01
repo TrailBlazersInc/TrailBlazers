@@ -9,11 +9,5 @@ export const AuthRoutes = [
         route: '/api/v1/auth/google',
         action: controller.authId,
         validation: []
-    },
-    {
-        method: "get",
-        route: "/user",
-        action: controller.getUser,
-        validation: []
     }
 ];

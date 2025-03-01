@@ -57,8 +57,4 @@ export class authenticate {
         }
 
     };
-    async getUser(req: Request, res: Response, nextFunction: NextFunction) {
-      const todos = await client.db("test").collection("users").findOne({ email: "amanvirsamra@gmail.com"});
-      res.status(200).send(todos);
-    };
 }

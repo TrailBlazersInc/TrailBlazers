@@ -13,9 +13,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
-        console.log("HERE1");
         (req as any).user = decodedToken;
-        console.log("HERE2");
         next();
     } catch (error) {
         return res.status(401).json({ message: "Unauthorized: No token provided"});

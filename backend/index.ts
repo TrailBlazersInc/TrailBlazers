@@ -6,6 +6,7 @@ import { MessagingRoutes } from './routes/MessagingRoutes'
 import { AuthRoutes } from './routes/authRoutes'
 import { authMiddleware } from './middleware/authMiddleware'
 import dotenv from 'dotenv';
+import { UserRoutes } from './routes/userRoutes'
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('tiny'))
 
-const Routes = [...MessagingRoutes, ...AuthRoutes]
+const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes]
 
 //const publicRoutes = ["/api/v1/auth/google"];
 
