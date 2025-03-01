@@ -1,12 +1,13 @@
-import express, {NextFunction, Request, Response} from 'express'
-import {client} from './services'
-import morgan from 'morgan'
-import { validationResult } from 'express-validator'
-import { MessagingRoutes } from './routes/MessagingRoutes'
-import { AuthRoutes } from './routes/authRoutes'
-import { authMiddleware } from './middleware/authMiddleware'
+import express, {NextFunction, Request, Response} from 'express';
+import {client} from './services';
+import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { UserRoutes } from './routes/userRoutes'
+import { validationResult } from 'express-validator';
+import { authMiddleware } from './middleware/authMiddleware';
+import { MessagingRoutes } from './routes/MessagingRoutes';
+import { AuthRoutes } from './routes/authRoutes';
+import { UserRoutes } from './routes/userRoutes';
+import { RecommendationRoutes } from './routes/RecommendationRoutes';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('tiny'))
 
-const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes]
+const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes, ...RecommendationRoutes]
 
 //const publicRoutes = ["/api/v1/auth/google"];
 

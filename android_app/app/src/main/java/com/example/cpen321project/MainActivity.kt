@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val activityScope = CoroutineScope(Dispatchers.Main)
+    private var userToken: String? = null
+    private var userEmail: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +84,27 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        findViewById<Button>(R.id.Recommendation_Button).setOnClickListener {
+            Log.d(TAG, "Recommendation Button Clicked")
+            Log.d(TAG, "email: $userEmail")
+
+
+            if (userToken != null) {
+                // Pass the token to Recommendation activity
+                val intent = Intent(this, Recommendation::class.java)
+                intent.putExtra("tkn", userToken)
+                intent.putExtra("email", userEmail)
+                startActivity(intent)
+            } else {
+                // User not logged in, show error message
+                Toast.makeText(
+                    this,
+                    "Please sign in first to access recommendations",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun handleFailure(e: GetCredentialException) {
@@ -105,7 +128,6 @@ class MainActivity : AppCompatActivity() {
                             .build()
 
                         val apiService = retrofit.create(ApiService::class.java)
-                        var token: String
 
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)
@@ -131,6 +153,10 @@ class MainActivity : AppCompatActivity() {
                                         try {
                                             val jsonObject = JSONObject(responseString)
                                             val tkn = jsonObject.optString("token", "")
+                                            // Store the token for use with Recommendation activity
+                                            userToken = tkn
+                                            userEmail = googleIdTokenCredential.id
+
                                             //TO DO: IF statement for if account already exists or not to take to different page
                                             runOnUiThread {
                                                 val intent = Intent(this@MainActivity, ManageProfile::class.java)
