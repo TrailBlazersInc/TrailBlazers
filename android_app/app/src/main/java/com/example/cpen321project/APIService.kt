@@ -13,8 +13,22 @@ import retrofit2.http.Path
 
 interface ApiService {
     @POST("/api/v1/auth/google")
-    fun postUser(@Body request: RequestBody): Call<ResponseBody>
+    fun postUser(
+        @Body request: RequestBody
+    ): Call<ResponseBody>
 
     @PUT("/User/{email}")
-    fun updateUser(@Header("Authorization") token: String, @Path("email") email: String, @Body request: RequestBody): Call<ResponseBody>
+    fun updateUser(
+        @Header("Authorization") token: String,
+        @Path("email") email: String,
+        @Body request: RequestBody
+    ): Call<ResponseBody>
+
+
+    @POST("/recommendations/{email}")
+    fun getRecommendations(
+        @Header("Authorization") token: String,
+        @Path("email") email: String,
+        @Body request: RequestBody
+    ): Call<ResponseBody>
 }
