@@ -6,7 +6,7 @@ import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
 import { MessagingRoutes } from './routes/MessagingRoutes';
 import { AuthRoutes } from './routes/authRoutes';
-import { UserRoutes } from './routes/userRoutes';
+import { UserRoutes } from './routes/UserRoutes';
 import { RecommendationRoutes } from './routes/RecommendationRoutes';
 
 dotenv.config();

@@ -1,4 +1,4 @@
-import { UserController } from '../controllers/userControllers';
+import { UserController } from '../controllers/UserControllers';
 import { body, param } from 'express-validator';
 
 const controller = new UserController();
