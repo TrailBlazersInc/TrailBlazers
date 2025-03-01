@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.cpen321project.MainActivity.Companion
 
 class ManageProfile : AppCompatActivity() {
 
@@ -29,6 +30,9 @@ class ManageProfile : AppCompatActivity() {
         val runTimeArray = resources.getStringArray(R.array.RunTime)
         var runDistance: String? = null
         var runTime: String? = null
+        val extras = intent.extras
+        val tkn = extras?.getString("tkn") ?: ""
+        Log.d(TAG, tkn)
 
         val disSpinner = findViewById<Spinner>(R.id.RunDistance)
         if (disSpinner != null) {
