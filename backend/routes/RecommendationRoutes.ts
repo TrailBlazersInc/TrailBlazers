@@ -1,12 +1,15 @@
-import { RecommendationController } from "../controllers/RecommendationController"
+import { RecommendationController } from "../controllers/RecommendationController";
+import { body, param } from 'express-validator';
 
 const controllers = new RecommendationController()
 
-export const MessagingRoutes = [
+export const RecommendationRoutes = [
     {
         method: "post",
-        route: "/recommendations",
+        route: "/recommendations/:email",
         action: controllers.postRecommendations,
-        validation: []
+        validation: [
+            param("email").isEmail()
+        ]
     }
 ]
