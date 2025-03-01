@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity() {
                                             runOnUiThread {
                                                 val intent = Intent(this@MainActivity, ManageProfile::class.java)
                                                 intent.putExtra("tkn", tkn)
+                                                intent.putExtra("email", googleIdTokenCredential.id)
                                                 startActivity(intent)
                                             }
                                         } catch (e: Exception) {

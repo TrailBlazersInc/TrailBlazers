@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { client } from '../services';
-import dotenv from 'dotenv';
 
 export class UserController {
     async getUserData(req: Request, res: Response, next: NextFunction){

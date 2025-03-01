@@ -36,7 +36,7 @@ export class authenticate {
               social_id: response.sub,
               first_name: response.given_name,
               last_name: response.family_name,
-              pace: "10:00",
+              pace: 1,
               distance: "Short",
               time: "Short",
               banned: false
