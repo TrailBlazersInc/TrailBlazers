@@ -14,6 +14,7 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
+        val extras = intent.extras
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
 
@@ -25,7 +26,7 @@ class HomeActivity : AppCompatActivity() {
         findViewById<Button>(R.id.manageProfileButton).setOnClickListener() {
             val intent = Intent(this, ManageProfile::class.java)
             intent.putExtra("tkn", tkn)
-            intent.putExtra("email", googleIdTokenCredential.id)
+            intent.putExtra("email", email)
             startActivity(intent)
         }
         findViewById<Button>(R.id.signOutButton).setOnClickListener() {
