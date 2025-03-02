@@ -84,27 +84,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        findViewById<Button>(R.id.Recommendation_Button).setOnClickListener {
-            Log.d(TAG, "Recommendation Button Clicked")
-            Log.d(TAG, "email: $userEmail")
-
-
-            if (userToken != null) {
-                // Pass the token to Recommendation activity
-                val intent = Intent(this, Recommendation::class.java)
-                intent.putExtra("tkn", userToken)
-                intent.putExtra("email", userEmail)
-                startActivity(intent)
-            } else {
-                // User not logged in, show error message
-                Toast.makeText(
-                    this,
-                    "Please sign in first to access recommendations",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
     }
 
     private fun handleFailure(e: GetCredentialException) {

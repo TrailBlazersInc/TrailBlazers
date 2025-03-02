@@ -2,7 +2,8 @@
 ####  William Sun, Yu Qian Yi, Amanvir Samra, Alfredo del Rayo
 
 ## 1. Change History
-<!-- Leave blank for M3 -->
+ - Updated Dependency Diagram to show link between userDB and user Component
+ - Functional Requirement 2 renamed to Sign In from Sign Up
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -38,8 +39,8 @@ An application that connects nearby users to jog/run together adapting to their 
             - 3a. Unable to connect to server to add User
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    2. **Sign Up**: 
-        - **Description**: This feature allows users to log in to an existing account on the app using Google Sign In API.
+    2. **Sign In**: 
+        - **Description**: This feature allows users to sign in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
             1. User enters credentials in Google Sign In

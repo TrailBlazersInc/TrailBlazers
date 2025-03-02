@@ -1,5 +1,6 @@
 package com.example.cpen321project
 
+import RecommendationAdapter
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,8 @@ import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
 import com.example.cpen321project.MainActivity.Companion
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +21,20 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.math.BigDecimal
+
+data class RecommendationItem(
+    val rank: Int,
+    val score: Double,
+    val name: String,
+    val pace: Int,
+    val distance: String,
+    val time: String
+)
+
+private lateinit var recommendationRecyclerView: RecyclerView
+private lateinit var recommendationAdapter: RecommendationAdapter
+
 
 class Recommendation : AppCompatActivity() {
 
@@ -37,6 +54,10 @@ class Recommendation : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_recommendation)
 
+        recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView)
+        recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
+
+
         // Initialize UI elements
         inputLocationWeight = findViewById(R.id.inputLocationWeight)
         inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
@@ -46,8 +67,8 @@ class Recommendation : AppCompatActivity() {
         resultTextView = findViewById(R.id.resultTextView)
 
         // Retrieve user token and email from intent
-        val userToken = intent.extras?.getString("tkn")
-        val userEmail = intent.extras?.getString("email")
+        val userToken = intent.extras?.getString("tkn") ?: ""
+        val userEmail = intent.extras?.getString("email") ?: ""
 
         getRecommendationButton.setOnClickListener {
             getRecommendations(userToken, userEmail)
@@ -90,19 +111,44 @@ class Recommendation : AppCompatActivity() {
         // Make API call with Authorization header
         userToken?.let { token ->
             userEmail?.let { userEmail ->
-                apiService.getRecommendations("Bearer $token", userEmail, requestBody).enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(
-                        call: Call<ResponseBody>,
-                        response: Response<ResponseBody>
-                    ) {
+                apiService.getRecommendations("Bearer $userToken", userEmail, requestBody).enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         progressBar.visibility = View.GONE
                         if (response.isSuccessful) {
                             val responseString = response.body()?.string()
-                            resultTextView.text = "Recommended Buddies:\n$responseString"
+                            Log.d(TAG, "API Response: $responseString")
+
+                            try {
+                                val jsonObject = JSONObject(responseString)
+                                val recommendationsArray = jsonObject.getJSONArray("recommendations")
+
+                                val recommendationsList = mutableListOf<RecommendationItem>()
+
+                                for (i in 0 until recommendationsArray.length()) {
+                                    val rec = recommendationsArray.getJSONObject(i)
+                                    val rank = i + 1 // Assign rank based on order
+                                    val score = rec.getDouble("matchScore")
+                                    Log.d(TAG, "matchScore: $score")
+                                    val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
+                                    val pace = rec.getInt("pace")
+                                    val distance = rec.getString("distance")
+                                    val time = rec.getString("time")
+
+                                    recommendationsList.add(RecommendationItem(rank, score, name, pace, distance, time))
+                                }
+
+                                // Update the RecyclerView with parsed data
+                                updateRecyclerView(recommendationsList)
+
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error parsing response: ${e.message}")
+                                resultTextView.text = "Error parsing response!"
+                            }
                         } else {
                             Log.e(TAG, "API call failed")
                             resultTextView.text = "Error: ${response.code()}"
                         }
+                        resultTextView.text = "Result is..."
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -118,3 +164,9 @@ class Recommendation : AppCompatActivity() {
         }
     }
 }
+
+private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
+    recommendationAdapter = RecommendationAdapter(recommendationsList)
+    recommendationRecyclerView.adapter = recommendationAdapter
+}
+

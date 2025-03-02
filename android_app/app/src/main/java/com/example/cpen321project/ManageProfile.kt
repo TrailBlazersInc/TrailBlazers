@@ -48,6 +48,7 @@ class ManageProfile : AppCompatActivity() {
         val extras = intent.extras
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
+        Log.d(TAG, "tkn and email: $tkn and $email")
 
         val disSpinner = findViewById<Spinner>(R.id.RunDistance)
         if (disSpinner != null) {
