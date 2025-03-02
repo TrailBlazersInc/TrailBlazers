@@ -21,9 +21,11 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.math.BigDecimal
 
 data class RecommendationItem(
     val rank: Int,
+    val score: Double,
     val name: String,
     val pace: Int,
     val distance: String,
@@ -125,12 +127,14 @@ class Recommendation : AppCompatActivity() {
                                 for (i in 0 until recommendationsArray.length()) {
                                     val rec = recommendationsArray.getJSONObject(i)
                                     val rank = i + 1 // Assign rank based on order
+                                    val score = rec.getDouble("matchScore")
+                                    Log.d(TAG, "matchScore: $score")
                                     val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
                                     val pace = rec.getInt("pace")
                                     val distance = rec.getString("distance")
                                     val time = rec.getString("time")
 
-                                    recommendationsList.add(RecommendationItem(rank, name, pace, distance, time))
+                                    recommendationsList.add(RecommendationItem(rank, score, name, pace, distance, time))
                                 }
 
                                 // Update the RecyclerView with parsed data

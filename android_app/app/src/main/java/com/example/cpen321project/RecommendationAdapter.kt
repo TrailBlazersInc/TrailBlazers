@@ -11,6 +11,7 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val rankText: TextView = view.findViewById(R.id.rankText)
+        val scoreText: TextView = view.findViewById(R.id.scoreText)
         val nameText: TextView = view.findViewById(R.id.nameText)
         val paceText: TextView = view.findViewById(R.id.paceText)
         val distanceText: TextView = view.findViewById(R.id.distanceText)
@@ -27,6 +28,7 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
         val recommendation = recommendations[position]
         holder.rankText.text = "#${recommendation.rank}"
         holder.nameText.text = recommendation.name
+        holder.scoreText.text = "Matching score: ${recommendation.score}"
         holder.paceText.text = "Pace: ${recommendation.pace}"
         holder.distanceText.text = "Distance: ${recommendation.distance}"
         holder.timeText.text = "Time: ${recommendation.time}"
