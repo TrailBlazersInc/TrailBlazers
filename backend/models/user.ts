@@ -3,7 +3,6 @@ const {Schema} = mongoose;
 
 const UserSchema = new Schema({
     username: String,
-    profilePicture: String,
     isBanned: Boolean
 })
 

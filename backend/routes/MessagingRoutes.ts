@@ -9,7 +9,7 @@ const controllers = new MessagingControllers()
 export const MessagingRoutes = [
     {
         method: "get",
-        route: "/chats",
+        route: "/chat",
         action: controllers.getChats,
         validation: [
             body("userId").isMongoId()
@@ -26,7 +26,7 @@ export const MessagingRoutes = [
     },
     {
         method: "post",
-        route: "chat",
+        route: "/chat",
         action: controllers.postChat,
         validation:[
             body("userList")
@@ -51,7 +51,7 @@ export const MessagingRoutes = [
     },
     {
         method: "post",
-        route: "Message",
+        route: "/message",
         action: controllers.postMessage,
         validation:[
             body("userId").isMongoId(),
@@ -60,8 +60,18 @@ export const MessagingRoutes = [
         ]
     },
     {
+        method: "post",
+        route: "/user",
+        action: controllers.createUser,
+        validation:[
+            body("username")
+                .isString()
+                .isLength({ max: 50 }).withMessage("Chatname Must be Shorter at Max 50 Characters"),
+        ]
+    },
+    {
         method: "put",
-        route: "addUser",
+        route: "/user",
         action: controllers.addUser,
         validation: [
             body("userId").isMongoId(),

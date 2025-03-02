@@ -1,5 +1,4 @@
 import mongoose, {Schema, Document} from 'mongoose';
-import {Message} from './message'
 
 interface PMessage extends Document {
     _id: mongoose.Types.ObjectId,

@@ -47,7 +47,7 @@ export class MessagingControllers {
             res.status(500).send("Error creating Chat")
         }
     }
-    
+
     async postMessage(req: Request, res: Response, next: NextFunction){
         try{
             let chat = await Chat.findOne(req.body.chatId);
@@ -76,7 +76,33 @@ export class MessagingControllers {
     }
 
     async addUser(req: Request, res: Response, next: NextFunction){
-        let myChat = await Chat.findOne(req.body.chatId);
+        try{
+            let userId = req.body.userId
+            let chat = await Chat.findOne(req.body.chatId);
+            if (!chat || chat.members.includes(userId)) {
+                return res.status(400).json({ message: "Chat not existent or User is already a member of the chat" });
+            }
+            // Add user to chat
+            chat.members.push(userId);
+            await chat.save();
+            
+        } catch(err){
+            console.log(err)
+            res.status(500).send("unable to add user")
+        }
+    }
+
+    async createUser(req: Request, res: Response, next: NextFunction){
+        try{
+            let username: string = req.body.username;
+            console.log(username);
+            let user = new User({username, isBanned: false})
+            await user.save()
+            res.status(200).send(user)
+        }catch(err){
+            console.log(err)
+            res.status(500).send("unable to create user")
+        }
     }
 
 }

@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 import {client} from './services';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
 import { MessagingRoutes } from './routes/MessagingRoutes';
@@ -54,6 +55,13 @@ app.get('/', async (req: Request, res: Response) =>{
 
 client.connect().then(() => {
     console.log("Mongo DB Client Connected")
+}).catch(err =>{
+    console.error(err)
+    client.close()
+})
+
+mongoose.connect('mongodb://127.0.0.1/gettingstarted').then(() =>{
+    console.log("Mongo DB Models Connected");
 }).catch(err =>{
     console.error(err)
     client.close()
