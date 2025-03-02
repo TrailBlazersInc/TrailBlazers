@@ -60,16 +60,6 @@ export const MessagingRoutes = [
         ]
     },
     {
-        method: "post",
-        route: "/user",
-        action: controllers.createUser,
-        validation:[
-            body("username")
-                .isString()
-                .isLength({ max: 50 }).withMessage("Chatname Must be Shorter at Max 50 Characters"),
-        ]
-    },
-    {
         method: "put",
         route: "/user",
         action: controllers.addUser,

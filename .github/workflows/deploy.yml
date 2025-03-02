@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_KEY }}
           script: |
-            cd /home/azureuser/Traiblazers/backend
+            cd /home/azureuser/Trailblazers/backend
             sudo rm -rf node_modules
             npm install
             # Write secrets into .env

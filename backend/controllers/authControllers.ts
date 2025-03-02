@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { client } from '../services';
+import { User } from '../models/user'
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -29,21 +29,22 @@ export class authenticate {
             return res.status(400).json({ status: 'error', error: 'Bad Request' });
           }
 
-          let user = await client.db("test").collection("users").findOne({ social_id: response.sub });
+          let user = await User.findOne({ social_id: response.sub });
 
           if (!user) {
-            const user = {
+            const first_name = response.given_name?? "Guest"
+            const last_name = response.family_name?? "User"
+            const user = new User ({
               email: response.email,
               social_id: response.sub,
-              first_name: response.given_name,
-              last_name: response.family_name,
+              first_name: first_name,
+              last_name: last_name,
               pace: 1,
               distance: "Short",
               time: "Short",
               banned: false
-            };
-
-            await client.db("test").collection("users").insertOne(user);
+            });
+            await user.save();
             new_user = true;
           }
 
@@ -55,6 +56,7 @@ export class authenticate {
 
           res.status(200).json({ status: 'success', token, new_user });
         } catch (error) {
+          console.log(error)
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });
         }
 

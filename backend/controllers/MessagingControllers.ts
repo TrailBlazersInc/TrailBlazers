@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { Message, PMessage } from "../models/message";
 import {Chat} from "../models/chat";
 import { User } from "../models/user";
-import mongoose, {Document} from "mongoose";
 
 export class MessagingControllers {
     async getChats(req: Request, res: Response, next: NextFunction){
@@ -55,7 +54,7 @@ export class MessagingControllers {
             if (!user || !chat){
                 res.status(400).send("Invalid User Id or Chat Id")
             } else{
-                let username = user.username;
+                let username = user.first_name + " " + user.last_name;
                 let message = new Message(username, req.body.content)
                 await message.save()
                 const updatedChat = await Chat.findByIdAndUpdate(
@@ -89,19 +88,6 @@ export class MessagingControllers {
         } catch(err){
             console.log(err)
             res.status(500).send("unable to add user")
-        }
-    }
-
-    async createUser(req: Request, res: Response, next: NextFunction){
-        try{
-            let username: string = req.body.username;
-            console.log(username);
-            let user = new User({username, isBanned: false})
-            await user.save()
-            res.status(200).send(user)
-        }catch(err){
-            console.log(err)
-            res.status(500).send("unable to create user")
         }
     }
 

@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/community_group"
+            android:id="@+id/manage_chats_title"
             android:layout_width="247dp"
             android:layout_height="33dp"
             android:layout_marginStart="80dp"
@@ -83,15 +83,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-
-        <RelativeLayout
-            android:id="@+id/home_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="48dp"/>
 
 
         <EditText

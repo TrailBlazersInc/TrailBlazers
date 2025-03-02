@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { client } from '../services';
+import { User } from '../models/user';
 import jwt from 'jsonwebtoken';
 
 export class RecommendationController {
@@ -17,7 +17,7 @@ export class RecommendationController {
             const userEmail = req.params.email;
     
             // Fetch user data from DB
-            const user = await client.db("test").collection("users").findOne({ email: userEmail });
+            const user = await User.findOne({ email: userEmail });
             if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
@@ -72,10 +72,10 @@ export class RecommendationController {
         thresholdSpeed: number
     ) {
         // Fetch all potential jogging buddies from the DB
-        const allUsers = await client.db("test").collection("users").find({
+        const allUsers = await User.find({
             email: { $ne: currentUser.email }, // Exclude the current user
             banned: { $ne: true }             // Exclude banned users
-        }).toArray();
+        });
 
         // Map availability strings to numeric values for comparison
         const availabilityMap: { [key: string]: number } = {
