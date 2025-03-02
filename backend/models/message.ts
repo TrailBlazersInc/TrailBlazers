@@ -1,10 +1,17 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-const MessageSchema = new Schema({
-    sender: String,
-    content: String,
-    sendAt: {type:Date, default: Date.now}
-})
+export interface PMessage extends Document {
+    _id: mongoose.Types.ObjectId;
+    sender: mongoose.Types.ObjectId;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
 
-export const Message = mongoose.model('Message', MessageSchema);
+const MessageSchema = new Schema<PMessage>({
+    sender:  mongoose.Schema.Types.ObjectId,
+    content: String,
+}, { timestamps: true })
+
+export const Message = mongoose.model<PMessage>('Message', MessageSchema);
