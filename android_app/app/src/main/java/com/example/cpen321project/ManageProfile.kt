@@ -1,5 +1,6 @@
 package com.example.cpen321project
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +51,13 @@ class ManageProfile : AppCompatActivity() {
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
         Log.d(TAG, "tkn and email: $tkn and $email")
+        val monday = findViewById<Switch>(R.id.monday_switch)
+        val tuesday = findViewById<Switch>(R.id.tuesday_switch)
+        val wednesday = findViewById<Switch>(R.id.wednesday_switch)
+        val thursday = findViewById<Switch>(R.id.thursday_switch)
+        val friday = findViewById<Switch>(R.id.friday_switch)
+        val saturday = findViewById<Switch>(R.id.saturday_switch)
+        val sunday = findViewById<Switch>(R.id.sunday_switch)
 
         val disSpinner = findViewById<Spinner>(R.id.RunDistance)
         if (disSpinner != null) {
@@ -97,11 +106,24 @@ class ManageProfile : AppCompatActivity() {
                 Toast.makeText(this, "Please enter valid Pace value", Toast.LENGTH_SHORT).show()
             }
             else{
+                val availabilityJson = """
+                {
+                    "monday": ${monday.isChecked},
+                    "tuesday": ${tuesday.isChecked},
+                    "wednesday": ${wednesday.isChecked},
+                    "thursday": ${thursday.isChecked},
+                    "friday": ${friday.isChecked},
+                    "saturday": ${saturday.isChecked},
+                    "sunday": ${sunday.isChecked}
+                }
+                """.trimIndent()
+
                 val jsonString = """
                     {
                         "distance": "${runDistance ?: "0"}",
                         "time": "${runTime ?: "0"}",
-                        "pace": $pace
+                        "pace": $pace,
+                        "availability": $availabilityJson
                     }
                 """
                 val requestBody = RequestBody.create(
@@ -109,6 +131,12 @@ class ManageProfile : AppCompatActivity() {
                 )
                 updateUser(tkn, email, requestBody)
             }
+        }
+        findViewById<Button>(R.id.home_button).setOnClickListener() {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("tkn", tkn)
+            intent.putExtra("email", email)
+            startActivity(intent)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

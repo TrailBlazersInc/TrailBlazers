@@ -72,4 +72,13 @@
     <string name="manage_profile">Manage Profile</string>
     <string name="sign_out">Sign Out</string>
     <string name="chat">Chat</string>
+    <string name="home">Home</string>
+    <string name="availability">Availability</string>
+    <string name="monday">Monday:</string>
+    <string name="tuesday">Tuesday:</string>
+    <string name="wednesday">Wednesday:</string>
+    <string name="thursday">Thursday:</string>
+    <string name="friday">Friday:</string>
+    <string name="saturday">Saturday:</string>
+    <string name="sunday">Sunday:</string>
 </resources>

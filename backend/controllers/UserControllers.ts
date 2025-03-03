@@ -8,8 +8,8 @@ export class UserController {
     }
     async putUserData(req: Request, res: Response, next: NextFunction){
         try {
-            const { distance, time, pace } = req.body;
-            var newValues = { $set: {distance: distance, time: time, pace: pace } };
+            const { distance, time, pace, availability } = req.body;
+            var newValues = { $set: {distance: distance, time: time, pace: pace, availability: availability } };
             var result = await User.updateOne({ email: req.params.email }, newValues);
             if(!result.acknowledged || result.modifiedCount == 0){
                 return res.status(404).json({ error: "User not found" });
