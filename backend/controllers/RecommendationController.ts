@@ -6,14 +6,6 @@ export class RecommendationController {
     // Using arrow function to preserve 'this' context
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            // Extract token from the Authorization header
-            const authHeader = req.headers.authorization;
-            if (!authHeader || !authHeader.startsWith('Bearer ')) {
-                return res.status(401).json({ error: "Unauthorized" });
-            }
-    
-            const token = authHeader.split(" ")[1];
-            const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
             const userEmail = req.params.email;
     
             // Fetch user data from DB
