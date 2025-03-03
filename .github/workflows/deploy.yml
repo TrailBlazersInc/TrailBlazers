@@ -33,8 +33,11 @@ jobs:
             npm install
             # Write secrets into .env
             cat > .env << EOF
-            PORT=${{ secrets.PROD_PORT }}
-            DB_URI=${{ secrets.PROD_DB_URI }}
+            PORT=${{ secrets.PORT }}
+            DB_URI=${{ secrets.DB_URI }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            JWT_SECRET=${{ secrets.JWT_SECRET.}}
+
             EOF
 
             # env permissions
