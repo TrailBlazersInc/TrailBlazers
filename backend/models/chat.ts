@@ -1,17 +1,17 @@
 import mongoose, {Schema, Document} from 'mongoose';
 
-interface PMessage extends Document {
+export interface IChat extends Document {
     _id: mongoose.Types.ObjectId,
-    title: String,
-    members: mongoose.Types.ObjectId[]
+    title: string,
+    members: string[]
     messages: mongoose.Types.ObjectId[]
 }
 
 
-const ChatSchema = new Schema<PMessage>({
+const ChatSchema = new Schema<IChat>({
     title: String,
-    members: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    members: [ String ],
     messages:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }]
 })
 
-export const Chat = mongoose.model<PMessage>("Chat", ChatSchema);
+export const Chat = mongoose.model<IChat>("Chat", ChatSchema);

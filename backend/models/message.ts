@@ -1,17 +1,19 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-export interface PMessage extends Document {
+export interface IMessage extends Document {
     _id: mongoose.Types.ObjectId;
-    sender: mongoose.Types.ObjectId;
+    sender_email: String;
+    sender_name: String;
     content: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-const MessageSchema = new Schema<PMessage>({
-    sender:  mongoose.Schema.Types.ObjectId,
+const MessageSchema = new Schema<IMessage>({
+    sender_email: String,
+    sender_name: String,
     content: String,
 }, { timestamps: true })
 
-export const Message = mongoose.model<PMessage>('Message', MessageSchema);
+export const Message = mongoose.model<IMessage>('Message', MessageSchema);

@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
         findViewById<Button>(R.id.Sign_In_Button).setOnClickListener() {
             Log.d(TAG, "Sign In Button Clicked")
             Log.d(TAG, "WEB_CLIENT_ID: ${BuildConfig.WEB_CLIENT_ID}")

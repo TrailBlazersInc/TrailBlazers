@@ -9,10 +9,10 @@ const controllers = new MessagingControllers()
 export const MessagingRoutes = [
     {
         method: "get",
-        route: "/chat",
+        route: "/chat/:email",
         action: controllers.getChats,
         validation: [
-            body("userId").isMongoId()
+            param("email").isEmail()
         ]
     },
     {
@@ -22,28 +22,13 @@ export const MessagingRoutes = [
         validation: [
             body("messageId").isMongoId()
         ]
-
     },
     {
         method: "post",
-        route: "/chat",
+        route: "/chat/:email",
         action: controllers.postChat,
         validation:[
-            body("userList")
-                .isArray().withMessage("user List must be an Array of IDs")
-                .notEmpty().withMessage("userList must not be empty")
-                .custom(async (ids) =>{
-                    if (!ids.every( (id: any) => mongoose.Types.ObjectId.isValid(id))) {
-                        throw new Error("One or more IDs are invalid");
-                    }
-    
-                    // Check that IDs exist in the database
-                    const existingUsers = await User.find({ _id: { $in: ids } });
-                    if (existingUsers.length !== ids.length) {
-                        throw new Error("One or more users do not exist");
-                    }
-
-                }),
+            param("email").isEmail(),
             body("chatName")
                 .isString()
                 .isLength({ max: 50 }).withMessage("Chatname Must be Shorter at Max 50 Characters")
@@ -51,20 +36,20 @@ export const MessagingRoutes = [
     },
     {
         method: "post",
-        route: "/message",
+        route: "/message/:email",
         action: controllers.postMessage,
         validation:[
-            body("userId").isMongoId(),
+            param("email").isEmail(),
             body("chatId").isMongoId(),
             body("content").isString()
         ]
     },
     {
         method: "put",
-        route: "/user",
+        route: "/chat/:email",
         action: controllers.addUser,
         validation: [
-            body("userId").isMongoId(),
+            param("email").isEmail(),
             body("chatId").isMongoId()
         ]
     }

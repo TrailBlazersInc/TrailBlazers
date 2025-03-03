@@ -31,4 +31,10 @@ interface ApiService {
         @Path("email") email: String,
         @Body request: RequestBody
     ): Call<ResponseBody>
+
+    @GET("/chat/{email}")
+    fun getChats(
+        @Header("Authorization") token : String,
+        @Path("email") email: String
+    ): Call<ResponseBody>
 }
