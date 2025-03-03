@@ -17,9 +17,18 @@ export const MessagingRoutes = [
     },
     {
         method: "get",
-        route: "/messagesAfter",
+        route: "/chat/messages/:chatId",
+        action: controllers.getMessages,
+        validation:[
+            param("chatId").isMongoId()
+        ]
+    },
+    {
+        method: "get",
+        route: "/chat/messagesAfter/:chatId",
         action: controllers.getMessagesAfter,
         validation: [
+            param("chatId").isMongoId(),
             body("messageId").isMongoId()
         ]
     },
@@ -36,7 +45,7 @@ export const MessagingRoutes = [
     },
     {
         method: "post",
-        route: "/message/:email",
+        route: "/chat/message/:email",
         action: controllers.postMessage,
         validation:[
             param("email").isEmail(),

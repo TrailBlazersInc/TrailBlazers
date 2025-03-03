@@ -38,15 +38,42 @@ export class MessagingControllers {
         }
     }
 
+    async getMessages(req: Request, res: Response, next: NextFunction){
+        try{
+            let chat = await Chat.findOne({_id: req.params.chatId}).populate<{messages: IMessage[]}>("messages");
+            if(!chat){
+                return res.status(400).send("Chat not found")
+            }
+            let messages = chat.messages.map((message) => ({
+                id: message._id,
+                sender_email: message.sender_email,
+                sender: message.sender,
+                content: message.content,
+                date: message.createdAt.toISOString()
+            }))
+            return res.status(200).json(messages)
+        } catch (error){
+            console.log(error)
+            res.status(500).send("Could not fetch messages")
+        }
+    }
+
     async getMessagesAfter(req: Request, res: Response, next: NextFunction){
         try{
-            const chat = await Chat.findOne({ _id: req.body.chatId }).populate<{messages: IMessage[]}>("messages");
+            const chat = await Chat.findOne({ _id: req.params.chatId }).populate<{messages: IMessage[]}>("messages");
             if(chat){
                 const referenceMessage = await Message.findOne({_id: req.body.messageId});
                 if(referenceMessage){
-                    chat.messages.filter((msg) => msg.createdAt > referenceMessage.createdAt)
+                    let filteredeMessages = chat.messages.filter((msg) => msg.createdAt.getTime() > referenceMessage.createdAt.getTime())
                     .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-                    res.status(200).json(chat.messages)
+                    let messages = filteredeMessages.map((message) => ({
+                        id: message._id,
+                        sender_email: message.sender_email,
+                        sender: message.sender,
+                        content: message.content,
+                        date: message.createdAt.toISOString()
+                }))
+                    res.status(200).json(messages)
                 } else{
                     res.status(400).send("Invalid Message Id");
                 }
@@ -79,13 +106,16 @@ export class MessagingControllers {
 
     async postMessage(req: Request, res: Response, next: NextFunction){
         try{
-            let chat = await Chat.findOne(req.body.chatId);
-            let user = await User.findOne(req.body.userId);
+            let chat = await Chat.findOne({_id: req.body.chatId});
+            let user = await User.findOne({email: req.params.email});
             if (!user || !chat){
                 res.status(400).send("Invalid User Id or Chat Id")
             } else{
-                let username = user.first_name + " " + user.last_name;
-                let message = new Message(username, req.body.content)
+                let username = user.first_name;
+                let message = new Message({
+                    sender_email: req.params.email,
+                    sender: user.first_name,
+                    content: req.body.content})
                 await message.save()
                 const updatedChat = await Chat.findByIdAndUpdate(
                     req.body.chatId,
@@ -100,6 +130,7 @@ export class MessagingControllers {
             }
             
         } catch(err){
+            console.log(err)
             res.status(500).send("Could not add message to the chat")
         }
     }

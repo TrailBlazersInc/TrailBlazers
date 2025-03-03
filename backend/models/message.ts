@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 export interface IMessage extends Document {
     _id: mongoose.Types.ObjectId;
     sender_email: String;
-    sender_name: String;
+    sender: String;
     content: string;
     createdAt: Date;
     updatedAt: Date;
@@ -12,7 +12,7 @@ export interface IMessage extends Document {
 
 const MessageSchema = new Schema<IMessage>({
     sender_email: String,
-    sender_name: String,
+    sender: String,
     content: String,
 }, { timestamps: true })
 

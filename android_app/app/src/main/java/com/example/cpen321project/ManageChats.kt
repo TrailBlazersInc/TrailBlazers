@@ -1,7 +1,9 @@
 package com.example.cpen321project
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -47,12 +49,17 @@ class ManageChats : AppCompatActivity() {
         val userToken = intent.extras?.getString("tkn") ?: ""
         val userEmail = intent.extras?.getString("email") ?: ""
         recyclerView = findViewById(R.id.recyclerView)
-        groups.add(ChatOverview("","Community Group", 5))
-        groups.add(ChatOverview("","Alfredo Alexei", 2))
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = ChatOverviewAdapter(groups, this)
+        adapter = ChatOverviewAdapter(groups, userToken, userEmail,this)
         recyclerView.adapter = adapter
         getChats(userToken, userEmail)
+
+        findViewById<ImageView>(R.id.chevron_left).setOnClickListener(){
+            intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("tkn", userToken)
+            intent.putExtra("email", userEmail)
+            startActivity(intent)
+        }
 
 
     }

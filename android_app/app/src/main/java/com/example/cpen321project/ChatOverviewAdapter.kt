@@ -20,7 +20,8 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321project.ChatAdapter.ViewHolder
 
-class ChatOverviewAdapter (private val groups: List<ChatOverview>, private val context: Context) :
+class ChatOverviewAdapter (private val groups: List<ChatOverview>, private val token: String,
+                           private val email: String, private val context: Context) :
     RecyclerView.Adapter<ChatOverviewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -48,6 +49,10 @@ class ChatOverviewAdapter (private val groups: List<ChatOverview>, private val c
         }
         holder.box.setOnClickListener{
             val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("tkn", token)
+            intent.putExtra("email", email)
+            intent.putExtra("chatName", groups[position].title)
+            intent.putExtra("chatId", groups[position].id)
             context.startActivity(intent)
         }
     }

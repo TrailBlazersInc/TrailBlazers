@@ -37,4 +37,17 @@ interface ApiService {
         @Header("Authorization") token : String,
         @Path("email") email: String
     ): Call<ResponseBody>
+
+    @GET("/chat/messages/{chatId}")
+    fun getMessages(
+        @Header("Authorization") token : String,
+        @Path("chatId") chatId : String,
+    ): Call<ResponseBody>
+
+    @POST("/chat/message/{email}")
+    fun postMessage(
+        @Header("Authorization") token : String,
+        @Path("email") email : String,
+        @Body request: RequestBody
+    ): Call<RequestBody>
 }
