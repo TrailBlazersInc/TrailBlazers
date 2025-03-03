@@ -10,7 +10,16 @@ export interface IUser  extends Document{
     pace: number,
     distance: string,
     time: string,
-    banned: Boolean
+    availability: {
+      monday: boolean,
+      tuesday: boolean,
+      wednesday: boolean,
+      thursday: boolean,
+      friday: boolean,
+      saturday: boolean,
+      sunday: boolean
+    },
+    banned: boolean
   };
 
 const UserSchema = new Schema<IUser>({
@@ -21,6 +30,15 @@ const UserSchema = new Schema<IUser>({
     pace: Number,
     distance: String,
     time: String,
+    availability: {
+      monday: Boolean,
+      tuesday: Boolean,
+      wednesday: Boolean,
+      thursday: Boolean,
+      friday: Boolean,
+      saturday: Boolean,
+      sunday: Boolean
+    },
     banned: Boolean
 })
 

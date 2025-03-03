@@ -119,7 +119,7 @@ class Recommendation : AppCompatActivity() {
                             Log.d(TAG, "API Response: $responseString")
 
                             try {
-                                val jsonObject = JSONObject(responseString)
+                                val jsonObject = JSONObject(responseString.toString())
                                 val recommendationsArray = jsonObject.getJSONArray("recommendations")
 
                                 val recommendationsList = mutableListOf<RecommendationItem>()

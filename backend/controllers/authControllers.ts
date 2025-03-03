@@ -42,17 +42,26 @@ export class authenticate {
               pace: 1,
               distance: "Short",
               time: "Short",
-              banned: false
+              banned: false,
+              availability: {
+                monday: false,
+                tuesday: false,
+                wednesday: false,
+                thursday: false,
+                friday: false,
+                saturday: false,
+                sunday: false
+              }
             });
             await user.save();
             new_user = true;
           }
 
-          if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-          }
+          // if (!user) {
+          //   return res.status(404).json({ message: 'User not found' });
+          // }
 
-          const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
+          const token = jwt.sign({ id: response.sub }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
           res.status(200).json({ status: 'success', token, new_user });
         } catch (error) {
