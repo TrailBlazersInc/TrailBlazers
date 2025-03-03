@@ -25,11 +25,11 @@ export const MessagingRoutes = [
     },
     {
         method: "get",
-        route: "/chat/messagesAfter/:chatId",
+        route: "/chat/messages/:chatId/:messageId",
         action: controllers.getMessagesAfter,
         validation: [
             param("chatId").isMongoId(),
-            body("messageId").isMongoId()
+            param("messageId").isMongoId()
         ]
     },
     {
@@ -45,11 +45,11 @@ export const MessagingRoutes = [
     },
     {
         method: "post",
-        route: "/chat/message/:email",
+        route: "/chat/message/:chatId",
         action: controllers.postMessage,
         validation:[
-            param("email").isEmail(),
-            body("chatId").isMongoId(),
+            param("chatId").isMongoId(),
+            body("email").isEmail(),
             body("content").isString()
         ]
     },

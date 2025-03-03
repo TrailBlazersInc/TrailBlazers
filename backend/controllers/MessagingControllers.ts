@@ -62,7 +62,7 @@ export class MessagingControllers {
         try{
             const chat = await Chat.findOne({ _id: req.params.chatId }).populate<{messages: IMessage[]}>("messages");
             if(chat){
-                const referenceMessage = await Message.findOne({_id: req.body.messageId});
+                const referenceMessage = await Message.findOne({_id: req.params.messageId});
                 if(referenceMessage){
                     let filteredeMessages = chat.messages.filter((msg) => msg.createdAt.getTime() > referenceMessage.createdAt.getTime())
                     .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
@@ -106,19 +106,18 @@ export class MessagingControllers {
 
     async postMessage(req: Request, res: Response, next: NextFunction){
         try{
-            let chat = await Chat.findOne({_id: req.body.chatId});
-            let user = await User.findOne({email: req.params.email});
+            let chat = await Chat.findOne({_id: req.params.chatId});
+            let user = await User.findOne({email: req.body.email});
             if (!user || !chat){
                 res.status(400).send("Invalid User Id or Chat Id")
             } else{
-                let username = user.first_name;
                 let message = new Message({
-                    sender_email: req.params.email,
+                    sender_email: req.body.email,
                     sender: user.first_name,
                     content: req.body.content})
                 await message.save()
                 const updatedChat = await Chat.findByIdAndUpdate(
-                    req.body.chatId,
+                    req.params.chatId,
                     { $push: { messages: message.id } }, // Add messageId to the messages array
                     { new: true } // Return the updated document
                 );

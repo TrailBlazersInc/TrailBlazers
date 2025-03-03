@@ -2,6 +2,8 @@ package com.example.cpen321project
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -46,9 +48,25 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var messages =mutableListOf<Message>()
     private lateinit var adapter: ChatAdapter
+    private val handler = Handler(Looper.getMainLooper())
+    private var lastMessageId = ""
+    private lateinit var userToken: String
+    private lateinit var userEmail: String
+    private lateinit var chatId: String
+
     private companion object {
         private const val TAG = "ChatActivity"
     }
+
+    private val updateMessagesRunnable = object : Runnable {
+        private val updateInterval: Long = 2000
+        override fun run() {
+            updateChat(userToken, userEmail, chatId)
+            // Schedule the next update
+            handler.postDelayed(this, updateInterval)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,9 +76,9 @@ class ChatActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val userToken = intent.extras?.getString("tkn") ?: ""
-        val userEmail = intent.extras?.getString("email") ?: ""
-        val chatId = intent.extras?.getString("chatId")?: ""
+        userToken = intent.extras?.getString("tkn") ?: ""
+        userEmail = intent.extras?.getString("email") ?: ""
+        chatId = intent.extras?.getString("chatId")?: ""
         val chatName = intent.extras?.getString("chatName")?: ""
         val messageInput = findViewById<EditText>(R.id.messageInput)
         val sendMessageButton = findViewById<ImageView>(R.id.sendMessageButton)
@@ -74,7 +92,7 @@ class ChatActivity : AppCompatActivity() {
 
 
         findViewById<ImageView>(R.id.chevron_left).setOnClickListener(){
-            intent = Intent(this, MainActivity::class.java)
+            intent = Intent(this, ManageChats::class.java)
             intent.putExtra("tkn", userToken)
             intent.putExtra("email", userEmail)
             startActivity(intent)
@@ -87,16 +105,10 @@ class ChatActivity : AppCompatActivity() {
             return currentDateTime
         }
 
-        fun sendMessage(){
-            val message = messageInput.text.toString().trim()
-            messages.add(Message("Me", message, getToday(), true ))
-            adapter.notifyItemInserted(messages.size - 1)
-            recyclerView.scrollToPosition(adapter.itemCount - 1)
-            messageInput.text.clear()
-        }
-
         sendMessageButton.setOnClickListener(){
-            sendMessage()
+            sendMessageButton.isEnabled = false
+            sendMessage(userToken, userEmail, chatId, messageInput)
+            sendMessageButton.postDelayed({ sendMessageButton.isEnabled = true }, 2000)
         }
 
     }
@@ -134,8 +146,9 @@ class ChatActivity : AppCompatActivity() {
                         messages.add(Message(chatMessage.sender, chatMessage.content,
                             convertIsoToLocal(chatMessage.date), isMine ))
                         adapter.notifyItemInserted(messages.size - 1)
+                        lastMessageId = chatMessage.id
                     }
-
+                    handler.post(updateMessagesRunnable)
                 } else {
                     Toast.makeText(this@ChatActivity, "Unable to Get Chats", Toast.LENGTH_SHORT).show()
                 }
@@ -146,6 +159,97 @@ class ChatActivity : AppCompatActivity() {
                 Log.d(TAG,"Request failed: ${t.message}")
             }
         })
+    }
+
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        handler.removeCallbacks(updateMessagesRunnable)
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        handler.removeCallbacksAndMessages(null)
+        handler.removeCallbacks(updateMessagesRunnable)
+        super.onPause()
+    }
+
+    override fun onStop() {
+        handler.removeCallbacksAndMessages(null)
+        handler.removeCallbacks(updateMessagesRunnable)
+        super.onStop()
+    }
+
+    private fun sendMessage(token: String, email: String, chatId: String, messageInput: EditText){
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("email", email)
+        jsonObject.put("content", messageInput.text)
+
+        val requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            jsonObject.toString()
+        )
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        apiService.postMessage("Bearer $token", chatId, requestBody).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    messageInput.text.clear()
+                } else {
+                    Toast.makeText(this@ChatActivity, "Unable to Send Message", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(this@ChatActivity, "Unable to Send Message", Toast.LENGTH_SHORT).show()
+                Log.d(TAG,"Request failed: ${t.message}")
+            }
+        })
+
+    }
+
+    private fun updateChat(token: String, email: String, chatId: String){
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        apiService.getNewMessages("Bearer $token", chatId, lastMessageId).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    val gson = Gson()
+                    val chatMessageListType = object : TypeToken<List<ChatMessage>>() {}.type
+                    val responseString = response.body()?.string() ?: return
+                    val chatMessageList: List<ChatMessage> = gson.fromJson(responseString, chatMessageListType)
+                    for (chatMessage in chatMessageList){
+                        val isMine: Boolean = chatMessage.sender_email == email
+                        messages.add(Message(chatMessage.sender, chatMessage.content,
+                            convertIsoToLocal(chatMessage.date), isMine ))
+                        adapter.notifyItemInserted(messages.size - 1)
+                        recyclerView.scrollToPosition(adapter.itemCount - 1)
+                        lastMessageId = chatMessage.id
+                    }
+
+                } else {
+                    Toast.makeText(this@ChatActivity, "Unable to Update Chat", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(this@ChatActivity, "Unable to update Chat", Toast.LENGTH_SHORT).show()
+                Log.d(TAG,"Request failed: ${t.message}")
+            }
+        })
+
     }
 }
 

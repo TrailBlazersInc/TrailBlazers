@@ -44,10 +44,17 @@ interface ApiService {
         @Path("chatId") chatId : String,
     ): Call<ResponseBody>
 
-    @POST("/chat/message/{email}")
+    @GET("/chat/messages/{chatId}/{messageId}")
+    fun getNewMessages(
+        @Header("Authorization") token : String,
+        @Path("chatId") chatId : String,
+        @Path("messageId") messageId : String
+    ): Call<ResponseBody>
+
+    @POST("/chat/message/{chatId}")
     fun postMessage(
         @Header("Authorization") token : String,
-        @Path("email") email : String,
+        @Path("chatId") chatId : String,
         @Body request: RequestBody
-    ): Call<RequestBody>
+    ): Call<ResponseBody>
 }
