@@ -19,6 +19,8 @@ export interface IUser  extends Document{
       saturday: boolean,
       sunday: boolean
     },
+    longitude: string,
+    latitude: string,
     banned: boolean,
     admin: boolean
   };
@@ -40,6 +42,8 @@ const UserSchema = new Schema<IUser>({
       saturday: Boolean,
       sunday: Boolean
     },
+    longitude: String,
+    latitude: String,
     banned: Boolean,
     admin: Boolean
 })

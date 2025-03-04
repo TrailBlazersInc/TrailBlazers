@@ -34,7 +34,7 @@ export class authenticate {
           if (!user) {
             const first_name = response.given_name?? "Guest"
             const last_name = response.family_name?? "User"
-            const user = new User ({
+            user = new User ({
               email: response.email,
               social_id: response.sub,
               first_name: first_name,
@@ -51,6 +51,8 @@ export class authenticate {
                 saturday: false,
                 sunday: false
               },
+              longitude: "no access",
+              latitude: "no access",
               banned: false,
               admin: false
             });
@@ -58,13 +60,13 @@ export class authenticate {
             new_user = true;
           }
 
-          // if (!user) {
-          //   return res.status(404).json({ message: 'User not found' });
-          // }
+          if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+          }
 
-          const token = jwt.sign({ id: response.sub }, process.env.JWT_SECRET!, { expiresIn: '12h' });
+          const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
-          res.status(200).json({ status: 'success', token, new_user });
+          res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: user.admin });
         } catch (error) {
           console.log(error)
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });
