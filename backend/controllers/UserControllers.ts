@@ -12,6 +12,7 @@ export class UserController {
             var newValues = { $set: {distance: distance, time: time, pace: pace, availability: availability } };
             var result = await User.updateOne({ email: req.params.email }, newValues);
             if(!result.acknowledged || result.modifiedCount == 0){
+                console.log("User not found")
                 return res.status(404).json({ error: "User not found" });
             }
             else {

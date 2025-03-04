@@ -57,4 +57,11 @@ interface ApiService {
         @Path("chatId") chatId : String,
         @Body request: RequestBody
     ): Call<ResponseBody>
+
+    @POST("/chat/dm/{email}")
+    fun postDMChat(
+        @Header("Authorization") token : String,
+        @Path("email") email : String,
+        @Body request: RequestBody
+    ): Call<ResponseBody>
 }

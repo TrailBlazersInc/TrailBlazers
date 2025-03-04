@@ -54,6 +54,15 @@ export const MessagingRoutes = [
         ]
     },
     {
+        method: "post",
+        route: "/chat/dm/:email",
+        action: controllers.postChatDM,
+        validation:[
+            param("email").isEmail(),
+            body("target_email").isEmail()
+        ]
+    },
+    {
         method: "put",
         route: "/chat/:email",
         action: controllers.addUser,

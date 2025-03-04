@@ -26,6 +26,7 @@ import java.math.BigDecimal
 data class RecommendationItem(
     val rank: Int,
     val score: Double,
+    val email: String,
     val name: String,
     val pace: Int,
     val distance: String,
@@ -48,6 +49,8 @@ class Recommendation : AppCompatActivity() {
     private lateinit var getRecommendationButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var resultTextView: TextView
+    private lateinit var userToken : String
+    private lateinit var userEmail : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,8 +70,8 @@ class Recommendation : AppCompatActivity() {
         resultTextView = findViewById(R.id.resultTextView)
 
         // Retrieve user token and email from intent
-        val userToken = intent.extras?.getString("tkn") ?: ""
-        val userEmail = intent.extras?.getString("email") ?: ""
+        userToken = intent.extras?.getString("tkn") ?: ""
+        userEmail = intent.extras?.getString("email") ?: ""
 
         getRecommendationButton.setOnClickListener {
             getRecommendations(userToken, userEmail)
@@ -133,8 +136,9 @@ class Recommendation : AppCompatActivity() {
                                     val pace = rec.getInt("pace")
                                     val distance = rec.getString("distance")
                                     val time = rec.getString("time")
+                                    val email = rec.getString("email")
 
-                                    recommendationsList.add(RecommendationItem(rank, score, name, pace, distance, time))
+                                    recommendationsList.add(RecommendationItem(rank, score, email, name, pace, distance, time))
                                 }
 
                                 // Update the RecyclerView with parsed data
@@ -163,10 +167,12 @@ class Recommendation : AppCompatActivity() {
             resultTextView.text = "Error: User not authenticated!"
         }
     }
+
+    private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
+        recommendationAdapter = RecommendationAdapter(recommendationsList, userToken, userEmail, this)
+        recommendationRecyclerView.adapter = recommendationAdapter
+    }
 }
 
-private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
-    recommendationAdapter = RecommendationAdapter(recommendationsList)
-    recommendationRecyclerView.adapter = recommendationAdapter
-}
+
 

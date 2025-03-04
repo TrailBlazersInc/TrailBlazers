@@ -104,6 +104,38 @@ export class MessagingControllers {
         }
     }
 
+    async postChatDM(req: Request, res: Response, next: NextFunction){
+        try{
+            const email = req.params.email
+            const targetEmail = req.body.target_email
+            const user = await User.findOne({email: email});
+            const user2 = await User.findOne({email: targetEmail})
+            if (!user || !user2){
+                return res.status(400).send("User does not Exist")
+            }
+            
+            let chat = await Chat.findOne({
+                members: { $all: [email, targetEmail], $size: 2 }
+            });
+            
+              if (!chat){
+                chat = new Chat({title: "DM", members:[email, targetEmail], messages: []})
+                console.log(chat)
+                await chat.save()
+            }
+            
+            let formattedChat = {
+                id: chat._id.toString(),
+                title: user2.first_name,
+                members: chat.members.length
+            };
+            res.status(200).json(formattedChat)
+        } catch(error){
+            console.log(error)
+            res.status(500).send("Error creating Chat")
+        }
+    }
+
     async postMessage(req: Request, res: Response, next: NextFunction){
         try{
             let chat = await Chat.findOne({_id: req.params.chatId});
