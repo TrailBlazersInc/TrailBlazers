@@ -53,8 +53,11 @@ app.get('/', async (req: Request, res: Response) =>{
     res.status(200).send('hello')
 })
 
-ConnectMongoDB()
-
+ConnectMongoDB().then(() => {
 app.listen(process.env.PORT, () => {
+    console.log("Mongo DB Models Connected");
     console.log("Listening on port " + process.env.PORT)
+})
+}).catch(err =>{
+    console.error(err)
 })
