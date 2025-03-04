@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         jsonObject.put("googleId", idToken)
 
                         val requestBody = RequestBody.create(
-                            MediaType.parse("application/json"),
+                            MediaType.get("application/json; charset=utf-8"),
                             jsonObject.toString()
                         )
 
@@ -128,23 +128,36 @@ class MainActivity : AppCompatActivity() {
                                             val jsonObject = JSONObject(responseString)
                                             val tkn = jsonObject.optString("token", "")
                                             val newUser = jsonObject.optBoolean("new_user", false)
+                                            val banned = jsonObject.optBoolean("banned", false)
+                                            val admin = jsonObject.optBoolean("admin", false)
                                             // Store the token for use with Recommendation activity
                                             userToken = tkn
                                             userEmail = googleIdTokenCredential.id
 
                                             //TO DO: IF statement for if account already exists or not to take to different page
                                             runOnUiThread {
-                                                if(newUser){
-                                                    val intent = Intent(this@MainActivity, ManageProfile::class.java)
-                                                    intent.putExtra("tkn", tkn)
-                                                    intent.putExtra("email", googleIdTokenCredential.id)
-                                                    startActivity(intent)
+                                                if(banned){
+                                                    Toast.makeText(this@MainActivity, "This account has been banned", Toast.LENGTH_SHORT).show()
                                                 }
                                                 else{
-                                                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                                                    intent.putExtra("tkn", tkn)
-                                                    intent.putExtra("email", googleIdTokenCredential.id)
-                                                    startActivity(intent)
+                                                    if(admin){
+                                                        //path to admin menu
+                                                    }
+                                                    else{
+                                                        if(newUser){
+                                                            val intent = Intent(this@MainActivity, ManageProfile::class.java)
+                                                            intent.putExtra("tkn", tkn)
+                                                            intent.putExtra("email", googleIdTokenCredential.id)
+                                                            startActivity(intent)
+                                                        }
+                                                        else{
+
+                                                            val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                                                            intent.putExtra("tkn", tkn)
+                                                            intent.putExtra("email", googleIdTokenCredential.id)
+                                                            startActivity(intent)
+                                                        }
+                                                    }
                                                 }
                                             }
                                         } catch (e: Exception) {
