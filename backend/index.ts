@@ -9,6 +9,8 @@ import { MessagingRoutes } from './routes/MessagingRoutes';
 import { AuthRoutes } from './routes/authRoutes';
 import { UserRoutes } from './routes/UserRoutes';
 import { RecommendationRoutes } from './routes/RecommendationRoutes';
+import { ReportRoutes } from './routes/ReportRoutes';
+import { BanRoutes } from './routes/BanRoutes';
 
 dotenv.config();
 
@@ -16,7 +18,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('tiny'))
 
-const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes, ...RecommendationRoutes]
+const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes, ...RecommendationRoutes, ...ReportRoutes, ...BanRoutes]
 
 //const publicRoutes = ["/api/v1/auth/google"];
 
