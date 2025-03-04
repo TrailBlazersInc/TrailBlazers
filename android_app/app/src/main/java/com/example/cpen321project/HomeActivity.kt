@@ -59,5 +59,12 @@ class HomeActivity : AppCompatActivity() {
                 val errorMessage = "Error starting ReportUserActivity: ${e.message}"
             }
         }
+
+        findViewById<Button>(R.id.banUsersButton).setOnClickListener() {
+            val intent = Intent(this, BanningUserActivity::class.java)
+            intent.putExtra("tkn", tkn)
+            intent.putExtra("email", email)
+            startActivity(intent)
+        }
     }
 }

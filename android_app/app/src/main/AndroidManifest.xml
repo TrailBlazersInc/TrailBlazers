@@ -38,6 +38,9 @@
             android:name=".ReportUserActivity"
             android:exported="false" />
         <activity
+            android:name=".BanningUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
