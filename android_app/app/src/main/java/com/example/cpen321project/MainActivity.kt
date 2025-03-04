@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                         jsonObject.put("googleId", idToken)
 
                         val requestBody = RequestBody.create(
-                            MediaType.parse("application/json"),
+                            MediaType.get("application/json; charset=utf-8"),
                             jsonObject.toString()
                         )
 
@@ -128,6 +128,8 @@ class MainActivity : AppCompatActivity() {
                                             val jsonObject = JSONObject(responseString)
                                             val tkn = jsonObject.optString("token", "")
                                             val newUser = jsonObject.optBoolean("new_user", false)
+                                            val banned = jsonObject.optBoolean("banned", false)
+                                            val admin = jsonObject.optBoolean("admin", false)
                                             // Store the token for use with Recommendation activity
                                             userToken = tkn
                                             userEmail = googleIdTokenCredential.id

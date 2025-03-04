@@ -81,4 +81,13 @@
     <string name="friday">Friday:</string>
     <string name="saturday">Saturday:</string>
     <string name="sunday">Sunday:</string>
+    <string name="submit_report">Submit Report</string>
+    <string name="select_a_reason_for_reporting_this_user">Select a reason for reporting this user:</string>
+    <string name="report_users">Report Users</string>
+    <string-array name="report_reasons">
+        <item>Harassment</item>
+        <item>Spam</item>
+        <item>Inappropriate Content</item>
+        <item>Other</item>
+    </string-array>
 </resources>
