@@ -42,7 +42,6 @@ export class authenticate {
               pace: 1,
               distance: "Short",
               time: "Short",
-              banned: false,
               availability: {
                 monday: false,
                 tuesday: false,
@@ -51,7 +50,9 @@ export class authenticate {
                 friday: false,
                 saturday: false,
                 sunday: false
-              }
+              },
+              banned: false,
+              admin: false
             });
             await user.save();
             new_user = true;

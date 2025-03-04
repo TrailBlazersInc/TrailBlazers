@@ -19,7 +19,8 @@ export interface IUser  extends Document{
       saturday: boolean,
       sunday: boolean
     },
-    banned: boolean
+    banned: boolean,
+    admin: boolean
   };
 
 const UserSchema = new Schema<IUser>({
@@ -39,7 +40,8 @@ const UserSchema = new Schema<IUser>({
       saturday: Boolean,
       sunday: Boolean
     },
-    banned: Boolean
+    banned: Boolean,
+    admin: Boolean
 })
 
 export const User = mongoose.model<IUser>("User", UserSchema);
