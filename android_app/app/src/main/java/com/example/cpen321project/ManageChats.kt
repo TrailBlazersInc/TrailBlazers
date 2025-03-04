@@ -66,7 +66,7 @@ class ManageChats : AppCompatActivity() {
 
     private fun getChats(token: String, email: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

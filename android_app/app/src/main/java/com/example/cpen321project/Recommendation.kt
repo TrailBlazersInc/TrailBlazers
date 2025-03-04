@@ -102,7 +102,7 @@ class Recommendation : AppCompatActivity() {
 
         // Setup Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")  // Adjust URL if needed
+            .baseUrl(BuildConfig.BACKEND_URL)  // Adjust URL if needed
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

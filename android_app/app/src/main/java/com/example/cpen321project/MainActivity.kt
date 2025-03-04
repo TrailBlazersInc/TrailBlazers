@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                         // Use googleIdTokenCredential and extract id to validate and
                         // authenticate on your server.
                         val retrofit = Retrofit.Builder()
-                            .baseUrl("http://10.0.2.2:3000/")
+                            .baseUrl(BuildConfig.BACKEND_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .build()
 

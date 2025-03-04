@@ -127,7 +127,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun getMessages(token: String, email: String, chatId: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -181,7 +181,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendMessage(token: String, email: String, chatId: String, messageInput: EditText){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -216,7 +216,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun updateChat(token: String, email: String, chatId: String){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/")
+            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
