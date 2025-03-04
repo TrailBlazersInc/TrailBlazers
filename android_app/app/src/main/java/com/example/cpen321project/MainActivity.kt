@@ -136,17 +136,28 @@ class MainActivity : AppCompatActivity() {
 
                                             //TO DO: IF statement for if account already exists or not to take to different page
                                             runOnUiThread {
-                                                if(newUser){
-                                                    val intent = Intent(this@MainActivity, ManageProfile::class.java)
-                                                    intent.putExtra("tkn", tkn)
-                                                    intent.putExtra("email", googleIdTokenCredential.id)
-                                                    startActivity(intent)
+                                                if(banned){
+                                                    Toast.makeText(this@MainActivity, "This account has been banned", Toast.LENGTH_SHORT).show()
                                                 }
                                                 else{
-                                                    val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                                                    intent.putExtra("tkn", tkn)
-                                                    intent.putExtra("email", googleIdTokenCredential.id)
-                                                    startActivity(intent)
+                                                    if(admin){
+                                                        //path to admin menu
+                                                    }
+                                                    else{
+                                                        if(newUser){
+                                                            val intent = Intent(this@MainActivity, ManageProfile::class.java)
+                                                            intent.putExtra("tkn", tkn)
+                                                            intent.putExtra("email", googleIdTokenCredential.id)
+                                                            startActivity(intent)
+                                                        }
+                                                        else{
+
+                                                            val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                                                            intent.putExtra("tkn", tkn)
+                                                            intent.putExtra("email", googleIdTokenCredential.id)
+                                                            startActivity(intent)
+                                                        }
+                                                    }
                                                 }
                                             }
                                         } catch (e: Exception) {
