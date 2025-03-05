@@ -31,6 +31,8 @@ export class authenticate {
 
           let user = await User.findOne({ social_id: response.sub });
 
+          const userCount = await User.countDocuments();
+
           if (!user) {
             const first_name = response.given_name?? "Guest"
             const last_name = response.family_name?? "User"
@@ -64,8 +66,16 @@ export class authenticate {
             return res.status(404).json({ message: 'User not found' });
           }
 
+
+
           const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
+          if (userCount === 0) {
+            console.log("HERE")
+            var newValues = { $set: {admin: true } };
+            var result = await User.updateOne({ email: response.email }, newValues);
+            res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });
+          }
           res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: user.admin });
         } catch (error) {
           console.log(error)
