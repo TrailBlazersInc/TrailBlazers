@@ -76,13 +76,17 @@ class ManageChats : AppCompatActivity() {
             Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    val gson = Gson()
-                    val chatListType = object : TypeToken<List<Chat>>() {}.type
-                    val responseString = response.body()?.string() ?: return
-                    val chatList: List<Chat> = gson.fromJson(responseString, chatListType)
-                    for (chat in chatList){
-                        groups.add(ChatOverview(chat.id, chat.title, chat.members))
-                        adapter.notifyItemInserted(groups.size - 1)
+                    try {
+                        val gson = Gson()
+                        val chatListType = object : TypeToken<List<Chat>>() {}.type
+                        val responseString = response.body()?.string() ?: return
+                        val chatList: List<Chat> = gson.fromJson(responseString, chatListType)
+                        for (chat in chatList) {
+                            groups.add(ChatOverview(chat.id, chat.title, chat.members))
+                            adapter.notifyItemInserted(groups.size - 1)
+                        }
+                    } catch (error: Exception){
+                        Log.d(TAG, error.toString())
                     }
 
                 } else {
