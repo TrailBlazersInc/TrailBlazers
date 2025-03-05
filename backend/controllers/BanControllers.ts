@@ -1,26 +1,23 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { User } from '../models/user';
 import { Ban } from '../models/ban';
 
 
 export class BanController {
-    public async banUser(req: Request, res: Response): Promise<void> {
+    public async banUser(req: Request, res: Response, next: NextFunction) {
         try {
-            const { userId, reason } = req.body;
-            const user = await User.findById(userId);
+            console.log("HERE")
+            console.log(req.params.email);
+            var newValues = { $set: {banned: true } };
+            var result = await User.updateOne({ email: req.params.email }, newValues);
 
-            if (!user) {
-                res.status(404).send({ message: 'User not found' });
-                return;
+            if(!result.acknowledged || result.modifiedCount == 0){
+                console.log("User not found")
+                return res.status(404).json({ error: "User not found" });
             }
-
-            const ban = new Ban({ userId, reason, date: new Date() });
-            await ban.save();
-
-            user.banned = true;
-            await user.save();
-
-            res.status(200).send({ message: 'User banned successfully' });
+            else {
+                res.status(200).json({ message: "User banned" });
+            }
         } catch (error) {
             res.status(500).send({ message: 'Internal server error', error });
         }

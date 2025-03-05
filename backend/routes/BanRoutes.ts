@@ -5,12 +5,11 @@ const controllers = new BanController();
 
 export const BanRoutes = [
     {
-        method: "post",
-        route: "/ban",
+        method: "put",
+        route: "/ban/:email",
         action: controllers.banUser,
         validation: [
-            body("userId").isString(),
-            body("reason").isString()
+            param("email").isEmail()
         ]
     },
     {

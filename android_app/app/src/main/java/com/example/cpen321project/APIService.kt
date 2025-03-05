@@ -77,4 +77,15 @@ interface ApiService {
         @Path("email") email : String,
         @Body request: RequestBody
     ): Call<ResponseBody>
+
+    @GET("/report")
+    fun getReport(
+        @Header("Authorization") token : String
+    ): Call<ResponseBody>
+
+    @PUT("/ban/{email}")
+    fun banUser(
+        @Header("Authorization") token: String,
+        @Path("email") email: String
+    ): Call<ResponseBody>
 }
