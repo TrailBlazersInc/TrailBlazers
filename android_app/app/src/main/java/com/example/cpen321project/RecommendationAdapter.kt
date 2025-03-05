@@ -38,6 +38,7 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
         val paceText: TextView = view.findViewById(R.id.paceText)
         val distanceText: TextView = view.findViewById(R.id.distanceText)
         val timeText: TextView = view.findViewById(R.id.timeText)
+        val availabilityText: TextView = view.findViewById(R.id.availabilityText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,10 +51,27 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
         val recommendation = recommendations[position]
         holder.rankText.text = "#${recommendation.rank}"
         holder.nameText.text = recommendation.name
-        holder.scoreText.text = "Matching score: ${recommendation.score}"
+        holder.scoreText.text = "Matching score: ${String.format("%.2f", recommendation.score)}"
         holder.paceText.text = "Pace: ${recommendation.pace}"
         holder.distanceText.text = "Distance: ${recommendation.distance}"
         holder.timeText.text = "Time: ${recommendation.time}"
+
+        // Format availability
+        val availabilityText = buildString {
+            append("Available days: ")
+            val days = listOf(
+                "Mon" to recommendation.availability.monday,
+                "Tue" to recommendation.availability.tuesday,
+                "Wed" to recommendation.availability.wednesday,
+                "Thu" to recommendation.availability.thursday,
+                "Fri" to recommendation.availability.friday,
+                "Sat" to recommendation.availability.saturday,
+                "Sun" to recommendation.availability.sunday
+            )
+            append(days.filter { it.second }.map { it.first }.joinToString(", "))
+        }
+        holder.availabilityText.text = availabilityText
+
         holder.messageButton.setOnClickListener(){
             directMessage(recommendations[position].email)
         }
@@ -64,50 +82,50 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
     }
 
     private fun createChat(message_email: String) {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BACKEND_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-            val apiService = retrofit.create(ApiService::class.java)
+        val apiService = retrofit.create(ApiService::class.java)
 
-            val jsonObject = JSONObject()
-            jsonObject.put("target_email", message_email)
+        val jsonObject = JSONObject()
+        jsonObject.put("target_email", message_email)
 
-            val requestBody = RequestBody.create(
-                MediaType.parse("application/json"),
-                jsonObject.toString()
-            )
+        val requestBody = RequestBody.create(
+            MediaType.parse("application/json"),
+            jsonObject.toString()
+        )
 
-            apiService.postDMChat("Bearer $token", email, requestBody).enqueue(object :
-                Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    if (response.isSuccessful) {
-                        try {
-                            val gson = Gson()
-                            val chatType = object : TypeToken<Chat>() {}.type
-                            val responseString = response.body()?.string() ?: return
-                            val chat: Chat = gson.fromJson(responseString, chatType)
-                            val intent = Intent(context, ChatActivity::class.java)
-                            intent.putExtra("tkn", token)
-                            intent.putExtra("email", email)
-                            intent.putExtra("chatName", chat.title)
-                            intent.putExtra("chatId", chat.id)
-                            context.startActivity(intent)
-                        } catch(error: Exception){
-                            Log.d("CreateDM", error.toString())
-                        }
-                    } else {
-                        Log.d("CreateDM", "$response")
+        apiService.postDMChat("Bearer $token", email, requestBody).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    try {
+                        val gson = Gson()
+                        val chatType = object : TypeToken<Chat>() {}.type
+                        val responseString = response.body()?.string() ?: return
+                        val chat: Chat = gson.fromJson(responseString, chatType)
+                        val intent = Intent(context, ChatActivity::class.java)
+                        intent.putExtra("tkn", token)
+                        intent.putExtra("email", email)
+                        intent.putExtra("chatName", chat.title)
+                        intent.putExtra("chatId", chat.id)
+                        context.startActivity(intent)
+                    } catch(error: Exception){
+                        Log.d("CreateDM", error.toString())
                     }
+                } else {
+                    Log.d("CreateDM", "$response")
                 }
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("CreateDM","Request failed: ${t.message}")
-                }
-            })
+            }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("CreateDM","Request failed: ${t.message}")
+            }
+        })
     }
 
     override fun getItemCount(): Int {

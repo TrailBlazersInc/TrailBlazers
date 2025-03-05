@@ -44,13 +44,18 @@
             android:id="@+id/timeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/availabilityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/addUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Message"
-            android:layout_margin="20dp"
-            />
+            android:layout_margin="20dp"/>
     </LinearLayout>
 
 </LinearLayout>

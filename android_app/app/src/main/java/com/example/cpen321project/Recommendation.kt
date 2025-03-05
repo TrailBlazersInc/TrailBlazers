@@ -28,6 +28,16 @@ import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.math.BigDecimal
 
+data class Availability(
+    val monday: Boolean,
+    val tuesday: Boolean,
+    val wednesday: Boolean,
+    val thursday: Boolean,
+    val friday: Boolean,
+    val saturday: Boolean,
+    val sunday: Boolean
+)
+
 data class RecommendationItem(
     val rank: Int,
     val score: Double,
@@ -35,7 +45,10 @@ data class RecommendationItem(
     val name: String,
     val pace: Int,
     val distance: String,
-    val time: String
+    val time: String,
+    val latitude: Double,
+    val longitude: Double,
+    val availability: Availability
 )
 
 private lateinit var recommendationRecyclerView: RecyclerView
@@ -51,7 +64,9 @@ class Recommendation : AppCompatActivity() {
     private lateinit var inputLocationWeight: EditText
     private lateinit var inputSpeedWeight: EditText
     private lateinit var inputDistanceWeight: EditText
+    private lateinit var getLocationPermissionButton: Button
     private lateinit var getRecommendationButton: Button
+//    private lateinit var viewOnMapButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var resultTextView: TextView
     private lateinit var userToken : String
@@ -70,7 +85,9 @@ class Recommendation : AppCompatActivity() {
         inputLocationWeight = findViewById(R.id.inputLocationWeight)
         inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
         inputDistanceWeight = findViewById(R.id.inputDistanceWeight)
+        getLocationPermissionButton = findViewById(R.id.getLocationPermissionButton)
         getRecommendationButton = findViewById(R.id.getRecommendationButton)
+//        viewOnMapButton = findViewById(R.id.viewOnMapButton)
         progressBar = findViewById(R.id.progressBar)
         resultTextView = findViewById(R.id.resultTextView)
 
@@ -78,7 +95,7 @@ class Recommendation : AppCompatActivity() {
         userToken = intent.extras?.getString("tkn") ?: ""
         userEmail = intent.extras?.getString("email") ?: ""
 
-        findViewById<Button>(R.id.getLocationPermissionButton).setOnClickListener {
+        getLocationPermissionButton.setOnClickListener {
             Log.d(TAG, "Location permission button clicked")
             Toast.makeText( this, "Location permission button clicked", Toast.LENGTH_SHORT).show()
 
@@ -114,6 +131,15 @@ class Recommendation : AppCompatActivity() {
         getRecommendationButton.setOnClickListener {
             getRecommendations(userToken, userEmail)
         }
+
+//        viewOnMapButton.setOnClickListener {
+//            val intent = Intent(this, MapActivity::class.java)
+//            val latitudes = recommendationsList.map { it.latitude }.toDoubleArray()
+//            val longitudes = recommendationsList.map { it.longitude }.toDoubleArray()
+//            intent.putExtra("latitudes", latitudes)
+//            intent.putExtra("longitudes", longitudes)
+//            startActivity(intent)
+//        }
     }
 
     private fun checkLocationPermissions() {
@@ -197,7 +223,7 @@ class Recommendation : AppCompatActivity() {
 
         // Setup Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)  // Adjust URL if needed
+            .baseUrl(BuildConfig.BACKEND_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -226,11 +252,34 @@ class Recommendation : AppCompatActivity() {
                                     Log.d(TAG, "matchScore: $score")
                                     val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
                                     val pace = rec.getInt("pace")
-                                    val distance = rec.getString("distance")
-                                    val time = rec.getString("time")
                                     val email = rec.getString("email")
 
-                                    recommendationsList.add(RecommendationItem(rank, score, email, name, pace, distance, time))
+                                    // Parse availability
+                                    val availabilityObj = rec.getJSONObject("availability")
+                                    val availability = Availability(
+                                        monday = availabilityObj.optBoolean("monday", false),
+                                        tuesday = availabilityObj.optBoolean("tuesday", false),
+                                        wednesday = availabilityObj.optBoolean("wednesday", false),
+                                        thursday = availabilityObj.optBoolean("thursday", false),
+                                        friday = availabilityObj.optBoolean("friday", false),
+                                        saturday = availabilityObj.optBoolean("saturday", false),
+                                        sunday = availabilityObj.optBoolean("sunday", false)
+                                    )
+
+                                    recommendationsList.add(
+                                        RecommendationItem(
+                                            rank = rank,
+                                            score = score,
+                                            email = email,
+                                            name = name,
+                                            pace = pace,
+                                            distance = rec.optString("distance", "N/A"),
+                                            time = rec.optString("time", "N/A"),
+                                            latitude = rec.optDouble("latitude", 0.0),
+                                            longitude = rec.optDouble("longitude", 0.0),
+                                            availability = availability
+                                        )
+                                    )
                                 }
 
                                 // Update the RecyclerView with parsed data
