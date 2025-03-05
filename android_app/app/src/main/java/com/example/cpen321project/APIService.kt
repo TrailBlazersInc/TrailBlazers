@@ -38,6 +38,12 @@ interface ApiService {
         @Path("email") email: String
     ): Call<ResponseBody>
 
+    @GET("/chat/members/{chatId}")
+    fun getChatMembers(
+        @Header("Authorization") token : String,
+        @Path("chatId") chatId : String
+    ) : Call<ResponseBody>
+
     @GET("/chat/messages/{chatId}")
     fun getMessages(
         @Header("Authorization") token : String,

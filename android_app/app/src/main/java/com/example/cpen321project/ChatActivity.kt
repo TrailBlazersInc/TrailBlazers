@@ -46,17 +46,12 @@ data class ChatMessage (
     val date: String
 )
 
-data class chatUser(
-    val email: String,
-    val name: String
-)
 class ChatActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var messages =mutableListOf<Message>()
     private lateinit var adapter: ChatAdapter
     private val handler = Handler(Looper.getMainLooper())
     private var lastMessageId = ""
-    private var users: List<chatUser>  = emptyList()
     private lateinit var userToken: String
     private lateinit var userEmail: String
     private lateinit var chatId: String
@@ -102,6 +97,7 @@ class ChatActivity : AppCompatActivity() {
             intent = Intent(this, ReportUserActivity::class.java)
             intent.putExtra("tkn", userToken)
             intent.putExtra("chatId", chatId)
+            intent.putExtra("email", userEmail)
             startActivity(intent)
         }
 

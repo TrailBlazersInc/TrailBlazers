@@ -1,10 +1,14 @@
 package com.example.cpen321project
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cpen321andriodapp.ApiService
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,9 +16,23 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+data class chatUser(
+    val email: String,
+    val name: String
+)
 
 class ReportUserActivity : AppCompatActivity() {
+    private lateinit var chatId : String
+    private var chatUsers: MutableList<chatUser> = mutableListOf()
+    lateinit var userEmail: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,15 +41,17 @@ class ReportUserActivity : AppCompatActivity() {
         val reportButton = findViewById<Button>(R.id.report_button)
         val reasonSpinner = findViewById<Spinner>(R.id.reason_spinner)
 
+
         val extras = intent.extras
         val reportedUserId = extras?.getString("reportedUseremail") ?: ""
         val tkn = extras?.getString("tkn") ?: ""
-        val chatId = extras?.getString("chatId") ?: ""
+        chatId = extras?.getString("chatId") ?: ""
+        userEmail = extras?.getString("email") ?: ""
 
         reportButton.setOnClickListener {
             val selectedReason = reasonSpinner.selectedItem.toString()
             if (reportedUserId.isNotEmpty()) {
-                submitReport(reportedUserId, selectedReason, tkn, email)
+                submitReport(reportedUserId, selectedReason, tkn, userEmail)
             } else {
                 Toast.makeText(this, "Error: No user selected.", Toast.LENGTH_SHORT).show()
             }
@@ -73,4 +93,39 @@ class ReportUserActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setUsers(token: String, email: String, spinner: Spinner){
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        apiService.getChatMembers("Bearer $token", chatId).enqueue(object :
+            Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    val gson = Gson()
+                    val chatListType = object : TypeToken<List<chatUser>>() {}.type
+                    val responseString = response.body()?.string() ?: return
+                    val UserList: List<chatUser> = gson.fromJson(responseString, chatListType)
+                    for (user in UserList){
+                        if (user.email != email){
+                            chatUsers.add(user)
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(this@ReportUserActivity, "Unable to get Members", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(this@ReportUserActivity, "Unable to Get Members", Toast.LENGTH_SHORT).show()
+                Log.d("ReportUsers","Request failed: ${t.message}")
+            }
+        })
+    }
+
 }
