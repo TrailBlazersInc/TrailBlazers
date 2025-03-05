@@ -3,8 +3,8 @@ package com.example.cpen321project
 import RecommendationAdapter
 import android.Manifest
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,7 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
-import com.example.cpen321project.MainActivity.Companion
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,9 +25,25 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.math.BigDecimal
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+
+// Add a new interface for location update API
+interface LocationUpdateService {
+    @POST("/api/users/location/{email}")
+    fun updateUserLocation(
+        @Header("Authorization") token: String,
+        @Path("email") email: String,
+        @Body locationData: RequestBody
+    ): Call<ResponseBody>
+}
 
 data class Availability(
     val monday: Boolean,
@@ -54,11 +71,11 @@ data class RecommendationItem(
 private lateinit var recommendationRecyclerView: RecyclerView
 private lateinit var recommendationAdapter: RecommendationAdapter
 
-
 class Recommendation : AppCompatActivity() {
 
     companion object {
         private const val TAG = "RecommendationActivity"
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 
     private lateinit var inputLocationWeight: EditText
@@ -66,20 +83,24 @@ class Recommendation : AppCompatActivity() {
     private lateinit var inputDistanceWeight: EditText
     private lateinit var getLocationPermissionButton: Button
     private lateinit var getRecommendationButton: Button
-//    private lateinit var viewOnMapButton: Button
+    private lateinit var viewOnMapButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var resultTextView: TextView
-    private lateinit var userToken : String
-    private lateinit var userEmail : String
+    private var recommendationsList = mutableListOf<RecommendationItem>()
+    private lateinit var userToken: String
+    private lateinit var userEmail: String
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_recommendation)
 
+        // Initialize FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView)
         recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
-
 
         // Initialize UI elements
         inputLocationWeight = findViewById(R.id.inputLocationWeight)
@@ -87,7 +108,7 @@ class Recommendation : AppCompatActivity() {
         inputDistanceWeight = findViewById(R.id.inputDistanceWeight)
         getLocationPermissionButton = findViewById(R.id.getLocationPermissionButton)
         getRecommendationButton = findViewById(R.id.getRecommendationButton)
-//        viewOnMapButton = findViewById(R.id.viewOnMapButton)
+        viewOnMapButton = findViewById(R.id.viewOnMapButton)
         progressBar = findViewById(R.id.progressBar)
         resultTextView = findViewById(R.id.resultTextView)
 
@@ -96,79 +117,155 @@ class Recommendation : AppCompatActivity() {
         userEmail = intent.extras?.getString("email") ?: ""
 
         getLocationPermissionButton.setOnClickListener {
-            Log.d(TAG, "Location permission button clicked")
-            Toast.makeText( this, "Location permission button clicked", Toast.LENGTH_SHORT).show()
-
-            val shouldShowFineRationale =
-                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-            val shouldShowCoarseRationale =
-                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
-
-            val finePermissionGranted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-
-            val coarsePermissionGranted = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-
-            Log.d(
-                TAG,
-                "onClick: shouldShowRequestPermissionRationale for ACCESS_FINE_LOCATION: $shouldShowFineRationale"
-            )
-            Log.d(
-                TAG,
-                "onClick: shouldShowRequestPermissionRationale for ACCESS_COARSE_LOCATION: $shouldShowCoarseRationale"
-            )
-            Log.d(
-                TAG,
-                "onClick: Permissions granted: ACCESS_FINE_LOCATION = $finePermissionGranted, ACCESS_COARSE_LOCATION = $coarsePermissionGranted"
-            )
-
-            checkLocationPermissions()
+            checkAndUpdateLocation()
         }
 
         getRecommendationButton.setOnClickListener {
             getRecommendations(userToken, userEmail)
         }
 
-//        viewOnMapButton.setOnClickListener {
-//            val intent = Intent(this, MapActivity::class.java)
-//            val latitudes = recommendationsList.map { it.latitude }.toDoubleArray()
-//            val longitudes = recommendationsList.map { it.longitude }.toDoubleArray()
-//            intent.putExtra("latitudes", latitudes)
-//            intent.putExtra("longitudes", longitudes)
-//            startActivity(intent)
-//        }
+        viewOnMapButton.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            val latitudes = recommendationsList.map { it.latitude }.toDoubleArray()
+            val longitudes = recommendationsList.map { it.longitude }.toDoubleArray()
+
+            // Get current user's location for MapActivity
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            intent.putExtra("currentUserLatitude", it.latitude)
+                            intent.putExtra("currentUserLongitude", it.longitude)
+                        }
+                        intent.putExtra("latitudes", latitudes)
+                        intent.putExtra("longitudes", longitudes)
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener {
+                        // Fallback if location retrieval fails
+                        intent.putExtra("latitudes", latitudes)
+                        intent.putExtra("longitudes", longitudes)
+                        startActivity(intent)
+                    }
+            } else {
+                // If location permission not granted, just start MapActivity with recommendations
+                intent.putExtra("latitudes", latitudes)
+                intent.putExtra("longitudes", longitudes)
+                startActivity(intent)
+            }
+        }
     }
 
-    private fun checkLocationPermissions() {
+    private fun checkAndUpdateLocation() {
         when {
             ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.d(TAG, "Location permissions granted")
-                Toast.makeText(
-                    this,
-                    "Location permissions already granted",
-                    Toast.LENGTH_SHORT
-                ).show()
+                // Permissions granted, proceed with location update
+                updateUserLocation()
             }
 
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                Log.d(TAG, "Requesting location permissions with rationale")
+                // Show rationale and request permissions
                 showLocationPermissionRationale()
             }
 
             else -> {
-                Log.d(TAG, "Requesting location permissions")
+                // Request permissions
                 requestLocationPermissions()
             }
         }
     }
+
+
+    private fun updateUserLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val latitude = it.latitude
+                    val longitude = it.longitude
+
+                    // Create JSON payload for location
+                    val jsonObject = JSONObject().apply {
+                        put("latitude", latitude)
+                        put("longitude", longitude)
+                    }
+
+                    val jsonString = jsonObject.toString()  // Get the JSON string
+                    Log.d(TAG, "JSON Payload: $jsonString") // Log the JSON string
+
+                    val requestBody = RequestBody.create(
+                        MediaType.parse("application/json"),
+                        jsonString
+                    )
+
+                    // Setup Retrofit for location update
+                    val retrofit = Retrofit.Builder()
+                        .baseUrl(BuildConfig.BACKEND_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+
+                    val locationUpdateService = retrofit.create(LocationUpdateService::class.java)
+
+                    // Make API call to update location
+                    locationUpdateService.updateUserLocation(
+                        "Bearer $userToken",
+                        userEmail,
+                        requestBody
+                    ).enqueue(object : Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            if (response.isSuccessful) {
+                                Toast.makeText(
+                                    this@Recommendation,
+                                    "Location updated successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Log.e(TAG, "Failed to update location. Response code: ${response.code()}")
+                                Log.e(TAG, "Response body: ${response.errorBody()?.string()}") // Log error response
+                                Toast.makeText(
+                                    this@Recommendation,
+                                    "Failed to update location",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.e(TAG, "Network error updating location: ${t.message}")
+                            Toast.makeText(
+                                this@Recommendation,
+                                "Network error updating location",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+                } ?: run {
+                    Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Location retrieval failed", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
     private fun requestLocationPermissions() {
         requestPermissions(
@@ -176,13 +273,13 @@ class Recommendation : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ),
-            0
+            LOCATION_PERMISSION_REQUEST_CODE
         )
     }
 
     private fun showLocationPermissionRationale() {
         AlertDialog.Builder(this)
-            .setMessage("Location permission is required to show your location")
+            .setMessage("Location permission is required to update and show your location")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
                 requestLocationPermissions()
@@ -196,6 +293,30 @@ class Recommendation : AppCompatActivity() {
             }.show()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                grantResults[1] == PackageManager.PERMISSION_GRANTED
+            ) {
+                // Permissions granted, update location
+                updateUserLocation()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Location permissions are required to use this feature",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    // Rest of the existing methods remain the same...
     private fun getRecommendations(userToken: String?, userEmail: String?) {
         val locationWeight = inputLocationWeight.text.toString().toIntOrNull()
         val speedWeight = inputSpeedWeight.text.toString().toIntOrNull()

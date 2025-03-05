@@ -95,4 +95,8 @@
         <item>Inappropriate Content</item>
         <item>Other</item>
     </string-array>
+    <string name="maps_api_key">${MAPS_API_KEY}</string>
+    <string name="backButton">Back</string>
+    <string name="mapButton">View on Map</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

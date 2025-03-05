@@ -32,6 +32,13 @@ interface ApiService {
         @Body request: RequestBody
     ): Call<ResponseBody>
 
+    @POST("/api/users/location/{email}")
+    fun updateUserLocation(
+        @Header("Authorization") token: String,
+        @Path("email") email: String,
+        @Body locationData: RequestBody
+    ): Call<ResponseBody>
+
     @GET("/chat/{email}")
     fun getChats(
         @Header("Authorization") token : String,
