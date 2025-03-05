@@ -33,6 +33,14 @@ export const MessagingRoutes = [
         ]
     },
     {
+        method: "get",
+        route: "/chat/members/:chatId",
+        action: controllers.getChatMembers,
+        validation:[
+            param("chatId").isMongoId()
+        ]
+    },
+    {
         method: "post",
         route: "/chat/:email",
         action: controllers.postChat,

@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -44,12 +45,18 @@ data class ChatMessage (
     val content: String,
     val date: String
 )
+
+data class chatUser(
+    val email: String,
+    val name: String
+)
 class ChatActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var messages =mutableListOf<Message>()
     private lateinit var adapter: ChatAdapter
     private val handler = Handler(Looper.getMainLooper())
     private var lastMessageId = ""
+    private var users: List<chatUser>  = emptyList()
     private lateinit var userToken: String
     private lateinit var userEmail: String
     private lateinit var chatId: String
@@ -83,12 +90,20 @@ class ChatActivity : AppCompatActivity() {
         val messageInput = findViewById<EditText>(R.id.messageInput)
         val sendMessageButton = findViewById<ImageView>(R.id.sendMessageButton)
         val chatNameTextView = findViewById<TextView>(R.id.manage_chats_title)
+        val reportButton : Button = findViewById(R.id.reportButton)
         chatNameTextView.text = chatName
         recyclerView = findViewById(R.id.recyclerView)
         adapter = ChatAdapter(messages)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         getMessages(userToken, userEmail, chatId)
+
+        reportButton.setOnClickListener(){
+            intent = Intent(this, ReportUserActivity::class.java)
+            intent.putExtra("tkn", userToken)
+            intent.putExtra("chatId", chatId)
+            startActivity(intent)
+        }
 
 
         findViewById<ImageView>(R.id.chevron_left).setOnClickListener(){

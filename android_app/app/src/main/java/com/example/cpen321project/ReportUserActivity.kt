@@ -24,9 +24,9 @@ class ReportUserActivity : AppCompatActivity() {
         val reasonSpinner = findViewById<Spinner>(R.id.reason_spinner)
 
         val extras = intent.extras
-        val reportedUserId = extras?.getString("reportedUserId") ?: ""
+        val reportedUserId = extras?.getString("reportedUseremail") ?: ""
         val tkn = extras?.getString("tkn") ?: ""
-        val email = extras?.getString("email") ?: ""
+        val chatId = extras?.getString("chatId") ?: ""
 
         reportButton.setOnClickListener {
             val selectedReason = reasonSpinner.selectedItem.toString()

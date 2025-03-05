@@ -87,6 +87,7 @@
     <string name="select_a_user_to_ban">Select a user to ban:</string>
     <string name="ban_user">Ban User</string>
     <string name="ban_users">Ban Users</string>
+    <string name="flag_user">Flag User</string>
     <string-array name="report_reasons">
         <item>Harassment</item>
         <item>Spam</item>

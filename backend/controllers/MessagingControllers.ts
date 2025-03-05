@@ -38,6 +38,32 @@ export class MessagingControllers {
         }
     }
 
+    async getChatMembers(req: Request, res: Response, next: NextFunction){
+        try{
+            let members: any[] = []
+            let chat = await Chat.findOne<IChat>({_id: req.params.chatId})
+            if (!chat){
+                return res.status(404).send("Chat not found")
+            }
+            
+            let chatMembers = chat.members
+            console.log(chatMembers)
+
+            for (let i=0; i<chatMembers.length; i++){
+                console.log(chatMembers[i])
+                let user = await User.findOne({email: chatMembers[i]})
+                console.log(user)
+                members.push({name: user?.first_name, email: user?.email})
+            }
+
+            return res.status(200).json(members)
+
+        } catch(error){
+            console.log(error)
+            res.status(500).send("Could not get members")
+        }
+    }
+
     async getMessages(req: Request, res: Response, next: NextFunction){
         try{
             let chat = await Chat.findOne({_id: req.params.chatId}).populate<{messages: IMessage[]}>("messages");
