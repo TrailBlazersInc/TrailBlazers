@@ -75,6 +75,12 @@ export class authenticate {
             var result = await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });
           }
+          else {
+            var newValues = { $set: {admin: false } };
+            var result = await User.updateOne({ email: response.email }, newValues);
+            res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
+          }
+
           res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: user.admin });
         } catch (error) {
           console.log(error)
