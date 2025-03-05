@@ -21,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,12 +63,12 @@ class BanningUserActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
                     Log.d(TAG, "Response: $responseString")
-                    val jsonArray = JSONObject(responseString).getJSONArray("reports")
+                    val jsonArray =  JSONArray(responseString)
 
 
                     for (i in 0 until jsonArray.length()) {
                         val report = jsonArray.getJSONObject(i)
-                        val aggressorEmail = report.optString("aggressorEmail", "")
+                        val aggressorEmail = report.optString("agressrEmail", "")
                         if (aggressorEmail.isNotEmpty()) {
                             emailList.add(aggressorEmail)
                         }
@@ -118,6 +119,9 @@ class BanningUserActivity : AppCompatActivity() {
                         Log.d(TAG, "Response: $responseString")
                         Toast.makeText(this@BanningUserActivity, "User banned", Toast.LENGTH_SHORT)
                             .show()
+                    }
+                    else {
+                        Log.d(TAG, "Request failed: ${response.code()}")
                     }
                 }
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

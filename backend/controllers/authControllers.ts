@@ -12,7 +12,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export class authenticate {
     async authId(req: Request, res: Response) {
         let new_user = false;
-        const { googleId } = req.body;
+        const { googleId, admin } = req.body;
         if (!googleId) {
           return res.status(400).json({ status: 'error', error: 'ID is required' });
         }
@@ -70,8 +70,7 @@ export class authenticate {
 
           const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
-          if (userCount === 0) {
-            console.log("HERE")
+          if (admin) {
             var newValues = { $set: {admin: true } };
             var result = await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });

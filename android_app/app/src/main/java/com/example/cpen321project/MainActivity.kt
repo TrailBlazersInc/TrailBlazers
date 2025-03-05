@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Switch
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        val admin = findViewById<Switch>(R.id.admin_switch)
+
         findViewById<Button>(R.id.Sign_In_Button).setOnClickListener() {
             Log.d(TAG, "Sign In Button Clicked")
             Log.d(TAG, "WEB_CLIENT_ID: ${BuildConfig.WEB_CLIENT_ID}")
@@ -73,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         request = request,
                         context = this@MainActivity,
                     )
-                    handleSignIn(result)
+                    handleSignIn(result, admin.isChecked)
                 } catch (e: GetCredentialException) {
                     handleFailure(e)
                 }
@@ -86,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Error Getting Credential", Toast.LENGTH_SHORT).show()
     }
 
-    private fun handleSignIn(result: GetCredentialResponse) {
+    private fun handleSignIn(result: GetCredentialResponse, admin: Boolean) {
         // Handle the successfully returned credential.
         val credential = result.credential
 
@@ -110,6 +113,7 @@ class MainActivity : AppCompatActivity() {
 
                         val jsonObject = JSONObject()
                         jsonObject.put("googleId", idToken)
+                        jsonObject.put("admin", admin)
 
                         val requestBody = RequestBody.create(
                             MediaType.get("application/json; charset=utf-8"),
