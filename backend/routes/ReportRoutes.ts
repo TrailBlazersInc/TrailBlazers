@@ -5,6 +5,12 @@ const controllers = new ReportController()
 
 export const ReportRoutes = [
     {
+        method: "get",
+        route: "/report",
+        action: controllers.getReports,
+        validation: []
+    },
+    {
         method: "post",
         route: "/report/:email",
         action: controllers.postReport,

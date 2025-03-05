@@ -3,15 +3,15 @@ import { User } from '../models/user'
 import { Report } from '../models/report'
 
 export class ReportController {
-    
-    async getUserData(req: Request, res: Response, next: NextFunction){
-        let user = await User.findOne({ email: req.params.email });
-        res.status(200).json({ status: 'success', user });
-    }
-
     async getReports(req: Request, res: Response, next: NextFunction) {
         let reports = await Report.find();
-        res.status(200).json({ status: 'success', reports });
+        let formattedReports = reports.map( report => ({
+            id: report._id,
+            agressrEmail: report.aggressorEmail,
+            reporterEmail: report.reporterEmail,
+            description: report.description
+        }))
+        res.status(200).json(formattedReports);
     }
 
     async postReport(req: Request, res: Response, next: NextFunction) {
