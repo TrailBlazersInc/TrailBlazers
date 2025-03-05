@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_KEY }}
           source: "."
-          target: "/home/ubuntu/Trailblazers"
+          target: "/home/azureuser/Trailblazers"
 
       - name: Rebuild and Deploy
         uses: appleboy/ssh-action@master
@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.AZURE_USER }}
           key: ${{ secrets.AZURE_KEY }}
           script: |
-            cd /home/ubuntu/Trailblazers/backend
+            cd /home/azureuser/Trailblazers/backend
             sudo rm -rf node_modules
             npm install
             # Write secrets into .env

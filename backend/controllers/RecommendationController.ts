@@ -50,6 +50,42 @@ export class RecommendationController {
         }
     }
 
+    postLocation = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { email } = req.params;
+            const { latitude, longitude } = req.body;
+    
+            // Validate input
+            if (latitude === undefined || longitude === undefined) {
+                return res.status(400).json({ error: "Latitude and longitude are required" });
+            }
+    
+            // Find and update user
+            const user = await User.findOneAndUpdate(
+                { email: email },
+                { 
+                    $set: { 
+                        latitude: latitude, 
+                        longitude: longitude 
+                    } 
+                },
+                { new: true } // Return the updated document
+            );
+    
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+    
+            res.status(200).json({ 
+                message: "Location updated successfully", 
+                location: user.location 
+            });
+        } catch (error) {
+            console.error("Error updating user location:", error);
+            res.status(500).json({ error: "Failed to update location" });
+        }
+    }
+
     private async findJogBuddies(
         currentUser: any, 
         userLocation: any, 

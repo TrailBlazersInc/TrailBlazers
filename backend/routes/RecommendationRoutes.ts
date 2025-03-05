@@ -11,5 +11,13 @@ export const RecommendationRoutes = [
         validation: [
             param("email").isEmail()
         ]
+    },
+    {
+        method: "post",
+        route: "/api/users/location/:email",
+        action: controllers.postLocation,
+        validation: [
+            param("email").isEmail()
+        ]
     }
 ]
