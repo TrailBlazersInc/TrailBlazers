@@ -1,13 +1,18 @@
 package com.example.cpen321project
 
 import RecommendationAdapter
+import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
@@ -73,9 +78,96 @@ class Recommendation : AppCompatActivity() {
         userToken = intent.extras?.getString("tkn") ?: ""
         userEmail = intent.extras?.getString("email") ?: ""
 
+        findViewById<Button>(R.id.getLocationPermissionButton).setOnClickListener {
+            Log.d(TAG, "Location permission button clicked")
+            Toast.makeText( this, "Location permission button clicked", Toast.LENGTH_SHORT).show()
+
+            val shouldShowFineRationale =
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+            val shouldShowCoarseRationale =
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+            val finePermissionGranted = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            val coarsePermissionGranted = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            Log.d(
+                TAG,
+                "onClick: shouldShowRequestPermissionRationale for ACCESS_FINE_LOCATION: $shouldShowFineRationale"
+            )
+            Log.d(
+                TAG,
+                "onClick: shouldShowRequestPermissionRationale for ACCESS_COARSE_LOCATION: $shouldShowCoarseRationale"
+            )
+            Log.d(
+                TAG,
+                "onClick: Permissions granted: ACCESS_FINE_LOCATION = $finePermissionGranted, ACCESS_COARSE_LOCATION = $coarsePermissionGranted"
+            )
+
+            checkLocationPermissions()
+        }
+
         getRecommendationButton.setOnClickListener {
             getRecommendations(userToken, userEmail)
         }
+    }
+
+    private fun checkLocationPermissions() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                Log.d(TAG, "Location permissions granted")
+                Toast.makeText(
+                    this,
+                    "Location permissions already granted",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                Log.d(TAG, "Requesting location permissions with rationale")
+                showLocationPermissionRationale()
+            }
+
+            else -> {
+                Log.d(TAG, "Requesting location permissions")
+                requestLocationPermissions()
+            }
+        }
+    }
+
+    private fun requestLocationPermissions() {
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ),
+            0
+        )
+    }
+
+    private fun showLocationPermissionRationale() {
+        AlertDialog.Builder(this)
+            .setMessage("Location permission is required to show your location")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                requestLocationPermissions()
+            }.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                Toast.makeText(
+                    this,
+                    "Please grant the location permissions",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.show()
     }
 
     private fun getRecommendations(userToken: String?, userEmail: String?) {

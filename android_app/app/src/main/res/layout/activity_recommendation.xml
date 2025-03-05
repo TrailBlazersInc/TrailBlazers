@@ -62,6 +62,14 @@
         android:hint="Enter a value (0-10)"
         android:inputType="number"/>
 
+    <Button
+        android:id="@+id/getLocationPermissionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:text="Grant Location Permission" />
+
     <!-- Request Recommendation Button -->
     <Button
         android:id="@+id/getRecommendationButton"
