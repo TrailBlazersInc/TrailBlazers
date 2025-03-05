@@ -4,8 +4,6 @@ import { Report } from '../models/report'
 
 export class ReportController {
     
-    
-    
     async getUserData(req: Request, res: Response, next: NextFunction){
         let user = await User.findOne({ email: req.params.email });
         res.status(200).json({ status: 'success', user });
@@ -17,23 +15,25 @@ export class ReportController {
     }
 
     async postReport(req: Request, res: Response, next: NextFunction) {
-        const { email, aggressor_email, description } = req.body;
-        let user = await User
-            .findOne({ email: email })
-            .catch((err) => {
-                res.status(400).json({ status: 'error', error: err });
+        try{
+            console.log("posting report")
+            const email = req.params.email
+            const { aggressor_email, description } = req.body;
+            let user = await User.findOne({ email: email })
+            if (!user) {
+                return res.status(404).send('User not found' );
+            }
+            let report = new Report({
+                description: description,
+                aggressorEmail: aggressor_email,
+                reporterEmail: email
             });
-        if (!user) {
-            res.status(404).json({ status: 'error', error: 'User not found' });
+            await report.save();
+            return res.status(200).json({ status: 'success', report });
+        } catch (error){
+            console.log(error)
+            return res.status(500).send("Could not Report User")
         }
-        let report = new Report({
-            type: 'report',
-            aggressorEmail: aggressor_email,
-            reporterEmail: email,
-            description: description
-        });
-        await report.save();
-        res.status(200).json({ status: 'success', report });
         
     }
 }

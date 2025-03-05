@@ -70,4 +70,11 @@ interface ApiService {
         @Path("email") email : String,
         @Body request: RequestBody
     ): Call<ResponseBody>
+
+    @POST("/report/{email}")
+    fun postReport(
+        @Header("Authorization") token : String,
+        @Path("email") email : String,
+        @Body request: RequestBody
+    ): Call<ResponseBody>
 }

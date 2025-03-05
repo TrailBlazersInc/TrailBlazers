@@ -2,17 +2,15 @@ import mongoose, {Schema, Document} from 'mongoose';
 
 export interface IReport extends Document {
     _id: mongoose.Types.ObjectId,
-    type: string,
+    description: string,
     aggressorEmail: string,
     reporterEmail: string,
-    description: string
 }
 
 const ReportSchema = new Schema<IReport>({
-    type: String,
+    description: String,
     aggressorEmail: String,
-    reporterEmail: String,
-    description: String
+    reporterEmail: String
 })
 
 
