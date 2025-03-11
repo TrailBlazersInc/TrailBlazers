@@ -14,7 +14,7 @@ import { BanRoutes } from './routes/BanRoutes';
 
 dotenv.config();
 
-const app = express()
+export const app = express()
 app.use(express.json())
 app.use(morgan('tiny'))
 
@@ -56,10 +56,10 @@ app.get('/', async (req: Request, res: Response) =>{
 })
 
 ConnectMongoDB().then(() => {
-app.listen(process.env.PORT, () => {
-    console.log("Mongo DB Models Connected");
-    console.log("Listening on port " + process.env.PORT)
-})
+    app.listen(process.env.PORT, () => {
+        console.log("Mongo DB Models Connected");
+        console.log("Listening on port " + process.env.PORT)
+    })
 }).catch(err =>{
     console.error(err)
 })
