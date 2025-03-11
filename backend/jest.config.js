@@ -8,4 +8,5 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: ["controllers/**/*.ts", "routes/**/*.ts"],
   coverageReporters: ["text", "lcov"],
+  maxWorkers: 1,
 };

@@ -56,10 +56,12 @@ app.get('/', async (req: Request, res: Response) =>{
 })
 
 ConnectMongoDB().then(() => {
-    app.listen(process.env.PORT, () => {
-        console.log("Mongo DB Models Connected");
-        console.log("Listening on port " + process.env.PORT)
-    })
+    if (require.main === module) {
+        app.listen(process.env.PORT, () => {
+            console.log("Mongo DB Models Connected");
+            console.log("Listening on port " + process.env.PORT)
+        })
+    }
 }).catch(err =>{
     console.error(err)
 })
