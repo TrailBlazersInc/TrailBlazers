@@ -1,0 +1,40 @@
+[{
+  "email": "someone@gmail.com",
+  "social_id": "834798418934328174980",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "pace": 1,
+  "distance": "Short (<5 km)",
+  "time": "Medium (30–60 min)",
+  "banned": false,
+  "__v": 0,
+  "availability": {
+    "monday": true,
+    "tuesday": false,
+    "wednesday": false,
+    "thursday": true,
+    "friday": false,
+    "saturday": true,
+    "sunday": false
+  }
+},
+{
+  "email": "person@gmail.com",
+  "social_id": "832089291084237398474",
+  "first_name": "Person",
+  "last_name": "Doe",
+  "pace": 20,
+  "distance": "Short (<5 km)",
+  "time": "Short (<30 min)",
+  "banned": false,
+  "__v": 0,
+  "availability": {
+    "monday": false,
+    "tuesday": true,
+    "wednesday": false,
+    "thursday": true,
+    "friday": false,
+    "saturday": true,
+    "sunday": false
+  }
+}]
