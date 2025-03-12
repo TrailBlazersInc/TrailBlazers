@@ -1,6 +1,6 @@
 import { describe, expect, test, jest } from '@jest/globals';
 import request from 'supertest';
-import { app } from '../..'; // Adjust the path as necessary
+import { server } from '../..'; // Adjust the path as necessary
 import { User } from '../../models/user'; // User model
 import { RecommendationController } from '../../controllers/RecommendationController'; // Adjust the path as necessary
 import mongoose from 'mongoose';
@@ -10,6 +10,12 @@ const invalidEmail = "fakeMockUser@example.com";
 
 beforeEach(() => {
     jest.resetAllMocks();
+});
+
+afterAll(async () => {
+    // Ensure that mongoose disconnects properly
+    await mongoose.connection.close();
+    await server.close();
 });
 
 describe("Mocked: POST /recommendation/:email", () => {
@@ -45,7 +51,7 @@ describe("Mocked: POST /recommendation/:email", () => {
             }
         ]);
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/recommendations/${validEmail}`)
             .send({
                 locationWeight: 5,
@@ -71,7 +77,7 @@ describe("Mocked: POST /recommendation/:email", () => {
 
         jest.spyOn(User, 'findOne').mockResolvedValue(null);
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/recommendations/${invalidEmail}`)
             .send({
                 locationWeight: 5,
@@ -94,7 +100,7 @@ describe("Mocked: POST /recommendation/:email", () => {
             throw new Error("Forced error while finding user");
         });
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/recommendations/${validEmail}`)
             .send({
                 locationWeight: 5,
@@ -141,7 +147,7 @@ describe("Mocked: POST /api/users/location/:email", () => {
             admin: false
         });
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${validEmail}`)
             .send({
                 latitude: 51.5074,
@@ -172,7 +178,7 @@ describe("Mocked: POST /api/users/location/:email", () => {
 
         jest.spyOn(User, 'findOne').mockResolvedValue(null);
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${invalidEmail}`)
             .send({
                 latitude: 51.5074,
@@ -194,7 +200,7 @@ describe("Mocked: POST /api/users/location/:email", () => {
             throw new Error("Database error while updating location");
         });
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${validEmail}`)
             .send({
                 latitude: 51.5074,
