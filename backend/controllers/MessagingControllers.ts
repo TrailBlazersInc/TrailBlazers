@@ -31,7 +31,7 @@ export class MessagingControllers {
                 }
                 res.status(200).json(formatedChats)
             } else{
-                res.status(400).send("User does not exist")
+                res.status(400).send("Invalid email")
             }
         } catch(error){
             res.status(400).send("No chats found")
@@ -43,7 +43,7 @@ export class MessagingControllers {
             let members: any[] = []
             let chat = await Chat.findOne<IChat>({_id: req.params.chatId})
             if (!chat){
-                return res.status(404).send("Chat not found")
+                return res.status(400).send("Invalid chat id")
             }
             
             let chatMembers = chat.members
@@ -68,7 +68,7 @@ export class MessagingControllers {
         try{
             let chat = await Chat.findOne({_id: req.params.chatId}).populate<{messages: IMessage[]}>("messages");
             if(!chat){
-                return res.status(400).send("Chat not found")
+                return res.status(400).send("Invalid chat id")
             }
             let messages = chat.messages.map((message) => ({
                 id: message._id,
@@ -101,8 +101,10 @@ export class MessagingControllers {
                 }))
                     res.status(200).json(messages)
                 } else{
-                    res.status(400).send("Invalid Message Id");
+                    res.status(400).send("Invalid message id");
                 }
+            } else {
+                res.status(400).send("Invalid chat id");
             }
         } catch(err){
             console.log(err);
@@ -116,14 +118,19 @@ export class MessagingControllers {
             const email = req.params.email
             const user = await User.findOne({email});
             if (!user){
-                return res.status(400).send("User does not Exist")
+                return res.status(400).send("Invalid email")
             }
             console.log(user)
             const chatName = req.body.chatName
             const chat = new Chat({title: chatName, members:[email], messages: []})
             console.log(chat)
-            await chat.save()
-            res.status(200).json(chat)
+            const newChat = await chat.save()
+            const formattedChat = {
+            id: newChat._id.toString(),
+            title: newChat.title,
+            members: newChat.members.length
+            }
+            res.status(201).json(formattedChat)
         } catch(error){
             console.log(error)
             res.status(500).send("Error creating Chat")
@@ -137,7 +144,7 @@ export class MessagingControllers {
             const user = await User.findOne({email: email});
             const user2 = await User.findOne({email: targetEmail})
             if (!user || !user2){
-                return res.status(400).send("User does not Exist")
+                return res.status(400).send("Invalid email")
             }
             
             let chat = await Chat.findOne({

@@ -1,0 +1,25 @@
+[
+{
+  "_id": "000000000000000000000006",
+  "title": "::::Someone Elses Chat",
+  "members": [
+    "someone@gmail.com",
+    "person@gmail.com"
+  ],
+  "messages": [ 
+    "000000000000000000000001",
+    "000000000000000000000002"
+  ]
+},
+{
+  "_id": "000000000000000000000007",
+  "title": "::::Jane Doe's Chat",
+  "members": [
+    "someone@gmail.com",
+    "lad@gmail.com"
+  ],
+  "messages": [ 
+    "000000000000000000000003",
+    "000000000000000000000004"
+  ]
+}]

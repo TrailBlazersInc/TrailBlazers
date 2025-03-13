@@ -1,8 +1,5 @@
 import { MessagingControllers } from "../controllers/MessagingControllers"
 import {body, param} from "express-validator"
-import mongoose from "mongoose"
-import {User} from "../models/user"
-import {Chat} from "../models/chat"
 
 const controllers = new MessagingControllers()
 

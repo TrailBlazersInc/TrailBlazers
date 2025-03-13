@@ -7,7 +7,6 @@
   "distance": "Short (<5 km)",
   "time": "Medium (30–60 min)",
   "banned": false,
-  "__v": 0,
   "availability": {
     "monday": true,
     "tuesday": false,
@@ -27,7 +26,6 @@
   "distance": "Short (<5 km)",
   "time": "Short (<30 min)",
   "banned": false,
-  "__v": 0,
   "availability": {
     "monday": false,
     "tuesday": true,
@@ -37,4 +35,24 @@
     "saturday": true,
     "sunday": false
   }
-}]
+},
+{
+  "email": "lad@gmail.com",
+  "social_id": "893441930871842937219",
+  "first_name": "Lad",
+  "last_name": "Young",
+  "pace": 10,
+  "distance": "Short (<5 km)",
+  "time": "Short (<30 min)",
+  "banned": false,
+  "availability": {
+    "monday": false,
+    "tuesday": true,
+    "wednesday": false,
+    "thursday": true,
+    "friday": false,
+    "saturday": true,
+    "sunday": false
+  }
+}
+]

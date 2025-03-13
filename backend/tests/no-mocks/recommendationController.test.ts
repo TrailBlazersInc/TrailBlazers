@@ -35,10 +35,6 @@ beforeAll(async () => {
 afterAll(async () => {
     // Clean up test data for mockUser
     await User.deleteMany({ email: validEmail });
-
-    // Ensure that mongoose disconnects properly
-    await mongoose.connection.close();
-    // This ensures Jest exits gracefully
 });
 
 describe("POST /recommendation/:email", () => {
