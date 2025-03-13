@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import request from 'supertest';
-import { app } from '../..';
+import { server } from '../..';
 import { User } from '../../models/user';
 import mongoose from 'mongoose';
 
@@ -35,6 +35,10 @@ beforeAll(async () => {
 afterAll(async () => {
     // Clean up test data for mockUser
     await User.deleteMany({ email: validEmail });
+
+    // Ensure that mongoose disconnects properly
+    await mongoose.connection.close();
+    await server.close();
 });
 
 describe("POST /recommendation/:email", () => {
@@ -44,7 +48,7 @@ describe("POST /recommendation/:email", () => {
         // Expected behavior: Should return status success and an array of recommendations
         // Expected output: { status: 'success', recommendations: [...] }
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/recommendations/${validEmail}`)
             .send({
                 locationWeight: 5,
@@ -63,7 +67,7 @@ describe("POST /recommendation/:email", () => {
         // Expected behavior: Should return an error message for user not found
         // Expected output: { error: "User not found" }
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/recommendations/${invalidEmail}`)
             .send({});
 
@@ -79,7 +83,7 @@ describe("POST /api/users/location/:email", () => {
         // Expected behavior: Should successfully update the location and return a message
         // Expected output: { message: "Location updated successfully" }
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${validEmail}`)
             .send({
                 latitude: 49.2827,
@@ -96,7 +100,7 @@ describe("POST /api/users/location/:email", () => {
         // Expected behavior: Should return an error message indicating missing latitude and longitude
         // Expected output: { error: "Latitude and longitude are required" }
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${validEmail}`)
             .send({});
 
@@ -110,7 +114,7 @@ describe("POST /api/users/location/:email", () => {
         // Expected behavior: Should return an error message for user not found
         // Expected output: { error: "User not found" }
 
-        const res = await request(app)
+        const res = await request(server)
             .post(`/api/users/location/${invalidEmail}`)
             .send({
                 latitude: 49.2827,

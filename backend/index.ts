@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 import {ConnectMongoDB} from './services';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import http from 'http';
 import mongoose from 'mongoose';
 import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
@@ -55,6 +56,7 @@ app.get('/', async (req: Request, res: Response) =>{
     res.status(200).send('hello')
 })
 
+export const server = http.createServer(app)
 ConnectMongoDB().then(() => {
     if (require.main === module) {
         app.listen(process.env.PORT, () => {
