@@ -62,12 +62,6 @@ export class authenticate {
             new_user = true;
           }
 
-          if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-          }
-
-
-
           const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
 
           if (admin) {
