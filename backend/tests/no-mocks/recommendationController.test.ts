@@ -35,10 +35,7 @@ beforeAll(async () => {
 afterAll(async () => {
     // Clean up test data for mockUser
     await User.deleteMany({ email: validEmail });
-
-    // Ensure that mongoose disconnects properly
-    await mongoose.connection.close();
-    await server.close();
+    await mongoose.connection.close()
 });
 
 describe("POST /recommendation/:email", () => {

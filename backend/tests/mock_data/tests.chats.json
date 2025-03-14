@@ -3,12 +3,13 @@
   "_id": "000000000000000000000006",
   "title": "::::Someone Elses Chat",
   "members": [
-    "someone@gmail.com",
-    "person@gmail.com"
+    "person@gmail.com",
+    "someone@gmail.com"
   ],
   "messages": [ 
     "000000000000000000000001",
-    "000000000000000000000002"
+    "000000000000000000000002",
+    "000000000000000000000005"
   ]
 },
 {
