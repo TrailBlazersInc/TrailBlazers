@@ -5,6 +5,7 @@
  - Updated Dependency Diagram to show link between userDB and user Component
  - Functional Requirement 2 renamed to Sign In from Sign Up
  - Updated the Messaging interface to align to implementation. 14/02/2025
+ - Updated the functional requirements for Recommend Jogger Buddies. 12/03/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -82,22 +83,28 @@ An application that connects nearby users to jog/run together adapting to their 
             - 4a2. App prompts user to try again after a set time period.
 
 3. **Recommend Jogger Buddies**:<a id="fr3"></a>
-    - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
+    - **Description**: This feature allows users to discover other joggers based on their pace, distance, location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
-        - 1. User navigates to the "Find Joggers Nearby" section.
-        - 2. User click on the "Find Joggers" button.
-        - 3. System retrieves and displays a list of available joggers nearby along with relevant details (e.g., name, experience level, jogging pace, availability).
+        - 1. User navigates to the "Recommendation" section.
+        - 2. User inputs weight for location, speed and distance respetively within number (0-10).
+        - 3. User clicks on the "Grant Location Permission" button to allow app to access user's location.
+        - 4. User clicks on the "Get Recommendations" button.
+        - 5. System retrieves and displays the top 5 joggers matched relevant details (e.g., name, match score, pace, distance, time, availability).
+        - 6. User can click the "Message" button to direct message jogger (which will lead to chat functionality).
     - **Failure scenario(s)**:
-        - 3a. No suitable matches are found: 
+        - 2a. Invalid inputs for weights: 
+            - 2a1. System displays message saying "Please enter valid weights (0-10)"
+            - 2a2. App prompts user to try again with valid weights.
+        - 3a. User did not grant location permission: 
+            - 2a1. System displays message saying "Please grant the location permissions"
+            - 2a2. App prompts user to try again by granting the location permissions.
+        - 5a. No suitable matches are found: 
             - 3a1. System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
             - 3a2. App prompts user to try again after adjusting preference.
-        - 3b. Database error: 
-            - 3b1. System displays error message saying "Unable to retrieve joggers. Please try again later."
-            - 3b2. App prompts user to try again after a set time period.
-        - 3c. Network issue: 
-            - 3c1. System displays error message saying "Network error. Please check your internet connection and try again."
-            - 3c2. App prompts user to try again after a set time period.
+        - 5b. API call fails: 
+            - 5b1. System displays error message saying "Failed to fetch recommendations."
+            - 5b2. App prompts user to try again after a set time period.
 
 4. **Join/Create and send message to Chat Group**:<a id="fr4"></a>
     1. Join/Create to Chat Group
