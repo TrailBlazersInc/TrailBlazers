@@ -74,8 +74,6 @@ export class authenticate {
             var result = await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
           }
-
-          res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: user.admin });
         } catch (error) {
           console.log(error)
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });

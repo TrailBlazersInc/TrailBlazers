@@ -22,24 +22,13 @@ const availability = {
     sunday: true,
   };
 
+beforeAll(async () => {
+    process.env.JWT_SECRET = "SECRET_KEY";
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
     server.close();
-});
-
-describe('PUT /User/:email (mock)', () => {
-    // Mocked behavior: User.updateOne throws an error
-    // Input: validEmail with updated preferences
-    // Expected status code: 500
-    // Expected behavior: Failure to connect to database, returns error message
-    // Expected output: Error 'Error Updating User'
-    test('cannot find user to update User data, should return 500 and error message', async () => {
-        jest.spyOn(User, 'updateOne').mockRejectedValue(new Error('Internal Server Error'));
-
-        const response = await request(server).put('/User/' + invalidEmail).send({ distance : distance, time : time, pace : pace, availability : availability });
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe('Error Updating User');
-    });
 });
 
 describe('POST /api/v1/auth/google (mock)', () => {
@@ -86,5 +75,20 @@ describe('POST /api/v1/auth/google (mock)', () => {
         expect(response.body).toHaveProperty('new_user');
         expect(response.body).toHaveProperty('banned');
         expect(response.body).toHaveProperty('admin', true);
+    });
+});
+
+describe('PUT /User/:email (mock)', () => {
+    // Mocked behavior: User.updateOne throws an error
+    // Input: validEmail with updated preferences
+    // Expected status code: 500
+    // Expected behavior: Failure to connect to database, returns error message
+    // Expected output: Error 'Error Updating User'
+    test('cannot find user to update User data, should return 500 and error message', async () => {
+        jest.spyOn(User, 'updateOne').mockRejectedValue(new Error('Internal Server Error'));
+
+        const response = await request(server).put('/User/' + invalidEmail).send({ distance : distance, time : time, pace : pace, availability : availability });
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe('Error Updating User');
     });
 });

@@ -1,5 +1,3 @@
-jest.mock('google-auth-library');
-
 import { describe, expect, test, beforeAll, afterAll, jest } from '@jest/globals';
 import request from 'supertest';
 import mongoose from 'mongoose';
