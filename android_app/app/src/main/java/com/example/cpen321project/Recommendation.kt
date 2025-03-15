@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar;
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import kotlin.reflect.typeOf
 
 // Add a new interface for location update API
 interface LocationUpdateService {
@@ -90,6 +92,7 @@ class Recommendation : AppCompatActivity() {
     private lateinit var userToken: String
     private lateinit var userEmail: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var invalidWeightsErrorShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -324,6 +327,7 @@ class Recommendation : AppCompatActivity() {
 
         if (locationWeight == null || speedWeight == null || distanceWeight == null) {
             Toast.makeText(this, "Please enter valid weights (0-10)", Toast.LENGTH_SHORT).show()
+            invalidWeightsErrorShown = true
             return
         }
 

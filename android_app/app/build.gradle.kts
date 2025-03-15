@@ -69,6 +69,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.espresso.contrib)
+    implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.espresso.intents)
+
     implementation("androidx.credentials:credentials:1.3.0")
     // optional - needed for credentials support from play services, for devices running
     // Android 13 and below.
@@ -84,4 +88,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test:runner:1.6.1")
     androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }
