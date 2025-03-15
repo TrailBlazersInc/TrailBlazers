@@ -4,6 +4,7 @@
 ## 1. Change History
  - Updated Dependency Diagram to show link between userDB and user Component
  - Functional Requirement 2 renamed to Sign In from Sign Up
+ - Updated the Messaging interface to align to implementation. 14/02/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -197,20 +198,22 @@ The design focuses on enabling the general user to
 2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
-        1. **`Chat *createNewChat(String myId, String budId)`**
-        - **Purpose**: Creates a new chat object, to manage the chat between the current User (myId) and the User they want to message (budId)
-        1. **`Bool addUserToChatGroup(String myId, String budId, String chatId, tkn)`**
-        - **Purpose**: Adds user "myId" and "budId" to a chat Object with the "chatId"
-        1. **`Bool deleteChat(String chatId)`**
-        - **Purpose**: Deletes Chat with Id matching "chatId"
-        1. **`Bool addUserToChat(String myId, String chatId)`**
-        - **Purpose**: Adds user to Chat with Id matching "chatId" 
-        1. **`Bool ValidateMessage(String Message)`**
-        - **Purpose**: Checks if "Message" has any invalid characters in it
-        1. **`Bool SendMessage(String UserId, String ChatId, String Message)`**
-        - **Purpose**: Sends "Message" using WebSocket to all Users in chat with id, "ChatId"
-        1. **`Bool AddMessageToChat(String UserId, String ChatId, String Message)`**
-        - **Purpose**: Stores "Message" in the Messaging DB
+        1. **`Chat[] getChats(String email)`**
+            - **Purpose**: Retrieve all the chats (without messages and with member count) from the user specified with email.
+        2. **`Message[] getMessages(String chatId)`**
+            - **Purpose**: Retrieve all messages from the chat specified in ordered by date non-ascending .
+        3. **`Message[] getMesagesAfter(String chatId, String messageId)`**
+            - **Purpose**: Retrieves all messages of the chat with id chatId whose date is later than the Message with id messageId
+        4. **`Tuple(String, String)[] getChatMembers(String chatId)`**:
+           - **Purpose**: Retrieves the emails and names of all members of the chat with id chatId. 
+        5. **`Chat postChat(String email, String chatName)`**
+           - **Purpose**: Creates a new chat with title chatName with a single member.
+        6. **`Chat postDMChat(String email, String target_email)`**
+            - **Purpose**: Creates a Direct Messaging chat, the title of the chat will show the other member's name and specify that it is a DM. This chat is constrained to two people.
+        7. **`Message postMessage(String email, string chatId, string content)`** 
+            - **Purpose**: Creates a message with the specified content and user and adds it to the chat with id chatId.
+        8.  **`Chat addUser(String email, string chatId)`** 
+            - **Purpose**: Adds user with the specified email to the chat.
         
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
