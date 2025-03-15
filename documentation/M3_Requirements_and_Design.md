@@ -4,7 +4,8 @@
 ## 1. Change History
  - Updated Dependency Diagram to show link between userDB and user Component
  - Functional Requirement 2 renamed to Sign In from Sign Up
- - Updated the Messaging interface to align to implementation. 14/02/2025
+ - Updated the Messaging interface to align to implementation. 03/14/2025
+ - Updated Usecase diagram and Functional Requirement names to align to use cases. 03/15/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -18,12 +19,12 @@ An application that connects nearby users to jog/run together adapting to their 
 
 
 ### **3.2. Actors Description**
-1. **User**: A person who uses the app to locate and connect with others users nearby, ultilizes leaderboards and update their personal information.
+1. **User**: A person who uses the app to locate, connect with others users nearby, and update their personal information.
 2. **App Admin**: A person who has higher privileges to moderate the app by reviewing reports from users and issues bans to offenders.
 
 ### **3.3. Functional Requirements**
 
-1. **User Authentication**:<a id="fr1"></a>
+1. **Authenticate**:<a id="fr1"></a>
    1. **Sign Up**:
         - **Description**: This feature allows users to create an account on the app using Google Sign In API.
         - **Primary actor(s)**: User
@@ -65,7 +66,7 @@ An application that connects nearby users to jog/run together adapting to their 
                 - 2a1. An error message is displayed telling user of the error
                 - 2a2. App prompts user to try again after a set time period
 
-2. **Update profile**:<a id="fr2"></a>
+2. **Manage profile**:<a id="fr2"></a>
    - **Description**: This feature allows users to update their profile to help personalize their nearby buddy recommendations.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -81,7 +82,7 @@ An application that connects nearby users to jog/run together adapting to their 
             - 4a1. Information are not saved and system displays error message saying "Network error. Please check your internet connection and try again."
             - 4a2. App prompts user to try again after a set time period.
 
-3. **Recommend Jogger Buddies**:<a id="fr3"></a>
+3. **Recommend Buddies**:<a id="fr3"></a>
     - **Description**: This feature allows users to discover other joggers nearby based on their location and preferred jogging time.
     - **Primary actor(s)**: User
     - **Main success scenario**:
@@ -99,7 +100,7 @@ An application that connects nearby users to jog/run together adapting to their 
             - 3c1. System displays error message saying "Network error. Please check your internet connection and try again."
             - 3c2. App prompts user to try again after a set time period.
 
-4. **Join/Create and send message to Chat Group**:<a id="fr4"></a>
+4. **Message Buddies**:<a id="fr4"></a>
     1. Join/Create to Chat Group
         - **Description**: This feature allows users to join or create a chat group with other users when looking at the profile of other joggers.
         - **Primary Actors**: User(s)
@@ -128,7 +129,7 @@ An application that connects nearby users to jog/run together adapting to their 
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. User is prompted to try again after a set period of time
 
-5. **Report Users**<a id="fr5"></a>:
+5. **Report User**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
    - **Primary actor(s)**: User
    - **Main success scenario**:
@@ -142,7 +143,7 @@ An application that connects nearby users to jog/run together adapting to their 
        - 1a. No internet connection: Display "Failed to submit report. Please try again."
        - 1b. Report submission error: Display "An error occurred. Please try again later."
 
-6. **Ban Users (Admin Side)**:<a id="fr6"></a>
+6. **Ban User (Admin Side)**:<a id="fr6"></a>
    - **Description**: Admins have the capability to ban users who have been reported for violations, ensuring a safe and friendly community environment.
    - **Primary actor(s)**: App Admin
    - **Main success scenario**:
