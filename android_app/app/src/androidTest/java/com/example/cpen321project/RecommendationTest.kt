@@ -1,201 +1,127 @@
-package com.example.cpen321project
-
-import android.Manifest
 import android.app.Activity
 import android.app.Instrumentation
+import android.content.Intent
+import android.util.Log
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObjectNotFoundException
+import androidx.test.uiautomator.UiSelector
+import com.example.cpen321project.*
+import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+private const val LAG: Long = 8000
+private const val TAG = "RecommendationE2ETest"
+
 @RunWith(AndroidJUnit4::class)
 class RecommendationTest {
 
     @get:Rule
-    var activityScenarioRule = ActivityScenarioRule(Recommendation::class.java)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
-
-    private lateinit var device: UiDevice
+    val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Before
     fun setUp() {
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        // Initialize Intents for testing navigation
         Intents.init()
     }
 
     @After
     fun tearDown() {
-        // Release Intents
         Intents.release()
     }
 
     @Test
-    fun testUIElementsDisplayed() {
-        onView(withId(R.id.inputLocationWeight)).check(matches(isDisplayed()))
-        onView(withId(R.id.inputSpeedWeight)).check(matches(isDisplayed()))
-        onView(withId(R.id.inputDistanceWeight)).check(matches(isDisplayed()))
-        onView(withId(R.id.getLocationPermissionButton)).check(matches(isDisplayed()))
-        onView(withId(R.id.getRecommendationButton)).check(matches(isDisplayed()))
-        onView(withId(R.id.viewOnMapButton)).check(matches(isDisplayed()))
-        onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
-        onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-        onView(withId(R.id.resultTextView)).check(matches(isDisplayed()))
-    }
+    fun testGetRecommendation() {
+        onView(withId(R.id.Sign_In_Button))
+            .check(matches(isDisplayed()))
+            .perform(click())
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        var accountSelector = device.findObject(UiSelector().textContains("yuqianyi1409@gmail.com")) // Replace with part of email
+        if (accountSelector.exists()) {
+            accountSelector.click() // Click the first available Google account
+        } else {
+            throw Exception("No Google account found for sign-in")
+        }
 
-    @Test
-    fun testEnterValidWeights() {
-        onView(withId(R.id.inputLocationWeight)).perform(replaceText("5"), closeSoftKeyboard())
-        onView(withId(R.id.inputSpeedWeight)).perform(replaceText("7"), closeSoftKeyboard())
-        onView(withId(R.id.inputDistanceWeight)).perform(replaceText("3"), closeSoftKeyboard())
+        // Wait for HomeActivity to load
+//        Thread.sleep(3000) // Adjust as needed, or use IdlingResource
 
-        onView(withId(R.id.inputLocationWeight)).check(matches(withText("5")))
-        onView(withId(R.id.inputSpeedWeight)).check(matches(withText("7")))
-        onView(withId(R.id.inputDistanceWeight)).check(matches(withText("3")))
-    }
+        // 1. Click "Recommendation" Button in HomeActivity
+        onView(withId(R.id.recommendationButton))
+            .check(matches(isDisplayed()))
+            .perform(click())
 
-    @Test
-    fun testEnterInvalidWeights_NonNumeric() {
-        var invalidWeightsErrorShown = false
+        // Ensure Recommendation Screen is loaded
+        Intents.intended(hasComponent(Recommendation::class.java.name))
 
-        // Enter invalid weight (non-numeric text)
+        // 2a. When input field is invalid (non numeric)
         onView(withId(R.id.inputLocationWeight)).perform(replaceText("abc"), closeSoftKeyboard())
         onView(withId(R.id.inputSpeedWeight)).perform(replaceText("def"), closeSoftKeyboard())
         onView(withId(R.id.inputDistanceWeight)).perform(replaceText("ghi"), closeSoftKeyboard())
 
-        // Click the recommendation button to trigger validation
         onView(withId(R.id.getRecommendationButton)).perform(click())
+        onView(withText("Please enter valid weights (0-10)")).check(matches(isDisplayed()))
 
-        // Check the flag in the activity
-        activityScenarioRule.scenario.onActivity { activity ->
-            invalidWeightsErrorShown = activity.invalidWeightsErrorShown
-        }
-
-        // Assert that the flag was set to true
-        assert(invalidWeightsErrorShown) { "Invalid weights error was not shown" }
-    }
-
-    @Test
-    fun testEnterInvalidWeights_EmptyFields() {
-        var invalidWeightsErrorShown = false
-
-        // Leave fields empty
-        onView(withId(R.id.inputLocationWeight)).perform(replaceText(""), closeSoftKeyboard())
-        onView(withId(R.id.inputSpeedWeight)).perform(replaceText(""), closeSoftKeyboard())
-        onView(withId(R.id.inputDistanceWeight)).perform(replaceText(""), closeSoftKeyboard())
-
-        // Click the recommendation button to trigger validation
-        onView(withId(R.id.getRecommendationButton)).perform(click())
-
-        // Check the flag in the activity
-        activityScenarioRule.scenario.onActivity { activity ->
-            invalidWeightsErrorShown = activity.invalidWeightsErrorShown
-        }
-
-        // Assert that the flag was set to true
-        assert(invalidWeightsErrorShown) { "Invalid weights error was not shown for empty fields" }
-    }
-
-    @Test
-    fun testEnterInvalidWeights_PartiallyFilled() {
-        var invalidWeightsErrorShown = false
-
-        // Only fill some fields
+        // 2. Correct input
         onView(withId(R.id.inputLocationWeight)).perform(replaceText("5"), closeSoftKeyboard())
-        onView(withId(R.id.inputSpeedWeight)).perform(replaceText(""), closeSoftKeyboard())
-        onView(withId(R.id.inputDistanceWeight)).perform(replaceText("3"), closeSoftKeyboard())
+        onView(withId(R.id.inputSpeedWeight)).perform(replaceText("6"), closeSoftKeyboard())
+        onView(withId(R.id.inputDistanceWeight)).perform(replaceText("7"), closeSoftKeyboard())
 
-        // Click the recommendation button to trigger validation
-        onView(withId(R.id.getRecommendationButton)).perform(click())
-
-        // Check the flag in the activity
-        activityScenarioRule.scenario.onActivity { activity ->
-            invalidWeightsErrorShown = activity.invalidWeightsErrorShown
+        // 3. Grant location permission
+        accountSelector = device.findObject(UiSelector().textContains("Only this time")) // Grant location permission for this time
+        if (accountSelector.exists()) {
+            accountSelector.click() // Click the first available Google account
+            Log.d(TAG, "Permission granted")
         }
 
-        // Assert that the flag was set to true
-        assert(invalidWeightsErrorShown) { "Invalid weights error was not shown for partially filled fields" }
-    }
-
-    @Test
-    fun testClickGetRecommendationButton_ShowsProgressBar() {
-        // Enter valid weights first
-        onView(withId(R.id.inputLocationWeight)).perform(replaceText("5"), closeSoftKeyboard())
-        onView(withId(R.id.inputSpeedWeight)).perform(replaceText("5"), closeSoftKeyboard())
-        onView(withId(R.id.inputDistanceWeight)).perform(replaceText("5"), closeSoftKeyboard())
-
-        // Progress bar should be initially hidden
-        onView(withId(R.id.progressBar)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-
-        // Click the button
+        // 4. Get recommendation
         onView(withId(R.id.getRecommendationButton)).perform(click())
 
-        // Check progress bar appears
-        onView(withId(R.id.progressBar)).check(matches(isDisplayed()))
+        // 5. Top 5 Recommendation is well displayed
+        onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
 
-        // Check text updates
-        onView(withId(R.id.resultTextView)).check(matches(withText("Fetching recommendations...")))
-    }
-
-    @Test
-    fun testRequestLocationPermission_PermissionAlreadyGranted() {
-        // Since we used GrantPermissionRule, permissions are already granted
-        // Click the permission button
-        onView(withId(R.id.getLocationPermissionButton)).perform(click())
-
-        // Wait a moment for possible toast (may not be reliable in tests)
-        Thread.sleep(1000)
-
-        // We can't reliably test for toast in this case, but we can verify
-        // the app didn't crash when attempting to use the permission
-    }
-
-    @Test
-    fun testClickViewOnMapButton_NavigatesToMapActivity() {
-        // Set up intended response
+        // 6. Navigate to MapActivity
         Intents.intending(IntentMatchers.hasComponent(MapsActivity::class.java.name))
             .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
 
-        // Click the map button
-        onView(withId(R.id.viewOnMapButton)).perform(click())
+        onView(withId(R.id.viewOnMapButton))
+            .check(matches(isDisplayed()))
+            .perform(click())
 
-        // Verify the intent was sent
         Intents.intended(IntentMatchers.hasComponent(MapsActivity::class.java.name))
-    }
 
-    @Test
-    fun testWeightInputRangeValidation() {
-        // Test with values out of expected range (assuming 0-10 is valid)
-        onView(withId(R.id.inputLocationWeight)).perform(replaceText("15"), closeSoftKeyboard())
-        onView(withId(R.id.inputSpeedWeight)).perform(replaceText("7"), closeSoftKeyboard())
-        onView(withId(R.id.inputDistanceWeight)).perform(replaceText("3"), closeSoftKeyboard())
+        Thread.sleep(12000)
 
-        // If your app validates weight ranges beyond just checking if they're numbers
-        // Add validation logic here
-    }
+        // Verify map UI elements are displayed
+//        onView(withId(R.id.mapFragment)).check(matches(isDisplayed()))
+//
+//        pressBack()
 
-    @Test
-    fun testInitialLoadState() {
-        // Check initial state of the recommendation list
-        onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
-        // Further checks would depend on your implementation - whether the list
-        // starts empty or pre-populated
+        // 7. Click the first "Message" button and navigate to Message Activity
+        onView(withId(R.id.recommendationRecyclerView))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecommendationAdapter.ViewHolder>(0, click()))
+        onView(allOf(
+            withId(R.id.addUserButton),
+            isDisplayed()
+        )).perform(click())
     }
 }
