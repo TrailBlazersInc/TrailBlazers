@@ -98,8 +98,8 @@ An application that connects nearby users to jog/run together adapting to their 
             - 2a1. System displays message saying "Please enter valid weights (0-10)"
             - 2a2. App prompts user to try again with valid weights.
         - 3a. User did not grant location permission: 
-            - 2a1. System displays message saying "Please grant the location permissions"
-            - 2a2. App prompts user to try again by granting the location permissions.
+            - 3a1. System displays message saying "Please grant the location permissions"
+            - 3a2. App prompts user to try again by granting the location permissions.
         - 5a. No suitable matches are found: 
             - 5a1. System displays message saying "No joggers available for the selected time and location. Please try again later or adjust your preferences."
             - 5a2. App prompts user to try again after adjusting preference.
