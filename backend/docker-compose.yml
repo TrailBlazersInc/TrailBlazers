@@ -22,7 +22,7 @@ services:
     ports:
       - "${PORT}:${PORT}"
     volumes:
-      -/home/azureuser/certificates:/certs:ro
+      - /home/azureuser/certificates:/certs:ro
     depends_on:
       - mongo
     command: npm start
