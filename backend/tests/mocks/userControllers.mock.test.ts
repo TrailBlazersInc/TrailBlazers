@@ -21,10 +21,6 @@ const availability = {
     sunday: true,
   };
 
-beforeAll(async () => {
-    process.env.JWT_SECRET = "SECRET_KEY";
-});
-
 afterAll(async () => {
     await mongoose.connection.close();
     server.close();

@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 import crypto from 'crypto';
 
 export class OAuth2Client {
-    verifyIdToken = jest.fn(async ({ idToken }: { idToken: string }) => {
+    verifyIdToken = jest.fn(({ idToken }: { idToken: string }) => {
       if (idToken === 'valid_mock_token') {
         return {
           getPayload: () => ({
