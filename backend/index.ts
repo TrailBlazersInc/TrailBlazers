@@ -3,7 +3,9 @@ import {ConnectMongoDB} from './services';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import http from 'http';
+import https from 'https';
 import mongoose from 'mongoose';
+import fs from 'fs';
 import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
 import { MessagingRoutes } from './routes/MessagingRoutes';
@@ -59,10 +61,21 @@ app.get('/', async (req: Request, res: Response) =>{
 export const server = http.createServer(app)
 ConnectMongoDB().then(() => {
     if (require.main === module) {
-        app.listen(process.env.PORT, () => {
-            console.log("Mongo DB Models Connected");
-            console.log("Listening on port " + process.env.PORT)
-        })
+        if (process.env.PORT == "443"){
+            const options = {
+                key: fs.readFileSync("/home/azureuser/certificates/key.pem"),
+                cert: fs.readFileSync("/home/azureuser/certificates/fullchain.pem"),
+            };
+            https.createServer(options, app).listen( process.env.PORT, () => {
+                console.log("Mongo DB Connected");
+                console.log("Listening on port " + process.env.PORT)
+            })
+        } else{
+            app.listen(process.env.PORT, () => {
+                console.log("Mongo DB Connected");
+                console.log("Listening on port " + process.env.PORT)
+            })
+        }
     }
 }).catch(err =>{
     console.error(err)
