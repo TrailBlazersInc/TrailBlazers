@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -167,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                             }
-                                        } catch (e: Exception) {
+                                        } catch (e: JSONException) {
                                             Log.e(TAG, "JSON Parsing error: ${e.message}")
                                         }
                                     } else {
