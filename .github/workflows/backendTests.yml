@@ -36,7 +36,6 @@ jobs:
 
       - name: Run Jest tests
         env: 
-          NODE_OPTIONS: "--experimental-vm-modules"
           DB_URI: mongodb://localhost:27017/tests
           PORT: 3000
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
