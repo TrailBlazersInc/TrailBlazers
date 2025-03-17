@@ -31,7 +31,7 @@ Routes.forEach( (route) => {
 
     (app as any) [route.method](
         route.route,
-        //...middlewares,
+        ...middlewares,
         route.validation,
         async (req: Request, res: Response, next: NextFunction) => {
             const errors = validationResult(req)

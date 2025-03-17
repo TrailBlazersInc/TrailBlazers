@@ -11,6 +11,12 @@
 ## 2. Back-end Test Specification: APIs
 
 ### 2.1. Locations of Back-end Tests and Instructions to Run Them
+All Backend Tests are located under  `backend/tests/`
+To run them perform run the following commands:
+```shell
+
+
+```
 
 #### 2.1.1. Tests
 
@@ -23,7 +29,7 @@
 
 #### 2.1.2. Commit Hash Where Tests Run
 
-`[Insert Commit SHA here]`
+`02:A1:47:3A:51:3E:83:4D:DC:42:29:1A:04:1F:61:68:4D:05:B9:25`
 
 #### 2.1.3. Explanation on How to Run the Tests
 
