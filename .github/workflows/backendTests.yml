@@ -8,7 +8,16 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,9 +32,15 @@ jobs:
       - name: Install dependencies
         run: |
           cd backend
-          npm ci
+          npm install
 
       - name: Run Jest tests
+        env: 
+          DB_URI: mongodb://localhost:27017/tests
+          PORT: 3000
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
+          IS_TESTING: true
         run: |
           cd backend
           npm test

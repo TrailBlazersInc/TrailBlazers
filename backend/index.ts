@@ -24,10 +24,15 @@ app.use(morgan('tiny'))
 const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes, ...RecommendationRoutes, ...ReportRoutes, ...BanRoutes]
 
 const publicRoutes = ["/api/v1/auth/google"];
+const isTesting = process.env.IS_TESTING;
 
 Routes.forEach( (route) => {
-
-    const middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
+    let middlewares: ((req: Request, res: Response, next: NextFunction) => express.Response<any, Record<string, any>> | undefined)[] = [];
+    
+    if (!isTesting){
+        middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
+    }
+    
 
     (app as any) [route.method](
         route.route,
