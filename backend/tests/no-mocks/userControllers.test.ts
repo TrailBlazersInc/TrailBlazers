@@ -69,7 +69,7 @@ describe('PUT /user/:email', () => {
         //Expected Status Code: 200
         //Expected Behavior: Updates the User DB of the user with updated preferences and returns success message
         //Expected output: Message 'User data updated successfully'
-        const response = await request(server).put('/User/' + validEmail).send({ distance : distance, time : time, pace : pace, availability : availability });
+        const response = await request(server).put('/User/' + validEmail).send({ distance, time : time, pace : pace, availability : availability });
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('message', 'User data updated successfully');
     });
@@ -78,7 +78,7 @@ describe('PUT /user/:email', () => {
         //Expected Status Code: 400
         //Expected Behavior: Returns Error Message
         //Expected output: Error 'User not found'
-        const response = await request(server).put('/User/' + invalidEmail).send({ distance : distance, time : time, pace : pace, availability : availability });
+        const response = await request(server).put('/User/' + invalidEmail).send({ distance, time : time, pace : pace, availability : availability });
         expect(response.status).toBe(400);
         expect(response.body.error).toBe('User not found');
     });
