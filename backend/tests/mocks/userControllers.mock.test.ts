@@ -5,7 +5,6 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { server } from '../../index';
 import { User } from '../../models/user';
-import crypto from 'crypto';
 
 const invalidEmail = "invalidmockUser@example.com";
 const distance = '5km';

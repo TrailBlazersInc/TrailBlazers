@@ -64,7 +64,7 @@ export class authenticate {
 
           if (admin) {
             var newValues = { $set: {admin: true } };
-            var result = await User.updateOne({ email: response.email }, newValues);
+            await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });
           }
           else {
