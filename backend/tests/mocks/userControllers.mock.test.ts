@@ -1,10 +1,11 @@
+import mongoose from 'mongoose';
+import request from 'supertest';
+import { describe, expect, test, beforeAll, afterAll, jest } from '@jest/globals';
+
 jest.mock('google-auth-library');
 
-import { describe, expect, test, beforeAll, afterAll, jest } from '@jest/globals';
-import request from 'supertest';
-import mongoose from 'mongoose';
-import { server } from '../../index';
 import { User } from '../../models/user';
+import { server } from '../../index';
 
 const invalidEmail = "invalidmockUser@example.com";
 const distance = '5km';
