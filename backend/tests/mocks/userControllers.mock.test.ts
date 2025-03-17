@@ -2,7 +2,7 @@ import { User } from '../../models/user';
 import { server } from '../../index';
 import mongoose from 'mongoose';
 import request from 'supertest';
-import { describe, expect, test, beforeAll, afterAll, jest } from '@jest/globals';
+import { describe, expect, test, afterAll, jest } from '@jest/globals';
 
 jest.mock('google-auth-library');
 
