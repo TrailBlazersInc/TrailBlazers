@@ -80,6 +80,7 @@ class Recommendation : AppCompatActivity() {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
 
+    private lateinit var rootView: View
     private lateinit var inputLocationWeight: EditText
     private lateinit var inputSpeedWeight: EditText
     private lateinit var inputDistanceWeight: EditText
@@ -93,11 +94,15 @@ class Recommendation : AppCompatActivity() {
     private lateinit var userEmail: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var invalidWeightsErrorShown = false
+    var locationPermissionDenied = false
+    var noMatchesFound = false
+    var apiCallFailed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_recommendation)
+        rootView = findViewById(android.R.id.content)
 
         // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -163,6 +168,10 @@ class Recommendation : AppCompatActivity() {
         }
     }
 
+    private fun showSnackbar(message: String) {
+        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun checkAndUpdateLocation() {
         when {
             ContextCompat.checkSelfPermission(
@@ -194,7 +203,7 @@ class Recommendation : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show()
+            showSnackbar("Location permission not granted")
             return
         }
 
@@ -234,37 +243,25 @@ class Recommendation : AppCompatActivity() {
                     ).enqueue(object : Callback<ResponseBody> {
                         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                             if (response.isSuccessful) {
-                                Toast.makeText(
-                                    this@Recommendation,
-                                    "Location updated successfully",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showSnackbar("Location updated successfully")
                             } else {
                                 Log.e(TAG, "Failed to update location. Response code: ${response.code()}")
                                 Log.e(TAG, "Response body: ${response.errorBody()?.string()}") // Log error response
-                                Toast.makeText(
-                                    this@Recommendation,
-                                    "Failed to update location",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showSnackbar("Failed to update location")
                             }
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             Log.e(TAG, "Network error updating location: ${t.message}")
-                            Toast.makeText(
-                                this@Recommendation,
-                                "Network error updating location",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showSnackbar("Network error updating location")
                         }
                     })
                 } ?: run {
-                    Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
+                    showSnackbar("Unable to get location")
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Location retrieval failed", Toast.LENGTH_SHORT).show()
+                showSnackbar("Location retrieval failed")
             }
     }
 
@@ -288,11 +285,8 @@ class Recommendation : AppCompatActivity() {
                 requestLocationPermissions()
             }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-                Toast.makeText(
-                    this,
-                    "Please grant the location permissions",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar("Please grant the location permissions")
+                locationPermissionDenied = true
             }.show()
     }
 
@@ -310,11 +304,8 @@ class Recommendation : AppCompatActivity() {
                 // Permissions granted, update location
                 updateUserLocation()
             } else {
-                Toast.makeText(
-                    this,
-                    "Location permissions are required to use this feature",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar("Location permissions are required to use this feature")
+                locationPermissionDenied = true
             }
         }
     }
@@ -326,7 +317,7 @@ class Recommendation : AppCompatActivity() {
         val distanceWeight = inputDistanceWeight.text.toString().toIntOrNull()
 
         if (locationWeight == null || speedWeight == null || distanceWeight == null) {
-            Toast.makeText(this, "Please enter valid weights (0-10)", Toast.LENGTH_SHORT).show()
+            showSnackbar("Please enter valid weights (0-10)")
             invalidWeightsErrorShown = true
             return
         }
@@ -367,6 +358,11 @@ class Recommendation : AppCompatActivity() {
                             try {
                                 val jsonObject = JSONObject(responseString.toString())
                                 val recommendationsArray = jsonObject.getJSONArray("recommendations")
+
+                                if (recommendationsArray.length() == 0) {
+                                    resultTextView.text = "No joggers available for the selected time and location. Please try again later or adjust your preferences."
+                                    return
+                                }
 
                                 val recommendationsList = mutableListOf<RecommendationItem>()
 
@@ -417,6 +413,7 @@ class Recommendation : AppCompatActivity() {
                         } else {
                             Log.e(TAG, "API call failed")
                             resultTextView.text = "Error: ${response.code()}"
+                            apiCallFailed = true
                         }
                         resultTextView.text = "Result is..."
                     }
@@ -425,6 +422,7 @@ class Recommendation : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                         resultTextView.text = "Failed to fetch recommendations: ${t.message}"
                         Log.e(TAG, "API Call Failed: ${t.message}")
+                        apiCallFailed = true
                     }
                 })
             }
