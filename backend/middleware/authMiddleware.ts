@@ -12,7 +12,12 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 
     try {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET!);
+        const jwtSecret = process.env.JWT_SECRET;
+        if (!jwtSecret) {
+            throw new Error("Missing JWT_SECRET environment variable.");
+        }
+
+        const decodedToken = jwt.verify(token, jwtSecret);
         (req as any).user = decodedToken;
         next();
     } catch (error) {

@@ -60,7 +60,12 @@ export class authenticate {
             new_user = true;
           }
 
-          const token = jwt.sign({ id: user.social_id }, process.env.JWT_SECRET!, { expiresIn: '12h' });
+          const jwtSecret = process.env.JWT_SECRET;
+          if (!jwtSecret) {
+              throw new Error("Missing JWT_SECRET environment variable.");
+          }
+
+          const token = jwt.sign({ id: user.social_id }, jwtSecret, { expiresIn: '12h' });
 
           if (admin) {
             var newValues = { $set: {admin: true } };
