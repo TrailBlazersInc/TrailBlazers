@@ -137,12 +137,8 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun getMessages(token: String, email: String, chatId: String){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.getMessages("Bearer $token", chatId).enqueue(object :
             Callback<ResponseBody> {
@@ -191,10 +187,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(token: String, email: String, chatId: String, messageInput: EditText){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
         val jsonObject = JSONObject()
         jsonObject.put("email", email)
@@ -205,7 +197,7 @@ class ChatActivity : AppCompatActivity() {
             jsonObject.toString()
         )
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.postMessage("Bearer $token", chatId, requestBody).enqueue(object :
             Callback<ResponseBody> {
@@ -226,12 +218,8 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun updateChat(token: String, email: String, chatId: String){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.getNewMessages("Bearer $token", chatId, lastMessageId).enqueue(object :
             Callback<ResponseBody> {

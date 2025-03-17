@@ -65,12 +65,8 @@ class ReportUserActivity : AppCompatActivity() {
     }
 
     private fun submitReport(targetEmail: String, reason: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         val jsonObject = JSONObject()
         jsonObject.put("aggressor_email", targetEmail)
@@ -100,12 +96,8 @@ class ReportUserActivity : AppCompatActivity() {
     }
 
     private fun setUsers(spinner: Spinner){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.getChatMembers("Bearer $userToken", chatId).enqueue(object :
             Callback<ResponseBody> {

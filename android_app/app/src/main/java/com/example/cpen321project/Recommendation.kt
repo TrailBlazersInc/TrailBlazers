@@ -228,12 +228,8 @@ class Recommendation : AppCompatActivity() {
                     )
 
                     // Setup Retrofit for location update
-                    val retrofit = Retrofit.Builder()
-                        .baseUrl(BuildConfig.BACKEND_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
 
-                    val locationUpdateService = retrofit.create(LocationUpdateService::class.java)
+                    val locationUpdateService = RetrofitClient.getClient(this).create(LocationUpdateService::class.java)
 
                     // Make API call to update location
                     locationUpdateService.updateUserLocation(
@@ -337,13 +333,7 @@ class Recommendation : AppCompatActivity() {
             jsonObject.toString()
         )
 
-        // Setup Retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         // Make API call with Authorization header
         userToken?.let { token ->
