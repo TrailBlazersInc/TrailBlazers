@@ -78,9 +78,8 @@ export class authenticate {
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
           }
         } catch (error) {
-          console.log(error)
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });
         }
 
-    };
+    }
 }
