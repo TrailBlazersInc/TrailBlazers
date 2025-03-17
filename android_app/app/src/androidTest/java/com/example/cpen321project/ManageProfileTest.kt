@@ -52,7 +52,7 @@ class ManageProfileTest {
 
         onView(withId(R.id.Sign_In_Button)).perform(click())
         Thread.sleep(1000)
-        val accountSelector = device.findObject(UiSelector().textContains("amanvirsamra@gmail.com")) // Replace with part of email
+        val accountSelector = device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click()
         } else {
