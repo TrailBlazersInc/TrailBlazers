@@ -4,7 +4,7 @@ import { Ban } from '../models/ban';
 
 
 export class BanController {
-    public async banUser(req: Request, res: Response, next: NextFunction) {
+    public async banUser(req: Request, res: Response) {
         try {
             console.log("HERE")
             console.log(req.params.email);

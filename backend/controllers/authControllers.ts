@@ -31,8 +31,6 @@ export class authenticate {
 
           let user = await User.findOne({ social_id: response.sub });
 
-          const userCount = await User.countDocuments();
-
           if (!user) {
             const first_name = response.given_name?? "Guest"
             const last_name = response.family_name?? "User"
@@ -71,7 +69,7 @@ export class authenticate {
           }
           else {
             var newValues = { $set: {admin: false } };
-            var result = await User.updateOne({ email: response.email }, newValues);
+            await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
           }
         } catch (error) {

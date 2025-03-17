@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { User } from '../models/user'
 
 export class UserController {
-    async getUserData(req: Request, res: Response, next: NextFunction){
+    async getUserData(req: Request, res: Response){
         let user = await User.findOne({ email: req.params.email });
         res.status(200).json({ status: 'success', user });
     }
-    async putUserData(req: Request, res: Response, next: NextFunction){
+    async putUserData(req: Request, res: Response){
         try {
             const { distance, time, pace, availability } = req.body;
             var newValues = { $set: {distance: distance, time: time, pace: pace, availability: availability } };

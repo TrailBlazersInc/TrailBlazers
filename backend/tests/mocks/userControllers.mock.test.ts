@@ -7,7 +7,6 @@ import { server } from '../../index';
 import { User } from '../../models/user';
 import crypto from 'crypto';
 
-const validEmail = crypto.randomUUID() + '@example.com';
 const invalidEmail = "invalidmockUser@example.com";
 const distance = '5km';
 const time = '2 hour';
