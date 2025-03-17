@@ -86,7 +86,7 @@ describe('PUT /User/:email (mock)', () => {
     test('cannot find user to update User data, should return 500 and error message', async () => {
         jest.spyOn(User, 'updateOne').mockRejectedValue(new Error('Internal Server Error'));
 
-        const response = await request(server).put('/User/' + invalidEmail).send({ distance, time : time, pace : pace, availability : availability });
+        const response = await request(server).put('/User/' + invalidEmail).send({ distance : distance, time : time, pace : pace, availability : availability });
         expect(response.status).toBe(500);
         expect(response.body.error).toBe('Error Updating User');
     });
