@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { UserController } from '../controllers/UserControllers';
 import { body, param } from 'express-validator';
 
@@ -7,7 +8,7 @@ export const UserRoutes = [
     {
         method: 'get',
         route: '/User/:email',
-        action: controller.getUserData,
+        action: (req: Request, res: Response) => controller.getUserData(req, res),
         validation: [
             param("email").isEmail()
         ]
@@ -15,7 +16,7 @@ export const UserRoutes = [
     {
         method: 'put',
         route: '/User/:email',
-        action: controller.putUserData,
+        action: (req: Request, res: Response) => controller.putUserData(req, res),
         validation: [
             param("email").isEmail()
         ]
