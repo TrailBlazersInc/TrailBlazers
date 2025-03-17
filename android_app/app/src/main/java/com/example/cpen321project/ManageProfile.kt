@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.cpen321andriodapp.ApiService
 import com.example.cpen321project.MainActivity.Companion
+import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -101,9 +102,9 @@ class ManageProfile : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.save_button).setOnClickListener() {
-            val pace = paceText.text.toString().toIntOrNull()
-            if(pace == null || pace == 0){
-                Toast.makeText(this, "Please enter valid Pace value", Toast.LENGTH_SHORT).show()
+            val pace = paceText.text.toString().toFloatOrNull()
+            if(pace == null || pace.toDouble() == 0.0 || pace.toDouble() >= 21.02){
+                Snackbar.make(findViewById(R.id.main), "Please enter valid Pace value", Snackbar.LENGTH_SHORT).show()
             }
             else{
                 val availabilityJson = """
@@ -156,14 +157,14 @@ class ManageProfile : AppCompatActivity() {
         apiService.updateUser("Bearer $token", email, requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(this@ManageProfile, "Changes Saved", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(findViewById(R.id.main), "Changes Saved", Snackbar.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@ManageProfile, "Unable to Update Profile", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(findViewById(R.id.main), "Unable to Update Profile", Snackbar.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(this@ManageProfile, "Unable to Update Profile", Toast.LENGTH_SHORT).show()
+                Snackbar.make(findViewById(R.id.main), "Unable to Update Profile", Snackbar.LENGTH_SHORT).show()
                 Log.d(TAG,"Request failed: ${t.message}")
             }
         })
