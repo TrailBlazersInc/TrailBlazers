@@ -63,8 +63,8 @@ ConnectMongoDB().then(() => {
     if (require.main === module) {
         if (process.env.PORT == "443"){
             const options = {
-                key: fs.readFileSync("/home/azureuser/certificates/privkey.pem"),
-                cert: fs.readFileSync("/home/azureuser/certificates/fullchain.pem"),
+                key: fs.readFileSync("/certs/privkey.pem"),
+                cert: fs.readFileSync("/certs/fullchain.pem"),
             };
             https.createServer(options, app).listen( process.env.PORT, () => {
                 console.log("Mongo DB Connected");
