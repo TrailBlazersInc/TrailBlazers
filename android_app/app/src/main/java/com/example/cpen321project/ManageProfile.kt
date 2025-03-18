@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,10 +42,7 @@ class ManageProfile : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_manage_profile)
         paceText = findViewById(R.id.editTextNumberDecimal)
-
         paceText.setText("1");
-
-
         val runDistanceArray = resources.getStringArray(R.array.RunDistance)
         val runTimeArray = resources.getStringArray(R.array.RunTime)
         var runDistance: String? = null
@@ -52,7 +50,6 @@ class ManageProfile : AppCompatActivity() {
         val extras = intent.extras
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
-        Log.d(TAG, "tkn and email: $tkn and $email")
         val monday = findViewById<Switch>(R.id.monday_switch)
         val tuesday = findViewById<Switch>(R.id.tuesday_switch)
         val wednesday = findViewById<Switch>(R.id.wednesday_switch)
@@ -63,12 +60,10 @@ class ManageProfile : AppCompatActivity() {
 
         setupSpinner(findViewById(R.id.RunDistance), runDistanceArray) { selectedDistance ->
             runDistance = selectedDistance
-            Log.d(TAG, runDistance ?: "No distance selected")
         }
 
         setupSpinner(findViewById(R.id.RunTime), runTimeArray) { selectedTime ->
             runTime = selectedTime
-            Log.d(TAG, runTime ?: "No time selected")
         }
 
         fetchUserData(tkn, email)
@@ -79,29 +74,10 @@ class ManageProfile : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.main), "Please enter valid Pace value", Snackbar.LENGTH_SHORT).show()
             }
             else{
-                val availabilityJson = """
-                {
-                    "monday": ${monday.isChecked},
-                    "tuesday": ${tuesday.isChecked},
-                    "wednesday": ${wednesday.isChecked},
-                    "thursday": ${thursday.isChecked},
-                    "friday": ${friday.isChecked},
-                    "saturday": ${saturday.isChecked},
-                    "sunday": ${sunday.isChecked}
-                }
-                """.trimIndent()
+                val availabilityJson = """{"monday": ${monday.isChecked},"tuesday": ${tuesday.isChecked},"wednesday": ${wednesday.isChecked},"thursday": ${thursday.isChecked},"friday": ${friday.isChecked},"saturday": ${saturday.isChecked},"sunday": ${sunday.isChecked}}""".trimIndent()
 
-                val jsonString = """
-                    {
-                        "distance": "${runDistance ?: "0"}",
-                        "time": "${runTime ?: "0"}",
-                        "pace": $pace,
-                        "availability": $availabilityJson
-                    }
-                """
-                val requestBody = RequestBody.create(
-                    MediaType.parse("application/json"), jsonString
-                )
+                val jsonString = """{"distance": "${runDistance ?: "0"}","time": "${runTime ?: "0"}","pace": $pace,"availability": $availabilityJson}"""
+                val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString)
                 updateUser(tkn, email, requestBody)
             }
         }
@@ -175,8 +151,8 @@ class ManageProfile : AppCompatActivity() {
                             runOnUiThread {
                                 updateUI(distance, time, pace, availability)
                             }
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error parsing user data: ${e.message}")
+                        } catch (e: JSONException) {
+                            Log.e(TAG, "JSON parsing error: ${e.message}")
                         }
                     }
                 } else {
