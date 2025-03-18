@@ -32,15 +32,24 @@ jobs:
       - name: Install dependencies
         run: |
           cd backend
-          npm install
+          npm ci
 
-      - name: Run Jest tests
-        env: 
+      - name: Create environment files
+        run: | 
+          cd backend
+          cat > .env << EOF
           DB_URI: mongodb://localhost:27017/tests
           PORT: 3000
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           JWT_SECRET: ${{ secrets.JWT_SECRET}}
           IS_TESTING: true
+
+          EOF
+
+          # env permissions
+          chmod 600 .env
+
+      - name: Run Jest tests
         run: |
           cd backend
           npm test
