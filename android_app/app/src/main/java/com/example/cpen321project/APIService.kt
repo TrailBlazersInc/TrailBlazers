@@ -95,4 +95,10 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("email") email: String
     ): Call<ResponseBody>
+
+    @GET("/User/{email}")
+    fun getUser(
+        @Header("Authorization") token : String,
+        @Path("email") email: String
+    ): Call<ResponseBody>
 }

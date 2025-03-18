@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,46 +61,17 @@ class ManageProfile : AppCompatActivity() {
         val saturday = findViewById<Switch>(R.id.saturday_switch)
         val sunday = findViewById<Switch>(R.id.sunday_switch)
 
-        val disSpinner = findViewById<Spinner>(R.id.RunDistance)
-        if (disSpinner != null) {
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, runDistanceArray)
-            disSpinner.adapter = adapter
-
-            disSpinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View, position: Int, id: Long
-                ) {
-                    Log.d(TAG, runDistanceArray[position])
-                    runDistance = runDistanceArray[position]
-                }
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Do Nothing
-                }
-            }
+        setupSpinner(findViewById(R.id.RunDistance), runDistanceArray) { selectedDistance ->
+            runDistance = selectedDistance
+            Log.d(TAG, runDistance ?: "No distance selected")
         }
-        val timeSpinner = findViewById<Spinner>(R.id.RunTime)
-        if (timeSpinner != null) {
-            //Note: Will be better to make helper function to reduce repetition
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, runTimeArray)
-            timeSpinner.adapter = adapter
 
-            timeSpinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View, position: Int, id: Long
-                ) {
-                    Log.d(TAG, runTimeArray[position])
-                    runTime = runTimeArray[position]
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Do Nothing
-                }
-            }
+        setupSpinner(findViewById(R.id.RunTime), runTimeArray) { selectedTime ->
+            runTime = selectedTime
+            Log.d(TAG, runTime ?: "No time selected")
         }
+
+        fetchUserData(tkn, email)
 
         findViewById<Button>(R.id.save_button).setOnClickListener() {
             val pace = paceText.text.toString().toFloatOrNull()
@@ -168,5 +140,76 @@ class ManageProfile : AppCompatActivity() {
                 Log.d(TAG,"Request failed: ${t.message}")
             }
         })
+    }
+    private fun setupSpinner(spinner: Spinner, items: Array<String>, onItemSelected: (String) -> Unit) {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                onItemSelected(items[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
+        }
+    }
+
+    private fun fetchUserData(token: String, email: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService = retrofit.create(ApiService::class.java)
+
+        apiService.getUser("Bearer $token", email).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    response.body()?.string()?.let { responseBody ->
+                        try {
+                            val jsonObject = JSONObject(responseBody)
+                            val user = jsonObject.getJSONObject("user")
+
+                            val distance = user.getString("distance")
+                            val time = user.getString("time")
+                            val pace = user.getDouble("pace")
+                            val availability = user.getJSONObject("availability")
+
+                            runOnUiThread {
+                                updateUI(distance, time, pace, availability)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error parsing user data: ${e.message}")
+                        }
+                    }
+                } else {
+                    Snackbar.make(findViewById(R.id.main), "Failed to load user data", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Snackbar.make(findViewById(R.id.main), "Unable to fetch user data", Snackbar.LENGTH_SHORT).show()
+                Log.d(TAG, "Request failed: ${t.message}")
+            }
+        })
+    }
+
+    private fun updateUI(distance: String, time: String, pace: Double, availability: JSONObject) {
+        val runDistanceSpinner = findViewById<Spinner>(R.id.RunDistance)
+        val runTimeSpinner = findViewById<Spinner>(R.id.RunTime)
+
+        runDistanceSpinner.setSelection(resources.getStringArray(R.array.RunDistance).indexOf(distance))
+        runTimeSpinner.setSelection(resources.getStringArray(R.array.RunTime).indexOf(time))
+
+        paceText.setText(pace.toString())
+
+        findViewById<Switch>(R.id.monday_switch).isChecked = availability.getBoolean("monday")
+        findViewById<Switch>(R.id.tuesday_switch).isChecked = availability.getBoolean("tuesday")
+        findViewById<Switch>(R.id.wednesday_switch).isChecked = availability.getBoolean("wednesday")
+        findViewById<Switch>(R.id.thursday_switch).isChecked = availability.getBoolean("thursday")
+        findViewById<Switch>(R.id.friday_switch).isChecked = availability.getBoolean("friday")
+        findViewById<Switch>(R.id.saturday_switch).isChecked = availability.getBoolean("saturday")
+        findViewById<Switch>(R.id.sunday_switch).isChecked = availability.getBoolean("sunday")
     }
 }
