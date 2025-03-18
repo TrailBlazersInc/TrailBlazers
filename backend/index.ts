@@ -59,26 +59,27 @@ Routes.forEach( (route) => {
     )
 })
 
-app.get('/', async (req: Request, res: Response) =>{
+app.get('/', (req: Request, res: Response) =>{
     res.status(200).send('hello')
 })
 
 export const server = http.createServer(app)
 ConnectMongoDB().then(() => {
+    const port = process.env.PORT || 3000; 
     if (require.main === module) {
-        if (process.env.PORT == "443"){
+        if (port == "443"){
             const options = {
                 key: fs.readFileSync("/certs/privkey.pem"),
                 cert: fs.readFileSync("/certs/fullchain.pem"),
             };
             https.createServer(options, app).listen( process.env.PORT, () => {
                 console.log("Mongo DB Connected");
-                console.log("Listening on port " + process.env.PORT)
+                console.log(`Listening on port ${port}`)
             })
         } else{
-            app.listen(process.env.PORT, () => {
+            app.listen([port], () => {
                 console.log("Mongo DB Connected");
-                console.log("Listening on port " + process.env.PORT)
+                console.log(`Listening on port ${port}`)
             })
         }
     }

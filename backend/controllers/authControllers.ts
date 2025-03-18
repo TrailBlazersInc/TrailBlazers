@@ -66,14 +66,13 @@ export class authenticate {
           }
 
           const token = jwt.sign({ id: user.social_id }, jwtSecret, { expiresIn: '12h' });
-
+          var newValues = { $set: {admin: false } };
           if (admin) {
-            var newValues = { $set: {admin: true } };
+            newValues = { $set: {admin: true } };
             await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });
           }
           else {
-            var newValues = { $set: {admin: false } };
             await User.updateOne({ email: response.email }, newValues);
             res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
           }

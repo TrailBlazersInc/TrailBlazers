@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Message, IMessage } from "../models/message";
 import { Chat, IChat } from "../models/chat";
 import { User, IUser } from "../models/user";
+import {sanitizeText} from "../utils/sanitize";
 
 export class MessagingControllers {
 	async getChats(req: Request, res: Response, next: NextFunction) {
@@ -15,8 +16,8 @@ export class MessagingControllers {
 					let members = chats[i].members;
 					let chat = {
 						id: chats[i]._id.toString(),
-						title: chats[i].title,
-						members: chats[i].members.length,
+						title: sanitizeText(chats[i].title),
+						members: Number.isInteger(chats[i].members?.length) ? chats[i].members.length : 0,
 					};
 					// Change the chat title to the other user's name
 					if (members.length == 2) {
