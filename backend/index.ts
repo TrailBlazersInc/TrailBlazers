@@ -3,7 +3,9 @@ import {ConnectMongoDB} from './services';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import http from 'http';
+import https from 'https';
 import mongoose from 'mongoose';
+import fs from 'fs';
 import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
 import { MessagingRoutes } from './routes/MessagingRoutes';
@@ -21,15 +23,20 @@ app.use(morgan('tiny'))
 
 const Routes = [...MessagingRoutes, ...AuthRoutes, ...UserRoutes, ...RecommendationRoutes, ...ReportRoutes, ...BanRoutes]
 
-//const publicRoutes = ["/api/v1/auth/google"];
+const publicRoutes = ["/api/v1/auth/google"];
+const isTesting = process.env.IS_TESTING;
 
 Routes.forEach( (route) => {
-
-    //const middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
+    let middlewares: ((req: Request, res: Response, next: NextFunction) => express.Response<any, Record<string, any>> | undefined)[] = [];
+    
+    if (!isTesting){
+        middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
+    }
+    
 
     (app as any) [route.method](
         route.route,
-        //...middlewares,
+        ...middlewares,
         route.validation,
         async (req: Request, res: Response, next: NextFunction) => {
             const errors = validationResult(req)
@@ -59,10 +66,21 @@ app.get('/', async (req: Request, res: Response) =>{
 export const server = http.createServer(app)
 ConnectMongoDB().then(() => {
     if (require.main === module) {
-        app.listen(process.env.PORT, () => {
-            console.log("Mongo DB Models Connected");
-            console.log("Listening on port " + process.env.PORT)
-        })
+        if (process.env.PORT == "443"){
+            const options = {
+                key: fs.readFileSync("/certs/privkey.pem"),
+                cert: fs.readFileSync("/certs/fullchain.pem"),
+            };
+            https.createServer(options, app).listen( process.env.PORT, () => {
+                console.log("Mongo DB Connected");
+                console.log("Listening on port " + process.env.PORT)
+            })
+        } else{
+            app.listen(process.env.PORT, () => {
+                console.log("Mongo DB Connected");
+                console.log("Listening on port " + process.env.PORT)
+            })
+        }
     }
 }).catch(err =>{
     console.error(err)

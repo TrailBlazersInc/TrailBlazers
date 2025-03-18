@@ -12,17 +12,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
-import com.example.cpen321project.ManageProfile.Companion
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 data class Chat(
     val id: String,
@@ -65,12 +60,8 @@ class ManageChats : AppCompatActivity() {
     }
 
     private fun getChats(token: String, email: String){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.getChats("Bearer $token", email).enqueue(object :
             Callback<ResponseBody> {

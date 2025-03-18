@@ -119,12 +119,8 @@ class ManageProfile : AppCompatActivity() {
         }
     }
     private fun updateUser(token: String, email: String, requestBody: RequestBody){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         apiService.updateUser("Bearer $token", email, requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

@@ -10,24 +10,11 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cpen321andriodapp.ApiService
-import com.example.cpen321project.MainActivity.Companion
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class BanningUserActivity : AppCompatActivity() {
 
@@ -46,12 +33,7 @@ class BanningUserActivity : AppCompatActivity() {
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         val call = apiService.getReport("Bearer $tkn")
 

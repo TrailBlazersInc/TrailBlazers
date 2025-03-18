@@ -100,12 +100,8 @@ class MainActivity : AppCompatActivity() {
                     try {
                         // Use googleIdTokenCredential and extract id to validate and
                         // authenticate on your server.
-                        val retrofit = Retrofit.Builder()
-                            .baseUrl(BuildConfig.BACKEND_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build()
 
-                        val apiService = retrofit.create(ApiService::class.java)
+                        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)

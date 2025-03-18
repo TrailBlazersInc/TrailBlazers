@@ -1,0 +1,60 @@
+name: Backend Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm ci
+      
+      - name: Initialize Jest for TypeScript
+        run: |
+          cd backend
+          npx ts-jest config:init
+
+      - name: Create environment files
+        run: | 
+          cd backend
+          cat > .env << EOF
+          DB_URI: mongodb://localhost:27017/tests
+          PORT: 3000
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET}}
+          IS_TESTING: true
+
+          EOF
+
+          # env permissions
+          chmod 600 .env
+
+      - name: Run Jest tests
+        run: |
+          cd backend
+          npm test
