@@ -33,6 +33,11 @@ jobs:
         run: |
           cd backend
           npm ci
+      
+      - name: Initialize Jest for TypeScript
+        run: |
+          cd backend
+          npx ts-jest config:init
 
       - name: Create environment files
         run: | 
