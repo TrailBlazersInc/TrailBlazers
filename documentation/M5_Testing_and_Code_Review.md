@@ -27,6 +27,10 @@
 | **POST /chat/message/:chatId**| [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
 | **POST /chat/dm/:email** | [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
 | **PUT /chat/:email** | [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
+| **GET /User/:email** | [`backend/tests/no-mocks/userControllers.test.ts`](#) |
+| **PUT /User/:email** | [`backend/tests/no-mocks/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure |
+| **POST /api/v1/auth/google** | [`backend/tests/no-mocks/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure & google-auth-library |
+
 #### 2.1.2. Commit Hash Where Tests Run
 
 #### 2.1.3. Explanation on How to Run the Tests
@@ -170,8 +174,8 @@ _(Placeholder for screenshots of Codacyâ€™s Issues page)_
 
   1. **@typescript eslint: [No explicit any](#)**
 
-     - **Location in Git:** [`backend`](#)
-     - **Justification:** ...
+     - **Location in Git:** [`backend/index.ts`](#)
+     - **Justification:** Since we are using exclusively our own routes and do not need to fetch it from some outter source and we are doing this only to set up the server, it is not necessary to heavily type the express application.
 
   2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
 
