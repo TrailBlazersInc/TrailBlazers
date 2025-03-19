@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../models/user';
+import { IUser, User } from '../models/user';
 import jwt from 'jsonwebtoken';
 
 export class RecommendationController {
@@ -18,14 +18,13 @@ export class RecommendationController {
                 timeWeight = 0.3, 
                 speedWeight,
                 availabilityWeight = 0.1,
-                userAvailability,  
             } = req.body;
 
             const effectiveLocation = {
                 latitude: user.latitude,
                 longitude: user.longitude
             };
-            const effectiveAvailability = userAvailability || user.availability;
+            const effectiveAvailability = user.availability;
             const effectiveSpeed = user.pace;
 
             const thresholdTime = 30;
@@ -51,7 +50,7 @@ export class RecommendationController {
         }
     }
 
-    postLocation = async (req: Request, res: Response, next: NextFunction) => {
+    postLocation = async (req: Request, res: Response) => {
         try {
             const { email } = req.params;
             const { latitude, longitude } = req.body;
@@ -88,9 +87,20 @@ export class RecommendationController {
     }
 
     private async findJogBuddies(
-        currentUser: any, 
-        userLocation: any, 
-        userAvailability: any, 
+        currentUser: IUser, 
+        userLocation: {
+            latitude: string;
+            longitude: string;
+        }, 
+        userAvailability: {
+            monday: boolean;
+            tuesday: boolean;
+            wednesday: boolean;
+            thursday: boolean;
+            friday: boolean;
+            saturday: boolean;
+            sunday: boolean;
+        }, 
         userSpeed: number,
         weightLocation: number,
         weightTime: number,
