@@ -213,7 +213,7 @@ describe("POST /chat/dm/:email", ()=>{
         expect(mongoose.Types.ObjectId.isValid(res.body?.id)).toBe(true)
         expect(res.body.members).toBe(2)
 
-    }),
+    })
 
     test("Valid Request Existing Chat", async()=>{
         //Input: Two valid emails that are already in a DM chat
@@ -228,7 +228,7 @@ describe("POST /chat/dm/:email", ()=>{
 
      
 
-    }),
+    })
 
     test("Invalid email", async()=>{
         //Input: Invalid email and a valid Target email
