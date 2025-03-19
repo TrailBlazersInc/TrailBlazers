@@ -71,6 +71,19 @@ describe('POST /api/v1/auth/google (mock)', () => {
         expect(response.body).toHaveProperty('banned');
         expect(response.body).toHaveProperty('admin', true);
     });
+    test('JWT_SECRET is missing', async () => {
+        const originalJwtSecret = process.env.JWT_SECRET;
+        
+        delete process.env.JWT_SECRET;
+    
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId: 'valid_mock_token', admin: false });
+    
+        process.env.JWT_SECRET = originalJwtSecret;
+    
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe('Internal Server Error');
+    });
+    
 });
 
 describe('PUT /User/:email (mock)', () => {
