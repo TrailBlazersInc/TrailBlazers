@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
-    postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
+    postRecommendations = async (req: Request, res: Response) => {
         try {
             const userEmail = req.params.email;
             
@@ -103,14 +103,6 @@ export class RecommendationController {
             email: { $ne: currentUser.email },
             banned: { $ne: true }
         });
-
-        // Reintroduce the original mapping for distance and time
-        const distanceMap: { [key: string]: number } = {
-            "Short (<5 km)": 3,
-            "Medium (5-10 km)": 7.5,
-            "Long (>10 km)": 15,
-            "Marathon (>15 km)": 20
-        };
 
         const timeMap: { [key: string]: number } = {
             "Short (<30 min)": 15,
