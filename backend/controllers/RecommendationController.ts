@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
-type Availability = Record<string, boolean>
+type Day = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+type Availability = {
+    [key in Day]: boolean;
+};
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
@@ -141,7 +145,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = validTimes.has(`${buddyTime}`) ? timeMap[`${buddyTime}`] : 45;
+            const buddyTimeValue = validTimes.has(buddyTime) ? timeMap[buddyTime] : 45;
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
@@ -180,13 +184,13 @@ export class RecommendationController {
         userAvailability: Availability, 
         buddyAvailability: Availability
     ): number {
-        const days = new Set(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]);
+        const days: Day[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
     
         let commonDays = 0;
-        let totalDays = days.size;
+        let totalDays = days.length;
     
-        days.forEach(day => {
-            if (userAvailability[day] && buddyAvailability[`${day}`]) {
+        days.forEach((day: Day) => {
+            if (userAvailability[day] && buddyAvailability[day]) {
                 commonDays++;
             }
         });
