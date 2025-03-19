@@ -7,6 +7,12 @@ type Availability = {
     [key in Day]: boolean;
 };
 
+type JoggingTime = "Short (<30 min)" | "Medium (30-60 min)" | "Long (>60 min)";
+
+type Time = {
+    [key in JoggingTime]: number;
+}
+
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
@@ -121,7 +127,7 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const timeMap: Record<string, number> = {
+        const timeMap: Time = {
             "Short (<30 min)": 15,
             "Medium (30-60 min)": 45,
             "Long (>60 min)": 90
@@ -134,7 +140,7 @@ export class RecommendationController {
             };
             const buddyAvailability = buddy.availability;
             const buddySpeed = buddy.pace;
-            const buddyTime = buddy.time;
+            const buddyTime = buddy.time as JoggingTime;
             
             const distanceScore = this.calculateDistance(userLocation, buddyLocation);
             const speedDifference = Math.abs(userSpeed - buddySpeed);
@@ -142,12 +148,8 @@ export class RecommendationController {
             const commonAvailability = this.calculateAvailabilityScore(userAvailability, buddyAvailability);
 
             // Calculate time difference using the time map
-            const userTimeValue = timeMap[currentUser.time] || 45;
-            // const buddyTimeValue = timeMap[buddyTime];
-            let buddyTimeValue = 45; // Default value
-            if (typeof buddyTime === 'string' && buddyTime in timeMap) {
-                buddyTimeValue = timeMap[buddyTime];
-            }
+            const userTimeValue = timeMap[currentUser.time as JoggingTime] || 45;            
+            const buddyTimeValue = timeMap[buddyTime];
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
