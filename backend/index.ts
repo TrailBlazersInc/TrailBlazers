@@ -73,7 +73,6 @@ async function startServer() {
 	try {
 		await ConnectMongoDB();
         const port = process.env.PORT ?? 3000;
-		console.log("port", port) 
 		if (require.main === module) {
 			if (port == "443") {
 				const options = {
@@ -96,4 +95,4 @@ async function startServer() {
 	}
 }
 
-void startServer();
+startServer();
