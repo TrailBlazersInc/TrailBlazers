@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
-interface Availability {
-    [key: string]: boolean;
-};
+interface Availability extends Record<string, boolean> {}
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
@@ -141,7 +139,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = timeMap[buddyTime] || 45;
+            const buddyTimeValue = timeMap[buddyTime];
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
