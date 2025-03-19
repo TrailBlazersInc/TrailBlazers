@@ -116,7 +116,7 @@ npm test # Make sure to add the .env file before running this command
     | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
 
   - **Test Logs:**
-    ![Messaging Espresso Result] (images/MessagingEspressoExecutionLog.png)
+    ![Messaging Espresso Result](images/MessagingEspressoExecutionLog.png)
 
 - **Use Case: Recommendation**
 
@@ -130,7 +130,7 @@ npm test # Make sure to add the .env file before running this command
     | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
 
   - **Test Logs:**
-    ![Recommendation Espresso Result] (images/RecommendationEspressoExecutionLog.png)
+    ![Recommendation Espresso Result](images/RecommendationEspressoExecutionLog.png)
 
 ---
 
