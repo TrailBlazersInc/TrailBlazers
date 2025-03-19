@@ -171,16 +171,15 @@ _(Placeholder for screenshots of Codacyâ€™s Issues page)_
      - **Location in Git:** [`src/services/chatService.js#L31`](#)
      - **Justification:** ...
 
-  2. **Interface 'ApiService' with '13' functions detected. Defined threshold inside interfaces is set to '11'**
+  2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
 
      - **Location in Git:** [`android_app/app/src/main/java/com/example/cpen321project/
 APIService.kt`](#)
-     - **Justification:** ...
+     - **Justification:** ApiService is used for all of our API request functions, we can not reduce the amount of API request functions we have for it.
 
-  3. **Code Pattern: [Unexpected any. Specify a different type.](#)**
+  3. **@typescript eslint: [No explicit any](#)**
 
-     - **Location in Git:** [`backend/middleware/
-authMiddleware.ts`](#)
-     - **Justification:** ...
+     - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
+     - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
 
 - ...
