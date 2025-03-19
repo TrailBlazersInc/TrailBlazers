@@ -53,7 +53,7 @@ class ManageProfileTest {
 
         onView(withId(R.id.Sign_In_Button)).perform(click())
         Thread.sleep(1000)
-        val accountSelector = device.findObject(UiSelector().textContains("amanvirsamra@gmail.com")) // Replace with part of email
+        val accountSelector = device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click()
         } else {
@@ -95,5 +95,47 @@ class ManageProfileTest {
         Thread.sleep(1000)
 
         Log.d(TAG, "Test 1: Successfully updated profile")
+    }
+    /**
+     * Function Originally written by ChatGPT (OpenAI) on 19/03/2025.
+     * Prompt:
+     * Add another test that checks response time is under 5 seconds:
+     * {first test code}
+     */
+    @Test
+    fun updatePreferencesResponseTimeTest() {
+        Log.d(TAG, "Testing Response Time");
+
+        onView(withId(R.id.Sign_In_Button)).perform(click())
+        Thread.sleep(1000)
+        val accountSelector = device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
+        if (accountSelector.exists()) {
+            accountSelector.click()
+        } else {
+            throw NoSuchElementException("No Google account found for sign-in")
+        }
+
+        // Wait for HomeActivity to load
+        Thread.sleep(5000)
+        // Click "Manage Profile" Button in HomeActivity
+        onView(withId(R.id.manageProfileButton)).perform(click());
+
+        val randomDecimal = String.format("%.1f", Random.Default.nextDouble(1.0, 20.0));
+        onView(withId(R.id.editTextNumberDecimal)).perform(clearText(), typeText(randomDecimal));
+        pressBack();
+
+        val startTime = System.currentTimeMillis();
+        onView(withId(R.id.save_button)).perform(click());
+
+        val isSaved = device.findObject(UiSelector().text("Changes Saved")).waitForExists(5000);
+        val endTime = System.currentTimeMillis();
+
+        val responseTime = endTime - startTime;
+        Log.d(TAG, "Response Time: $responseTime ms");
+
+        assert(responseTime < 5000){
+            "Response time too long. Expected to be 5000 ms, but was $responseTime";
+        }
+        Log.d(TAG, "Test 2: Successfully checked response time for updated profile")
     }
 }
