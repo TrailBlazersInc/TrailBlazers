@@ -6,13 +6,10 @@ import { Ban } from '../models/ban';
 export class BanController {
     public async banUser(req: Request, res: Response) {
         try {
-            console.log("HERE")
-            console.log(req.params.email);
             var newValues = { $set: {banned: true } };
             var result = await User.updateOne({ email: req.params.email }, newValues);
 
             if(!result.acknowledged || result.modifiedCount == 0){
-                console.log("User not found")
                 return res.status(404).json({ error: "User not found" });
             }
             else {

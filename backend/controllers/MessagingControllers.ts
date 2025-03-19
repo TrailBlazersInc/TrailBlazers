@@ -65,7 +65,6 @@ export class MessagingControllers {
 
 			return res.status(200).json(members);
 		} catch (error) {
-			console.log(error);
 			res.status(500).send("Internal server error");
 		}
 	}
@@ -87,7 +86,6 @@ export class MessagingControllers {
 			}));
 			return res.status(200).json(messages);
 		} catch (error) {
-			console.log(error);
 			res.status(500).send("Internal server error");
 		}
 	}
@@ -123,7 +121,6 @@ export class MessagingControllers {
 				res.status(400).send("Invalid chat id");
 			}
 		} catch (error) {
-			console.log(error);
 			res.status(500).send("Internal server error");
 		}
 	}
@@ -151,7 +148,6 @@ export class MessagingControllers {
 
 			res.status(201).json(formattedChat);
 		} catch (error) {
-			console.log(error);
 			res.status(500).send("Internal server error");
 		}
 	}
@@ -198,7 +194,6 @@ export class MessagingControllers {
 			};
 			return res.status(201).json(formattedChat);
 		} catch (error) {
-			console.log(error);
 			res.status(500).send("Internal server error");
 		}
 	}
@@ -230,8 +225,7 @@ export class MessagingControllers {
 		
 			return res.status(201).json(message);
 			
-		} catch (err) {
-			console.log(err);
+		} catch (error) {
 			return res.status(500).send("Internal server error");
 		}
 	}
@@ -268,8 +262,7 @@ export class MessagingControllers {
 			};
 
 			return res.status(200).json(formattedChat);
-		} catch (err) {
-			console.log(err);
+		} catch (error) {
 			return res.status(500).send("Internal server error");
 		}
 	}

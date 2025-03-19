@@ -121,7 +121,6 @@ export class RecommendationController {
             const buddyLocation = buddy.location || { latitude: 0, longitude: 0 };
             const buddyAvailability = buddy.availability || {};
             const buddySpeed = buddy.pace || 5;
-            const buddyDistance = buddy.distance || "Medium (5-10 km)";
             const buddyTime = buddy.time || "Medium (30-60 min)";
             
             const distanceScore = userLocation ? this.calculateDistance(userLocation, buddyLocation) : 0;

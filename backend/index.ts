@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import http from 'http';
 import https from 'https';
-import mongoose from 'mongoose';
 import fs from 'fs';
 import { validationResult } from 'express-validator';
 import { authMiddleware } from './middleware/authMiddleware';
@@ -74,12 +73,12 @@ ConnectMongoDB().then(() => {
             };
             https.createServer(options, app).listen( process.env.PORT, () => {
                 console.log("Mongo DB Connected");
-                console.log(`Listening on port ${port}`)
+                console.log(`Listening on port 443`)
             })
         } else{
             app.listen([port], () => {
                 console.log("Mongo DB Connected");
-                console.log(`Listening on port ${port}`)
+                console.log(`Listening on port 3000`)
             })
         }
     }

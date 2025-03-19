@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const {Schema, Document} = mongoose;
+const {Schema} = mongoose;
 
 export interface IUser  extends Document{
     _id: mongoose.Types.ObjectId,

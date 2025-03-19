@@ -1,7 +1,6 @@
 import { ReportController } from "../controllers/ReportControllers";
 import { body, param } from 'express-validator';
 import {Request, Response} from 'express';
-import mongoose from "mongoose";
 
 const controllers = new ReportController()
 
