@@ -72,7 +72,8 @@ export const server = http.createServer(app);
 async function startServer() {
 	try {
 		await ConnectMongoDB();
-        const port = process.env.PORT ?? 3000; 
+        const port = process.env.PORT ?? 3000;
+		console.log("port", port) 
 		if (require.main === module) {
 			if (port == "443") {
 				const options = {
@@ -84,7 +85,7 @@ async function startServer() {
 					console.log("Listening on port 443");
 				});
 			} else {
-				app.listen([port], () => {
+				app.listen(port, () => {
 					console.log("Mongo DB Connected");
 					console.log("Listening on port 3000");
 				});
