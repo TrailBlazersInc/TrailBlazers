@@ -23,6 +23,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
 import com.example.cpen321project.*
+import junit.framework.TestCase.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -54,6 +55,7 @@ class RecommendationTest {
         onView(withId(R.id.Sign_In_Button))
             .check(matches(isDisplayed()))
             .perform(click())
+        Thread.sleep(3000)
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         var accountSelector = device.findObject(UiSelector().textContains("yuqianyi1409@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
@@ -63,7 +65,7 @@ class RecommendationTest {
         }
 
         // Wait for HomeActivity to load
-//        Thread.sleep(3000) // Adjust as needed, or use IdlingResource
+        Thread.sleep(5000) // Adjust as needed, or use IdlingResource
 
         // 1. Click "Recommendation" Button in HomeActivity
         onView(withId(R.id.recommendationButton))
@@ -93,11 +95,18 @@ class RecommendationTest {
             Log.d(TAG, "Permission granted")
         }
 
+        val t1  = System.currentTimeMillis()
+
         // 4. Get recommendation
         onView(withId(R.id.getRecommendationButton)).perform(click())
 
         // 5. Top 5 Recommendation is well displayed
         onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
+
+        val t2  = System.currentTimeMillis()
+        assertTrue("Schedule upload took more than 4s", t2 - t1 < 4000)
+
+        Log.d(TAG, "Test 3: Successfully get recommendation in ${t2 - t1}ms!")
 
         // 6. Navigate to MapActivity
         Intents.intending(IntentMatchers.hasComponent(MapsActivity::class.java.name))
@@ -110,11 +119,6 @@ class RecommendationTest {
         Intents.intended(IntentMatchers.hasComponent(MapsActivity::class.java.name))
 
         Thread.sleep(12000)
-
-        // Verify map UI elements are displayed
-//        onView(withId(R.id.mapFragment)).check(matches(isDisplayed()))
-//
-//        pressBack()
 
         // 7. Click the first "Message" button and navigate to Message Activity
         onView(withId(R.id.recommendationRecyclerView))
