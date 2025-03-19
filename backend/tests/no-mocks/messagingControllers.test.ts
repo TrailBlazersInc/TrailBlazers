@@ -185,7 +185,7 @@ describe("POST /chat/:email", ()=>{
 
     }),
 
-    test("Invalid email", async()=>{
+    test("Invalid email", async ()=>{
         //Input: invalid email, and a title string
         //Expected Status Code: 400
         //Expected Behavior: Sends error message

@@ -37,7 +37,7 @@ Routes.forEach((route) => {
 		req: Request,
 		res: Response,
 		next: NextFunction
-	) => express.Response<any, Record<string, any>> | undefined)[] = [];
+	) => express.Response<any> | undefined)[] = [];
 
 	if (!isTesting) {
 		middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
@@ -95,4 +95,4 @@ async function startServer() {
 	}
 }
 
-startServer();
+void startServer();

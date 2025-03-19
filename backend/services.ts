@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
 
-export async function ConnectMongoDB() {
+export function ConnectMongoDB() {
     return mongoose.connect(process.env.DB_URI ?? "mongodb://localhost:27017/test")
 }
