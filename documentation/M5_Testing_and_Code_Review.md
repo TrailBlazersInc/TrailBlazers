@@ -168,7 +168,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
 ### 5.2. Unfixed Issues per Codacy Category
 
-_(Placeholder for screenshots of Codacyâ€™s Category Breakdown table in Overview)_
+![alt text](images/codacyIssues.png)
 
 ### 5.3. Unfixed Issues per Codacy Code Pattern
 

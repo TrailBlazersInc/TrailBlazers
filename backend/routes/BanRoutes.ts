@@ -1,5 +1,6 @@
 import { BanController } from "../controllers/BanControllers";
 import { body, param } from 'express-validator';
+import {Request, Response}  from 'express';
 
 const controllers = new BanController();
 
@@ -7,7 +8,7 @@ export const BanRoutes = [
     {
         method: "put",
         route: "/ban/:email",
-        action: controllers.banUser,
+        action: (req: Request, res: Response) =>  controllers.banUser(req, res),
         validation: [
             param("email").isEmail()
         ]
@@ -15,7 +16,7 @@ export const BanRoutes = [
     {
         method: "post",
         route: "/unban",
-        action: controllers.unbanUser,
+        action: (req: Request, res: Response) =>  controllers.unbanUser(req, res),
         validation: [
             body("userId").isString()
         ]
