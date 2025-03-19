@@ -124,10 +124,13 @@ npm test # Make sure to add the .env file before running this command
 
     | **Scenario Steps** | **Test Case Steps** |
     | ------------------ | ------------------- |
-    | 1. User Enters the Chat Overview               | click button "My groups in the main page" |
-    | 2. User Selects Chat | click on the first DM chat available from the overview |
-    | 3. User enters message into the textbox and clicks on send | Input a "hello, howe are you?" and click send |
-    | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
+    | 1. User enters the Recommendation Overview. | Click button "Recommendation" at HomeActivity and it will navigates to RecommendationActivity. |
+    | 2a. User inputs invalid weight for location, speed and distance respectively. | Enter abc, def and ghi respectively.  |
+    | 2. User inputs valid weight for location, speed and distance respectively. | Enter 5, 6 and 7 respectively. |
+    | 3. User grants location permission. | Click "Grant Location Permission" button. |
+    | 4. User get recommendation list. | Click "Get Recommendations" button and the top 5 recommendation will be displayed. |
+    | 5. User can see it's location (and location of joggers if they are nearby)  | Click "View on Map" button and it will navigate to MapActivity. |
+    | 6. User can direct message jogger | Click "Message" button and it will navigate to ChatActivity. |
 
   - **Test Logs:**
     ![Recommendation Espresso Result](images/RecommendationEspressoExecutionLog.png)
