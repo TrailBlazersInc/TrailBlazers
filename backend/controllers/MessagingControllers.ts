@@ -29,13 +29,10 @@ export class MessagingControllers {
 							email: buddy_email,
 						});
 						if (buddy) {
-							chat.title = buddy.first_name;
-						}
-						if (buddy) {
-							chat.title = buddy.first_name;
+							formattedChat.title = buddy.first_name;
 						}
 					}
-					formatedChats.push(chat);
+					formatedChats.push(formattedChat);
 				}
 				return res.status(200).json(formatedChats);
 			} else {
