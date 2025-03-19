@@ -65,11 +65,13 @@ npm test # Make sure to add the .env file before running this command
 
 ### 2.3. Jest Coverage Report Screenshots With Mocks
 ![Jest Tests](images/jest_tests.png)
+
 Please note that our team was not required to test BanControllers, BanRoutes, ReportRoutes, nor ReportControllers due to team reduction.
 
 ### 2.4. Jest Coverage Report Screenshots Without Mocks
 
 ![Jest Tests, no mocks](images/jest_tests_no_mocks.png)
+
 Please note that our team was not required to test BanControllers, BanRoutes, ReportRoutes, nor ReportControllers due to team reduction.
 
 ---
