@@ -183,14 +183,14 @@ describe("POST /chat/:email", ()=>{
         expect(res.body.members).toBe(1)
         expect(res.body.title).toBe(newChatName)
 
-    }),
+    })
 
     test("Invalid email", async ()=>{
         //Input: invalid email, and a title string
         //Expected Status Code: 400
         //Expected Behavior: Sends error message
         //Expected output: Message "Invalid email"
-        
+
         const res = await request(server).post(`/chat/${fakeEmail}`).send({chatName: newChatName})
         expect(res.status).toBe(400)
         expect(res.text).toStrictEqual("Invalid email")
