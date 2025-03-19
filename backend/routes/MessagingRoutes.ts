@@ -1,4 +1,5 @@
 import { MessagingControllers } from "../controllers/MessagingControllers"
+import { Request, Response } from 'express';
 import {body, param} from "express-validator"
 
 const controllers = new MessagingControllers()
@@ -7,7 +8,7 @@ export const MessagingRoutes = [
     {
         method: "get",
         route: "/chat/:email",
-        action: controllers.getChats,
+        action: (req: Request, res: Response) => controllers.getChats(req, res),
         validation: [
             param("email").isEmail()
         ]
@@ -15,7 +16,7 @@ export const MessagingRoutes = [
     {
         method: "get",
         route: "/chat/messages/:chatId",
-        action: controllers.getMessages,
+        action:  (req: Request, res: Response) => controllers.getMessages(req, res),
         validation:[
             param("chatId").isMongoId()
         ]
@@ -23,7 +24,7 @@ export const MessagingRoutes = [
     {
         method: "get",
         route: "/chat/messages/:chatId/:messageId",
-        action: controllers.getMessagesAfter,
+        action:  (req: Request, res: Response) => controllers.getMessagesAfter(req, res),
         validation: [
             param("chatId").isMongoId(),
             param("messageId").isMongoId()
@@ -32,7 +33,7 @@ export const MessagingRoutes = [
     {
         method: "get",
         route: "/chat/members/:chatId",
-        action: controllers.getChatMembers,
+        action:   (req: Request, res: Response) => controllers.getChatMembers(req, res),
         validation:[
             param("chatId").isMongoId()
         ]
@@ -40,7 +41,7 @@ export const MessagingRoutes = [
     {
         method: "post",
         route: "/chat/:email",
-        action: controllers.postChat,
+        action:   (req: Request, res: Response) =>controllers.postChat(req, res),
         validation:[
             param("email").isEmail(),
             body("chatName")
@@ -51,7 +52,7 @@ export const MessagingRoutes = [
     {
         method: "post",
         route: "/chat/message/:chatId",
-        action: controllers.postMessage,
+        action:   (req: Request, res: Response) => controllers.postMessage(req, res),
         validation:[
             param("chatId").isMongoId(),
             body("email").isEmail(),
@@ -61,7 +62,7 @@ export const MessagingRoutes = [
     {
         method: "post",
         route: "/chat/dm/:email",
-        action: controllers.postChatDM,
+        action:   (req: Request, res: Response) => controllers.postChatDM(req, res),
         validation:[
             param("email").isEmail(),
             body("target_email").isEmail()
@@ -70,7 +71,7 @@ export const MessagingRoutes = [
     {
         method: "put",
         route: "/chat/:email",
-        action: controllers.addUser,
+        action:   (req: Request, res: Response) => controllers.addUser(req, res),
         validation: [
             param("email").isEmail(),
             body("chatId").isMongoId()

@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response} from "express";
 import { Message, IMessage } from "../models/message";
 import { Chat, IChat } from "../models/chat";
 import { User, IUser } from "../models/user";
 import {sanitizeText} from "../utils/sanitize";
 
 export class MessagingControllers {
-	async getChats(req: Request, res: Response, next: NextFunction) {
+	async getChats(req: Request, res: Response) {
 		const email: String = req.params.email;
 		try {
 			const user = await User.findOne<IUser>({ email: email });
@@ -42,7 +42,7 @@ export class MessagingControllers {
 			return res.status(500).send("Internal server error");
 		}
 	}
-	async getChatMembers(req: Request, res: Response, next: NextFunction) {
+	async getChatMembers(req: Request, res: Response) {
 		try {
 			let members: any[] = [];
 			let chat = await Chat.findOne<IChat>({ _id: req.params.chatId });
@@ -68,7 +68,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async getMessages(req: Request, res: Response, next: NextFunction) {
+	async getMessages(req: Request, res: Response) {
 		try {
 			let chat = await Chat.findOne({ _id: req.params.chatId }).populate<{
 				messages: IMessage[];
@@ -90,7 +90,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async getMessagesAfter(req: Request, res: Response, next: NextFunction) {
+	async getMessagesAfter(req: Request, res: Response) {
 		try {
 			const chat = await Chat.findOne({ _id: req.params.chatId }).populate<{
 				messages: IMessage[];
@@ -126,7 +126,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async postChat(req: Request, res: Response, next: NextFunction) {
+	async postChat(req: Request, res: Response) {
 		try {
 			console.log("entering Post chat");
 			const email = req.params.email;
@@ -156,7 +156,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async postChatDM(req: Request, res: Response, next: NextFunction) {
+	async postChatDM(req: Request, res: Response) {
 		try {
 			const email = req.params.email;
 			const targetEmail = req.body.target_email;
@@ -204,7 +204,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async postMessage(req: Request, res: Response, next: NextFunction) {
+	async postMessage(req: Request, res: Response) {
 		try {
 			let chat = await Chat.findOne<IChat>({ _id: req.params.chatId });
 			let user = await User.findOne<IUser>({ email: req.body.email });
@@ -237,7 +237,7 @@ export class MessagingControllers {
 		}
 	}
 
-	async addUser(req: Request, res: Response, next: NextFunction) {
+	async addUser(req: Request, res: Response) {
 		try {
 			let email = req.params.email;
 			let chat = await Chat.findOne({ _id: req.body.chatId });

@@ -11,11 +11,22 @@
 ## 2. Back-end Test Specification: APIs
 
 ### 2.1. Locations of Back-end Tests and Instructions to Run Them
-All Backend Tests are located under  `backend/tests/`
-To run them perform run the following commands:
-```shell
+All Backend Tests are located under  `backend/tests`
 
+We assume that you have MongoDB installed and running in your machine.
 
+First cd into the backend directory, and create an .env file with the following properties:
+```
+DB_URI: mongodb://localhost:27017/tests
+PORT: 3000
+GOOGLE_CLIENT_ID: << Your GOOGLE CLIENT ID >> 
+JWT_SECRET: helloWorld
+IS_TESTING: true
+```
+Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
+```sh
+npx ts-jest config:init
+npm test
 ```
 
 #### 2.1.1. Tests
@@ -26,10 +37,9 @@ To run them perform run the following commands:
 | **POST /study-groups/create** | ...                                                  | ...                                                | Study Group DB                     |
 | ...                           | ...                                                  | ...                                                | ...                                |
 | ...                           | ...                                                  | ...                                                | ...                                |
-
+| GET /chat/:email |
+| GET /chat/
 #### 2.1.2. Commit Hash Where Tests Run
-
-`02:A1:47:3A:51:3E:83:4D:DC:42:29:1A:04:1F:61:68:4D:05:B9:25`
 
 #### 2.1.3. Explanation on How to Run the Tests
 
@@ -44,15 +54,15 @@ To run them perform run the following commands:
 
 ### 2.2. GitHub Actions Configuration Location
 
-`~/.github/workflows/backend-tests.yml`
+`.github/workflows/backendTests.yml`
 
 ### 2.3. Jest Coverage Report Screenshots With Mocks
 
-_(Placeholder for Jest coverage screenshot with mocks enabled)_
+![Jest Tests](images/jest_tests.png)
 
 ### 2.4. Jest Coverage Report Screenshots Without Mocks
 
-_(Placeholder for Jest coverage screenshot without mocks)_
+![Jest Tests, no mocks](images/jest_tests_no_mocks.png)
 
 ---
 

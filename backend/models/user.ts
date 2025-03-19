@@ -23,7 +23,7 @@ export interface IUser  extends Document{
     latitude: string,
     banned: boolean,
     admin: boolean
-  };
+  }
 
 const UserSchema = new Schema<IUser>({
     email: String,
