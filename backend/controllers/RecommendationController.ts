@@ -127,8 +127,8 @@ export class RecommendationController {
                 longitude: buddy.longitude
             };
             const buddyAvailability = buddy.availability;
-            const buddySpeed = buddy.pace || 5;
-            const buddyTime = buddy.time || "Medium (30-60 min)";
+            const buddySpeed = buddy.pace;
+            const buddyTime = buddy.time;
             
             const distanceScore = this.calculateDistance(userLocation, buddyLocation);
             const speedDifference = Math.abs(userSpeed - buddySpeed);
@@ -160,7 +160,7 @@ export class RecommendationController {
                     distance: buddy.distance,
                     time: buddy.time,
                     availability: buddy.availability,
-                    matchScore: matchScore
+                    matchScore
                 };
             }
             return null;
@@ -172,7 +172,24 @@ export class RecommendationController {
         return matches;
     }
 
-    private calculateAvailabilityScore(userAvailability: any, buddyAvailability: any): number {
+    private calculateAvailabilityScore(
+        userAvailability: {
+            monday: boolean;
+            tuesday: boolean;
+            wednesday: boolean;
+            thursday: boolean;
+            friday: boolean;
+            saturday: boolean;
+            sunday: boolean;
+        }, buddyAvailability: {
+            monday: boolean;
+            tuesday: boolean;
+            wednesday: boolean;
+            thursday: boolean;
+            friday: boolean;
+            saturday: boolean;
+            sunday: boolean;
+        }): number {
         const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
         let commonDays = 0;
         let totalDays = days.length;
