@@ -140,7 +140,7 @@ export class RecommendationController {
             };
             const buddyAvailability = buddy.availability;
             const buddySpeed = buddy.pace;
-            const buddyTime = buddy.time as JoggingTime;
+            const buddyTime = buddy.time;
             
             const distanceScore = this.calculateDistance(userLocation, buddyLocation);
             const speedDifference = Math.abs(userSpeed - buddySpeed);
@@ -148,8 +148,21 @@ export class RecommendationController {
             const commonAvailability = this.calculateAvailabilityScore(userAvailability, buddyAvailability);
 
             // Calculate time difference using the time map
-            const userTimeValue = timeMap[currentUser.time as JoggingTime] || 45;            
-            const buddyTimeValue = timeMap[buddyTime];
+            // const userTimeValue = timeMap[currentUser.time as JoggingTime] || 45;
+            // Object.entries()            
+            // const buddyTimeValue = timeMap[buddy.time as JoggingTime];
+            let userTimeValue = 45; // Default value
+            let buddyTimeValue = 45; // Default value
+            
+            Object.entries(timeMap).forEach(([timeOption, minutes]) => {
+                if (currentUser.time === timeOption) {
+                    userTimeValue = minutes;
+                }
+                if (buddyTime === timeOption) {
+                    buddyTimeValue = minutes;
+                }
+            });
+
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
