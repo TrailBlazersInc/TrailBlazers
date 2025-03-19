@@ -146,7 +146,7 @@ export class RecommendationController {
             // const buddyTimeValue = timeMap[buddyTime];
             let buddyTimeValue = 45; // Default value
             if (typeof buddyTime === 'string' && buddyTime in timeMap) {
-                buddyTimeValue = timeMap[buddyTime as keyof typeof timeMap];
+                buddyTimeValue = timeMap[buddyTime];
             }
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
