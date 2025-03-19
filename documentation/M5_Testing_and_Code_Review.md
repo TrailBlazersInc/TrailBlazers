@@ -42,11 +42,13 @@ First clone the reporsitory as follows:
 git clone https://github.com/example/your-project.git Trailblazers
 ```
 Then cd into the backend directory, and create an .env file with the following properties:
-DB_URI: mongodb://localhost:27017/tests
+```sh
+D`B_URI: mongodb://localhost:27017/tests
 PORT: 3000
-GOOGLE_CLIENT_ID: << Your GOOGLE CLIENT ID >> 
+GOOGLE_CLIENT_ID: << "Your GOOGLE CLIENT ID" >> 
 JWT_SECRET: helloWorld
 IS_TESTING: true
+```
 ```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
