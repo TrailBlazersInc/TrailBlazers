@@ -141,7 +141,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = validTimes.has(buddyTime) ? timeMap[buddyTime] : 45;            
+            const buddyTimeValue = validTimes.has(`${buddyTime}`) ? timeMap[`${buddyTime}`] : 45;
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
@@ -186,7 +186,7 @@ export class RecommendationController {
         let totalDays = days.size;
     
         days.forEach(day => {
-            if (userAvailability[day] && buddyAvailability[day]) {
+            if (userAvailability[day] && buddyAvailability[`${day}`]) {
                 commonDays++;
             }
         });
