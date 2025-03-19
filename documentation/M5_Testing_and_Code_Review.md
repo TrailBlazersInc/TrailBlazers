@@ -11,6 +11,23 @@
 ## 2. Back-end Test Specification: APIs
 
 ### 2.1. Locations of Back-end Tests and Instructions to Run Them
+
+#### 2.1.1. Tests
+
+| **Interface**                 | **Describe Group Location, No Mocks**                | **Describe Group Location, With Mocks**            | **Mocked Components**              |
+| ----------------------------- | ---------------------------------------------------- | -------------------------------------------------- | ---------------------------------- |
+| **GET /chat/:email** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **GET /chat/:email** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **GET /chat/:chatId** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **GET /chat/messages/:chatId/:messageId** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **GET /chat/members/:chatId** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **POST /chat/:email** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **POST /chat/message/:chatId**| [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **POST /chat/dm/:email** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+| **PUT /chat/:email** | [`bakend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts](#) | Mongo DB failure |
+#### 2.1.2. Commit Hash Where Tests Run
+
+#### 2.1.3. Explanation on How to Run the Tests
 All Backend Tests are located under  `backend/tests`
 
 We assume that you have MongoDB installed and running in your machine.
@@ -25,32 +42,11 @@ IS_TESTING: true
 ```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
-npx ts-jest config:init
-npm test
+git clone https://github.com/example/your-project.git Trailblazers
+cd Trailblazers/backend
+npx ts-jest config:init 
+npm test # Make sure to add the .env file before running this command
 ```
-
-#### 2.1.1. Tests
-
-| **Interface**                 | **Describe Group Location, No Mocks**                | **Describe Group Location, With Mocks**            | **Mocked Components**              |
-| ----------------------------- | ---------------------------------------------------- | -------------------------------------------------- | ---------------------------------- |
-| **POST /user/login**          | [`tests/unmocked/authenticationLogin.test.js#L1`](#) | [`tests/mocked/authenticationLogin.test.js#L1`](#) | Google Authentication API, User DB |
-| **POST /study-groups/create** | ...                                                  | ...                                                | Study Group DB                     |
-| ...                           | ...                                                  | ...                                                | ...                                |
-| ...                           | ...                                                  | ...                                                | ...                                |
-| GET /chat/:email |
-| GET /chat/
-#### 2.1.2. Commit Hash Where Tests Run
-
-#### 2.1.3. Explanation on How to Run the Tests
-
-1. **Clone the Repository**:
-
-   - Open your terminal and run:
-     ```
-     git clone https://github.com/example/your-project.git
-     ```
-
-2. **...**
 
 ### 2.2. GitHub Actions Configuration Location
 
@@ -72,7 +68,8 @@ npm test
 
 | **Non-Functional Requirement**  | **Location in Git**                              |
 | ------------------------------- | ------------------------------------------------ |
-| **Performance (Response Time)** | [`tests/nonfunctional/response_time.test.js`](#) |
+| **Performance (Recommendations Response Time)** | [`backend/tests/nonfunctional/response_time.test.js`](#) |
+| **Performance (Chat Updates Response Time)** | [`android_app/app/src/androidTest/java/com/example/cpen321project/MessagingTest.kt`](#) |
 | **Chat Data Security**          | [`tests/nonfunctional/chat_security.test.js`](#) |
 
 ### 3.2. Test Verification and Logs
