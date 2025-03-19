@@ -33,7 +33,7 @@
 
 #### 2.1.2. Commit Hash Where Tests Run
 
- `cb88cf814d7dcd177065e583fbc9fbe61421085f`
+ `90f791b3c71aff908a52c9293fd24820235095a6`
 
 #### 2.1.3. Explanation on How to Run the Tests
 All Backend Tests are located under  `backend/tests`
@@ -164,26 +164,29 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
 ### 5.1. Commit Hash Where Codacy Ran
 
-`cb88cf814d7dcd177065e583fbc9fbe61421085f`
+`90f791b3c71aff908a52c9293fd24820235095a6`
 
 ### 5.2. Unfixed Issues per Codacy Category
 
 ![alt text](images/codacyIssues.png)
 
 ### 5.3. Unfixed Issues per Codacy Code Pattern
+  1. **@typescript eslint: [No explicit any](#)**
+  ![alt text](images/firstCodacyIssue.png)
+  2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
+  ![alt text](images/secondCodacyIssue.png)
+  3. **Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.**
+  ![alt text](images/thirdCodacyIssue.png)
 
-_(Placeholder for screenshots of Codacyâ€™s Issues page)_
 
 ### 5.4. Justifications for Unfixed Issues
 
-  1. **@typescript eslint: [No explicit any](#)**
-
-    1.
-     - **Location in Git:** [`backend/index.ts`](#)
-     - **Justification:** Since we are using exclusively our own routes and do not need to fetch it from some outter source and we are doing this only to set up the server, it is not necessary to heavily type the express application.
-    2.
-    - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
-     - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
+  1. **@typescript eslint: [No explicit any](#)** 
+  - **Location in Git:** [`backend/index.ts`](#)
+  - **Justification:** Since we are using exclusively our own routes and do not need to fetch it from some outter source and we are doing this only to set up the server, it is not necessary to heavily type the express application.
+  
+  - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
+   - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
   
 
   2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
