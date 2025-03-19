@@ -148,9 +148,6 @@ export class RecommendationController {
             const commonAvailability = this.calculateAvailabilityScore(userAvailability, buddyAvailability);
 
             // Calculate time difference using the time map
-            // const userTimeValue = timeMap[currentUser.time as JoggingTime] || 45;
-            // Object.entries()            
-            // const buddyTimeValue = timeMap[buddy.time as JoggingTime];
             let userTimeValue = 45; // Default value
             let buddyTimeValue = 45; // Default value
             
