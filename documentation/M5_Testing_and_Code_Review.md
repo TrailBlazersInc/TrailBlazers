@@ -27,6 +27,10 @@
 | **POST /chat/message/:chatId**| [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
 | **POST /chat/dm/:email** | [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
 | **PUT /chat/:email** | [`backend/tests/no-mocks/messagingControllers.test.ts`](#) | [`backend/tests/mocks/messagingControllers.mock.test.ts`](#) | Mongo DB failure |
+| **GET /User/:email** | [`backend/tests/no-mocks/userControllers.test.ts`](#) |
+| **PUT /User/:email** | [`backend/tests/no-mocks/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure |
+| **POST /api/v1/auth/google** | [`backend/tests/no-mocks/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure & google-auth-library |
+
 #### 2.1.2. Commit Hash Where Tests Run
 
 #### 2.1.3. Explanation on How to Run the Tests
