@@ -15,6 +15,7 @@ import com.example.cpen321project.ChatActivity
 import com.example.cpen321project.R
 import com.example.cpen321project.RecommendationItem
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -115,7 +116,7 @@ class RecommendationAdapter(private val recommendations: List<RecommendationItem
                         intent.putExtra("chatName", chat.title)
                         intent.putExtra("chatId", chat.id)
                         context.startActivity(intent)
-                    } catch(error: Exception){
+                    } catch(error: JsonSyntaxException){
                         Log.d("CreateDM", error.toString())
                     }
                 } else {

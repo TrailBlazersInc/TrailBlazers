@@ -59,7 +59,7 @@ class RecommendationTest {
         if (accountSelector.exists()) {
             accountSelector.click() // Click the first available Google account
         } else {
-            throw Exception("No Google account found for sign-in")
+            throw NoSuchElementException("No Google account found for sign-in")
         }
 
         // Wait for HomeActivity to load

@@ -396,8 +396,8 @@ class Recommendation : AppCompatActivity() {
                                 // Update the RecyclerView with parsed data
                                 updateRecyclerView(recommendationsList)
 
-                            } catch (e: Exception) {
-                                Log.e(TAG, "Error parsing response: ${e.message}")
+                            } catch (e: org.json.JSONException) {
+                                Log.e(TAG, "JSON parsing error: ${e.message}")
                                 resultTextView.text = "Error parsing response!"
                             }
                         } else {
