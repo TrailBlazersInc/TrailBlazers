@@ -125,17 +125,12 @@ An application that connects nearby users to jog/run together adapting to their 
         - **Primary Actors**: User(s)
         - **Main Success Scenario**:
             1. User enters message into textbox and clicks send
-            2. System ensures message contains valid content
-            3. System sends the message to the recipient(s) with WebSocket
-            4. System takes message and stores it in message DB
-            5. System confirms to User the message was delivered successfully and updates displayed messages
+            2. System sends the message to the recipient(s)
+            3. System confirms to User the message was delivered successfully and updates displayed messages
         - **Failure Scenarios**:
-            - 2a. Invalid content in message
+            - 2a. Message can not be sent due to network issues
                 - 2a1. An error message is displayed telling user of the error
-                - 2a2. User is prompted to re-enter message with valid characters
-            - 3a. Message can not be sent due to network issues
-                - 3a1. An error message is displayed telling user of the error
-                - 3a2. User is prompted to try again after a set period of time
+                - 2a2. User is prompted to try again after a set period of time
 
 5. **Report User**<a id="fr5"></a>:
    - **Description**: Users can report inappropriate behavior or content within the app. This report is sent to the admin panel for further review.
