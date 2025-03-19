@@ -71,8 +71,7 @@ npm test # Make sure to add the .env file before running this command
 | **Non-Functional Requirement**  | **Location in Git**                              |
 | ------------------------------- | ------------------------------------------------ |
 | **Recommendation Usability** | [`android_app/app/src/androidTest/java/com/example/cpen321project/RecommendationTest.kt#L109`](#) |
-| **Performance (Chat Updates Response Time)** | [`android_app/app/src/androidTest/java/com/example/cpen321project/MessagingTest.kt`](#) |
-| **Chat Data Security**          | [`tests/nonfunctional/chat_security.test.js`](#) |
+| **Performance (Profile Preferences Updates Response Time)** | [`android_app/app/src/androidTest/java/com/example/cpen321project/ManageProfileTest.kt`](#) |
 
 ### 3.2. Test Verification and Logs
 
@@ -86,10 +85,11 @@ npm test # Make sure to add the .env file before running this command
     ```
 
 - **Chat Data Security**
-  - **Verification:** ...
+  - **Verification:** This test suite simulates updated the pace number entry and saving the changes to your profile. The focus of this test is on parsing updated user information to the backend and updating the database. The test lets us know if the system is executed within our expected response time.
   - **Log Output**
     ```
-    [Placeholder for chat security test logs]
+    Response Time: $responseTime ms
+    Test 2: Successfully checked response time for updated profile
     ```
 
 ---
@@ -118,6 +118,20 @@ npm test # Make sure to add the .env file before running this command
   - **Test Logs:**
     ![Messaging Espresso Result](images/MessagingEspressoExecutionLog.png)
 
+- **Use Case: Manage Profile**
+
+  - **Expected Behaviors:**
+
+    | **Scenario Steps** | **Test Case Steps** |
+    | ------------------ | ------------------- |
+    | 1. User enters the Recommendation Overview. | Click button "Manage Profile" at HomeActivity and it will navigate to ManageProfile. |
+    | 2a. User inputs invalid number for pace and tries to save changes. | Enter 25.0 into the text field for pace and click "Save Changes" button.  |
+    | 2a1. The app shows an error message prompting the user for a correct value. | Check dialog is opened with text: “Please enter a valid pace”.  |
+    | 2. User inputs valid pace. | Enter a randomly generated number from 1.0 to 20.0 into the text field for pace. |
+    | 3. User presses the save button. | Click "Save Changes" button. |
+    | 4. The app shows a message telling the user the changes were changed successfully. | Check dialog is opened with text: “Please enter a valid pace”. |
+  - **Test Logs:**
+  
 - **Use Case: Recommendation**
 
   - **Expected Behaviors:**
@@ -131,7 +145,6 @@ npm test # Make sure to add the .env file before running this command
     | 4. User get recommendation list. | Click "Get Recommendations" button and the top 5 recommendation will be displayed. |
     | 5. User can see it's location (and location of joggers if they are nearby)  | Click "View on Map" button and it will navigate to MapActivity. |
     | 6. User can direct message jogger | Click "Message" button and it will navigate to ChatActivity. |
-
   - **Test Logs:**
     ![Recommendation Espresso Result](images/RecommendationEspressoExecutionLog.png)
 
