@@ -69,7 +69,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
 ### 2.4. Jest Coverage Report Screenshots Without Mocks
 
-![Jest Tests, no mocks](images/jest_no_mock.png)
+![Jest Tests, no mocks](images/jest_tests_no_mocks.png)
 Please note that our team was not required to test BanControllers, BanRoutes, ReportRoutes, nor ReportControllers due to team reduction.
 
 ---
