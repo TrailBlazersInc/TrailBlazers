@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
+interface Availability {
+    [key: string]: boolean;
+};
+
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
@@ -173,24 +177,11 @@ export class RecommendationController {
     }
 
     private calculateAvailabilityScore(
-        userAvailability: {
-            monday: boolean;
-            tuesday: boolean;
-            wednesday: boolean;
-            thursday: boolean;
-            friday: boolean;
-            saturday: boolean;
-            sunday: boolean;
-        }, buddyAvailability: {
-            monday: boolean;
-            tuesday: boolean;
-            wednesday: boolean;
-            thursday: boolean;
-            friday: boolean;
-            saturday: boolean;
-            sunday: boolean;
-        }): number {
+        userAvailability: Availability, 
+        buddyAvailability: Availability
+    ): number {
         const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
         let commonDays = 0;
         let totalDays = days.length;
 
