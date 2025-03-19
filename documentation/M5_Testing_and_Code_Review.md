@@ -33,6 +33,7 @@
 
 #### 2.1.2. Commit Hash Where Tests Run
 
+
 #### 2.1.3. Explanation on How to Run the Tests
 All Backend Tests are located under  `backend/tests`
 
@@ -52,6 +53,7 @@ IS_TESTING: true
 ```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
+npm install
 npx ts-jest config:init 
 npm test # Make sure to add the .env file before running this command
 ```
