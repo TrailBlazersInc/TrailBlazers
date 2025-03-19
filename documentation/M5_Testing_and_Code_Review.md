@@ -49,7 +49,6 @@ GOOGLE_CLIENT_ID: << "Your GOOGLE CLIENT ID" >>
 JWT_SECRET: helloWorld
 IS_TESTING: true
 ```
-```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
 cd Trailblazers/backend
