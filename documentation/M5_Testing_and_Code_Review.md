@@ -91,7 +91,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
     Test 3: Successfully get recommendation in 379ms!
     ```
 
-- **Chat Data Security**
+- **Manage Profile Usability**
   - **Verification:** This test suite simulates updated the pace number entry and saving the changes to your profile. The focus of this test is on parsing updated user information to the backend and updating the database. The test lets us know if the system is executed within our expected response time.
   - **Log Output**
     ```
