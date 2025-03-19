@@ -180,18 +180,13 @@ export class RecommendationController {
         userAvailability: Availability, 
         buddyAvailability: Availability
     ): number {
-        const validDays = new Set(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]);
+        const days = new Set(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]);
     
         let commonDays = 0;
-        let totalDays = validDays.size;
+        let totalDays = days.size;
     
-        validDays.forEach(day => {
-            if (
-                Object.prototype.hasOwnProperty.call(userAvailability, day) &&
-                Object.prototype.hasOwnProperty.call(buddyAvailability, day) &&
-                userAvailability[day] && 
-                buddyAvailability[day]
-            ) {
+        days.forEach(day => {
+            if (userAvailability[day] && buddyAvailability[day]) {
                 commonDays++;
             }
         });
