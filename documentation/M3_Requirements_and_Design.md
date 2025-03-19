@@ -116,12 +116,11 @@ An application that connects nearby users to jog/run together adapting to their 
         - **Main Success Scenario**:
             1. User clicks on an User Profile
             2. User sends a connection request or message to create a chat or join a group chat with the jogger.
-            3. If the jogger accepts, the system confirms the connection, allowing further communication.
         - **Failure Scenarios**:
         - 2a. Jogger/Group does not exist: Display "Error: Group/Jogger does not Exist"
         - 2b. User is not logged in: Display "Error: Please Log in again"
         - 3a. Jogger/Group Reports user attempting to join: "Error: Could not connect with Joggers"
-    2. Send message
+    2. Send Messages
         - **Description**: This feature allows users to message other users.
         - **Primary Actors**: User(s)
         - **Main Success Scenario**:

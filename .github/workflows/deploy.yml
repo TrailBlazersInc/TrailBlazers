@@ -37,6 +37,7 @@ jobs:
             DB_URI=${{ secrets.DB_URI }}
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             JWT_SECRET=${{ secrets.JWT_SECRET}}
+            IS_TESTING=true
 
             EOF
 

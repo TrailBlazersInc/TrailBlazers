@@ -95,7 +95,7 @@ npm test # Make sure to add the .env file before running this command
 
 ### 4.1. Location in Git of Front-end Test Suite:
 
-`frontend/src/androidTest/java/com/studygroupfinder/`
+`android_app/src/androidTest/java/com/cpen321project/`
 
 ### 4.2. Tests
 
@@ -118,13 +118,16 @@ npm test # Make sure to add the .env file before running this command
     [Placeholder for Espresso test execution logs]
     ```
 
-- **Use Case: ...**
+- **Use Case: Message**
 
   - **Expected Behaviors:**
 
     | **Scenario Steps** | **Test Case Steps** |
     | ------------------ | ------------------- |
-    | ...                | ...                 |
+    | 1. User Enters the Chat Overview               | click button "My groups in the main page" |
+    | 2. User Selects Chat | click on the first DM chat available from the overview |
+    | 3. User enters message into the textbox and clicks on send | Input a "hello, howe are you?" and click send |
+    | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
 
   - **Test Logs:**
     ```
