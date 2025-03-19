@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
-interface Availability extends Record<string, boolean> {}
+type Availability = Record<string, boolean>
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
@@ -191,7 +191,13 @@ export class RecommendationController {
         return commonDays / totalDays;
     }
 
-    private calculateDistance(location1: any, location2: any): number {
+    private calculateDistance(location1: {
+        latitude: string, 
+        longitude: string
+    }, location2: {
+        latitude: string, 
+        longitude: string
+    }): number {
         if (!location1 || !location2 || 
             location1.latitude === undefined || location1.longitude === undefined ||
             location2.latitude === undefined || location2.longitude === undefined) {
@@ -199,13 +205,13 @@ export class RecommendationController {
         }
 
         const R = 6371;
-        const dLat = this.toRadians(location2.latitude - location1.latitude);
-        const dLon = this.toRadians(location2.longitude - location1.longitude);
+        const dLat = this.toRadians(Number(location2.latitude) - Number(location1.latitude));
+        const dLon = this.toRadians(Number(location2.longitude) - Number(location1.longitude));
         
         const a = 
             Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(this.toRadians(location1.latitude)) * 
-            Math.cos(this.toRadians(location2.latitude)) * 
+            Math.cos(this.toRadians(Number(location1.latitude))) * 
+            Math.cos(this.toRadians(Number(location2.latitude))) * 
             Math.sin(dLon/2) * Math.sin(dLon/2);
             
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const {Schema, Document} = mongoose;
+const { Schema } = mongoose;
 
 export interface IBan extends Document {
     userId: string;

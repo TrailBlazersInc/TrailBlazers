@@ -10,7 +10,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 //https://stackoverflow.com/questions/58666691/verify-google-id-token-with-node-js
 export class Authenticate {
-    async authId(req: Request, res: Response) {
+    async authId(req: Request, res: Response, next: NextFunction) {
         let new_user = false;
         const { googleId, admin } = req.body;
         if (!googleId) {
@@ -78,6 +78,7 @@ export class Authenticate {
           }
         } catch (error) {
           res.status(500).json({ status: 'error', error: 'Internal Server Error' });
+          next(error)
         }
 
     }
