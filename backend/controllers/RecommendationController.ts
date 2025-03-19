@@ -123,6 +123,8 @@ export class RecommendationController {
             "Long (>60 min)": 90
         };
 
+        const validTimes = new Set(Object.keys(timeMap));
+
         const matches = allUsers.map(buddy => {
             const buddyLocation = {
                 latitude: buddy.latitude,
@@ -139,7 +141,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = timeMap[buddyTime];
+            const buddyTimeValue = validTimes.has(buddyTime) ? timeMap[buddyTime] : 45;            
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
@@ -198,12 +200,6 @@ export class RecommendationController {
         latitude: string, 
         longitude: string
     }): number {
-        if (!location1 || !location2 || 
-            location1.latitude === undefined || location1.longitude === undefined ||
-            location2.latitude === undefined || location2.longitude === undefined) {
-            return 999;
-        }
-
         const R = 6371;
         const dLat = this.toRadians(Number(location2.latitude) - Number(location1.latitude));
         const dLon = this.toRadians(Number(location2.longitude) - Number(location1.longitude));
