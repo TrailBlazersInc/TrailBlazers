@@ -93,12 +93,12 @@ class MessagingTest {
         actionOnItemAtPosition<ChatAdapter.ViewHolder>(newItemCount - 1, checkContent(R.id.messageText, messageContent )))
 
     }
-    /**
-     * Function Originally written by ChatGPT (OpenAI) on 17/03/2025.
-     * Prompt:
-     * Give me the implementation to click an element of a child of a RecyclerView in Espresso
-     */
+
     private fun clickChildViewWithId(id: Int) = object : ViewAction {
+         // Function Originally written by ChatGPT (OpenAI) on 17/03/2025.
+         // Prompt:
+         // Give me the implementation to click an element of a child of a RecyclerView in Espresso
+         
         override fun getConstraints(): Matcher<View>? {
             return null
         }

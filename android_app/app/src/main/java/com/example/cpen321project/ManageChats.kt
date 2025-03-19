@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cpen321andriodapp.ApiService
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 data class Chat(
     val id: String,
@@ -76,8 +79,12 @@ class ManageChats : AppCompatActivity() {
                             groups.add(ChatOverview(chat.id, chat.title, chat.members))
                             adapter.notifyItemInserted(groups.size - 1)
                         }
-                    } catch (error: Exception){
-                        Log.d(TAG, error.toString())
+                    } catch (e: IOException) {
+                        Log.e(TAG, "Network error: ${e.message}", e)
+                    } catch (e: HttpException) {
+                        Log.e(TAG, "HTTP error: ${e.code()} - ${e.message}", e)
+                    } catch (e: JsonParseException) {
+                        Log.e(TAG, "JSON parsing error: ${e.message}", e)
                     }
 
                 } else {

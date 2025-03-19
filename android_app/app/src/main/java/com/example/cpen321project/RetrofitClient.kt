@@ -10,6 +10,9 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import android.util.Log
 import com.google.android.apps.common.testing.accessibility.framework.BuildConfig
+import com.google.gson.JsonParseException
+import retrofit2.HttpException
+import java.io.IOException
 
 object RetrofitClient {
     private var retrofit: Retrofit? = null
@@ -43,14 +46,12 @@ object RetrofitClient {
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-            } catch (e: IOException) {  // Handle network failures
+            } catch (e: IOException) {
                 Log.e("Retrofit", "Network error: ${e.message}", e)
             } catch (e: HttpException) {
                 Log.e("Retrofit", "HTTP error: ${e.code()} - ${e.message}", e)
-            } catch (e: JsonParseException) {  // Handle JSON parsing issues
+            } catch (e: JsonParseException) {
                 Log.e("Retrofit", "JSON parsing error: ${e.message}", e)
-            } catch (e: Exception) {  // Catch any unexpected errors
-                Log.e("Retrofit", "Unexpected error: ${e.message}", e)
             }
         }
 

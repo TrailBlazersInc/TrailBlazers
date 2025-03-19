@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cpen321andriodapp.ApiService
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,9 +22,11 @@ import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 data class chatUser(
     val email: String,
@@ -58,8 +61,12 @@ class ReportUserActivity : AppCompatActivity() {
                     val targetEmail: String = chatUsers.get(userIndex).email
                     submitReport(targetEmail, selectedReason)
                 }
-            } catch(error: Exception){
-                Log.d("ReportUser", error.toString())
+            } catch (e: IOException) {
+                Log.e("Report User", "Network error: ${e.message}", e)
+            } catch (e: HttpException) {
+                Log.e("Report User", "HTTP error: ${e.code()} - ${e.message}", e)
+            } catch (e: JsonParseException) {
+                Log.e("Report User", "JSON parsing error: ${e.message}", e)
             }
         }
     }
