@@ -37,7 +37,7 @@ Routes.forEach((route) => {
 		req: Request,
 		res: Response,
 		next: NextFunction
-	) => express.Response<any> | undefined)[] = [];
+    ) => express.Response | undefined)[] = [];
 
 	if (!isTesting) {
 		middlewares = publicRoutes.includes(route.route) ? [] : [authMiddleware];
