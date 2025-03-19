@@ -16,7 +16,6 @@ export class ReportController {
 
     async postReport(req: Request, res: Response) {
         try{
-            console.log("posting report")
             const email = req.params.email
             const { aggressor_email, description } = req.body;
             let user = await User.findOne({ email })
@@ -31,7 +30,6 @@ export class ReportController {
             await report.save();
             return res.status(200).json({ status: 'success', report });
         } catch (error){
-            console.log(error)
             return res.status(500).send("Could not Report User")
         }
         

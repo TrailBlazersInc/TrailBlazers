@@ -118,8 +118,8 @@ export class RecommendationController {
         };
 
         const matches = allUsers.map(buddy => {
-            const buddyLocation = buddy.location || { latitude: 0, longitude: 0 };
-            const buddyAvailability = buddy.availability || {};
+            const buddyLocation = buddy.location;
+            const buddyAvailability = buddy.availability;
             const buddySpeed = buddy.pace || 5;
             const buddyTime = buddy.time || "Medium (30-60 min)";
             
@@ -159,7 +159,7 @@ export class RecommendationController {
             return null;
         })
         .filter(match => match !== null)
-        .sort((a, b) => (b?.matchScore || 0) - (a?.matchScore || 0))
+        .sort((a, b) => (b.matchScore || 0) - (a?.matchScore || 0))
         .slice(0, 5);
 
         return matches;

@@ -3,8 +3,8 @@ const {Schema} = mongoose;
 
 export interface IMessage extends Document {
     _id: mongoose.Types.ObjectId;
-    sender_email: String;
-    sender: String;
+    sender_email: string;
+    sender: string;
     content: string;
     createdAt: Date;
     updatedAt: Date;

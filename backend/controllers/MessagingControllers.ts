@@ -6,13 +6,13 @@ import {sanitizeText} from "../utils/sanitize";
 
 export class MessagingControllers {
 	async getChats(req: Request, res: Response) {
-		const email: String = req.params.email;
+		const email: string = req.params.email;
 		try {
 			const user = await User.findOne<IUser>({ email });
 			if (user) {
 				const chats = await Chat.find<IChat>({ members: user.email });
 				let formatedChats: unknown[] = [];
-				chats.forEach(async (chat) =>{
+				for (const chat of chats){
 					let members: string[] = chat.members;
 					let formattedChat = {
 						id: chat._id.toString(),
@@ -36,7 +36,7 @@ export class MessagingControllers {
 						}
 					}
 					formatedChats.push(chat);
-				})
+				}
 				return res.status(200).json(formatedChats);
 			} else {
 				return res.status(400).send("Invalid email");
@@ -55,12 +55,12 @@ export class MessagingControllers {
 
 			let chatMembers = chat.members;
 
-			chatMembers.forEach(async(member) =>{
+			for (const member of chatMembers) {
 				let user = await User.findOne<IUser>({ email: member });
 				if(user){
 					members.push({ name: user.first_name, email: user.email });
 				}
-			})
+			}
 
 			return res.status(200).json(members);
 		} catch (error) {
@@ -220,7 +220,7 @@ export class MessagingControllers {
 			});
 			message = await message.save();
 			chat.messages.push(message._id)
-			chat.save()
+			chat = await chat.save()
 		
 			return res.status(201).json(message);
 			
