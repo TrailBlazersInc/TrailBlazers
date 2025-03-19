@@ -21,9 +21,12 @@ export class MessagingControllers {
 					};
 					// Change the chat title to the other user's name
 					if (members.length == 2) {
-						let buddy_email_index = members[0] === email ? 1 : 0;
+						let buddy_email: string = sanitizeText(members[0])
+						if (buddy_email == email){
+							buddy_email = sanitizeText(members[1])
+						}
 						let buddy = await User.findOne({
-							email: sanitizeText(members[buddy_email_index]),
+							email: buddy_email,
 						});
 						if (buddy) {
 							chat.title = buddy.first_name;
@@ -53,7 +56,8 @@ export class MessagingControllers {
 			let chatMembers = chat.members;
 
 			for (let i = 0; i < chatMembers.length; i++) {
-				let user = await User.findOne<IUser>({ email: chatMembers[i] });
+				let chatMember = sanitizeText(chatMembers[i])
+				let user = await User.findOne<IUser>({ email: chatMember });
 				if(user){
 					members.push({ name: user.first_name, email: user.email });
 				}
@@ -118,9 +122,9 @@ export class MessagingControllers {
 			} else {
 				res.status(400).send("Invalid chat id");
 			}
-		} catch (err) {
-			console.log(err);
-			res.status(500).send("Internal server errorges");
+		} catch (error) {
+			console.log(error);
+			res.status(500).send("Internal server error");
 		}
 	}
 

@@ -43,8 +43,14 @@ object RetrofitClient {
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-            } catch(error: Exception){
-                Log.d("Retrofit", error.toString())
+            } catch (e: IOException) {  // Handle network failures
+                Log.e("Retrofit", "Network error: ${e.message}", e)
+            } catch (e: HttpException) {
+                Log.e("Retrofit", "HTTP error: ${e.code()} - ${e.message}", e)
+            } catch (e: JsonParseException) {  // Handle JSON parsing issues
+                Log.e("Retrofit", "JSON parsing error: ${e.message}", e)
+            } catch (e: Exception) {  // Catch any unexpected errors
+                Log.e("Retrofit", "Unexpected error: ${e.message}", e)
             }
         }
 

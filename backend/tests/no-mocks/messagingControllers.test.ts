@@ -78,7 +78,7 @@ describe("GET /chat/messages/:chatId", ()=>{
         //Expected Behavior: Returns all messages of that Chat
         //Expected output: The array of messages of the chat
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? ""
+        let chatId = chat?._id.toString() ?? ""
 
         const res = await request(server).get(`/chat/messages/${chatId}`)
         expect(res.status).toBe(200)
@@ -106,7 +106,7 @@ describe("GET /chat/members/:chatId", ()=>{
         //Expected Behavior: Returns all members of that Chat
         //Expected output: Returns an array of all the user emails and names (first name) in the Chat 
         let chat = await Chat.findOne({title: mockChats[1].title});
-        let chatId = chat?._id ?? "";
+        let chatId = chat?._id.toString() ?? "";
         const res = await request(server).get(`/chat/members/${chatId}`)
         expect(res.status).toBe(200)
         expect(res.body).toStrictEqual(expNoMock[2])
@@ -147,7 +147,7 @@ describe("GET /chat/messages/:chatId/:messageId", ()=>{
         //Expected output: Message "Invalid Message Id"
 
         let chat = await Chat.findOne({title: mockChats[1].title});
-        let chatId = chat?._id ?? "";
+        let chatId = chat?._id.toString() ?? "";
 
         const res = await request(server).get(`/chat/messages/${chatId}/${invalidMessageId}`)
         expect(res.status).toBe(400)
@@ -262,7 +262,7 @@ describe("POST /chat/message/:chatId", ()=>{
         //Expected Behavior: Creates a new message in the chat
         //Expected output: The newly created message object
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? " ";
+        let chatId = chat?._id.toString() ?? " ";
         const res = await request(server).post(`/chat/message/${chatId}`).send({email: validEmail, content: someContent })
         if (res.status == 201){
             await Message.deleteMany({_id: res.body?._id})
@@ -292,7 +292,7 @@ describe("POST /chat/message/:chatId", ()=>{
         //Expected output: Message "Invalid email"
 
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? " ";
+        let chatId = chat?._id.toString() ?? " ";
 
         const res = await request(server).post(`/chat/message/${chatId}`).send({email: fakeEmail, content: someContent })
         expect(res.status).toBe(400)
@@ -306,7 +306,7 @@ describe("POST /chat/message/:chatId", ()=>{
         //Expected output: Message "Email not in chat"
 
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? " ";
+        let chatId = chat?._id.toString() ?? " ";
 
         const res = await request(server).post(`/chat/message/${chatId}`).send({email: validEmail2, content: someContent })
         expect(res.status).toBe(400)
@@ -321,7 +321,7 @@ describe("PUT /chat/:email", ()=>{
         //Expected Behavior: Adds member to the chat
         //Expected output: Chat object with 3 members and no messages
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? " ";
+        let chatId: string = chat?._id.toString().toString() ?? " ";
         const res = await request(server).put(`/chat/${validEmail2}`).send({chatId: chatId})
         
         expect(res.status).toBe(200)
@@ -334,8 +334,6 @@ describe("PUT /chat/:email", ()=>{
         //Expected Status Code: 200
         //Expected Behavior: Sends the chat with no modificatoins
         //Expected output: Chat object with 2 members and no messages
-        console.log("mock chat", mockChats[1])
-        console.log(await Chat.find({}))
         const res = await request(server).put(`/chat/${validEmail}`).send({chatId: mockChats[1]._id})
         
         expect(res.status).toBe(200)
@@ -361,7 +359,7 @@ describe("PUT /chat/:email", ()=>{
         //Expected output: Message "Invalid email"
 
         let chat = await Chat.findOne({title: mockChats[0].title})
-        let chatId = chat?._id ?? " ";
+        let chatId = chat?._id.toString() ?? " ";
 
         const res = await request(server).put(`/chat/${fakeEmail}`).send({ chatId: chatId })
         expect(res.status).toBe(400)
