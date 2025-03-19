@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { Authenticate } from '../controllers/authControllers';
-import { body } from 'express-validator';
 
 const controller = new Authenticate();
 

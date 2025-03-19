@@ -1,5 +1,5 @@
 import { RecommendationController } from "../controllers/RecommendationController";
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 
 const controllers = new RecommendationController()
 

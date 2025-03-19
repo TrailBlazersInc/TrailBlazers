@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
+type Availability = Record<string, boolean>
+
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
@@ -121,14 +123,16 @@ export class RecommendationController {
             "Long (>60 min)": 90
         };
 
+        const validTimes = new Set(Object.keys(timeMap));
+
         const matches = allUsers.map(buddy => {
             const buddyLocation = {
                 latitude: buddy.latitude,
                 longitude: buddy.longitude
             };
             const buddyAvailability = buddy.availability;
-            const buddySpeed = buddy.pace || 5;
-            const buddyTime = buddy.time || "Medium (30-60 min)";
+            const buddySpeed = buddy.pace;
+            const buddyTime = buddy.time;
             
             const distanceScore = this.calculateDistance(userLocation, buddyLocation);
             const speedDifference = Math.abs(userSpeed - buddySpeed);
@@ -137,7 +141,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = timeMap[buddyTime] || 45;
+            const buddyTimeValue = validTimes.has(buddyTime) ? timeMap[buddyTime] : 45;            
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
@@ -160,7 +164,7 @@ export class RecommendationController {
                     distance: buddy.distance,
                     time: buddy.time,
                     availability: buddy.availability,
-                    matchScore: matchScore
+                    matchScore
                 };
             }
             return null;
@@ -172,34 +176,44 @@ export class RecommendationController {
         return matches;
     }
 
-    private calculateAvailabilityScore(userAvailability: any, buddyAvailability: any): number {
-        const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    private calculateAvailabilityScore(
+        userAvailability: Availability, 
+        buddyAvailability: Availability
+    ): number {
+        const validDays = new Set(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]);
+    
         let commonDays = 0;
-        let totalDays = days.length;
-
-        days.forEach(day => {
-            if (userAvailability[day] && buddyAvailability[day]) {
+        let totalDays = validDays.size;
+    
+        validDays.forEach(day => {
+            if (
+                Object.prototype.hasOwnProperty.call(userAvailability, day) &&
+                Object.prototype.hasOwnProperty.call(buddyAvailability, day) &&
+                userAvailability[day] && 
+                buddyAvailability[day]
+            ) {
                 commonDays++;
             }
         });
+    
         return commonDays / totalDays;
     }
 
-    private calculateDistance(location1: any, location2: any): number {
-        if (!location1 || !location2 || 
-            location1.latitude === undefined || location1.longitude === undefined ||
-            location2.latitude === undefined || location2.longitude === undefined) {
-            return 999;
-        }
-
+    private calculateDistance(location1: {
+        latitude: string, 
+        longitude: string
+    }, location2: {
+        latitude: string, 
+        longitude: string
+    }): number {
         const R = 6371;
-        const dLat = this.toRadians(location2.latitude - location1.latitude);
-        const dLon = this.toRadians(location2.longitude - location1.longitude);
+        const dLat = this.toRadians(Number(location2.latitude) - Number(location1.latitude));
+        const dLon = this.toRadians(Number(location2.longitude) - Number(location1.longitude));
         
         const a = 
             Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(this.toRadians(location1.latitude)) * 
-            Math.cos(this.toRadians(location2.latitude)) * 
+            Math.cos(this.toRadians(Number(location1.latitude))) * 
+            Math.cos(this.toRadians(Number(location2.latitude))) * 
             Math.sin(dLon/2) * Math.sin(dLon/2);
             
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));

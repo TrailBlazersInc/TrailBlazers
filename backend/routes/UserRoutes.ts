@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { UserController } from '../controllers/UserControllers';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 
 const controller = new UserController();
 

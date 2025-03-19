@@ -13,7 +13,7 @@ beforeEach(() => {
 afterAll(async () => {
     // Ensure that mongoose disconnects properly
     await mongoose.connection.close();
-    await server.close();
+    server.close();
 });
 
 describe("Mocked: POST /recommendation/:email", () => {
