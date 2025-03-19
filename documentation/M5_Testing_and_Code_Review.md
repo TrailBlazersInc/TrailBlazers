@@ -131,7 +131,7 @@ npm test # Make sure to add the .env file before running this command
     | 3. User presses the save button. | Click "Save Changes" button. |
     | 4. The app shows a message telling the user the changes were changed successfully. | Check dialog is opened with text: “Please enter a valid pace”. |
   - **Test Logs:**
-  
+
 - **Use Case: Recommendation**
 
   - **Expected Behaviors:**
@@ -166,13 +166,21 @@ _(Placeholder for screenshots of Codacyâ€™s Issues page)_
 
 ### 5.4. Justifications for Unfixed Issues
 
-- **Code Pattern: [Usage of Deprecated Modules](#)**
-
-  1. **Issue**
+  1. **Code Pattern: [Usage of Deprecated Modules](#)**
 
      - **Location in Git:** [`src/services/chatService.js#L31`](#)
      - **Justification:** ...
 
-  2. ...
+  2. **Interface 'ApiService' with '13' functions detected. Defined threshold inside interfaces is set to '11'**
+
+     - **Location in Git:** [`android_app/app/src/main/java/com/example/cpen321project/
+APIService.kt`](#)
+     - **Justification:** ...
+
+  3. **Code Pattern: [Unexpected any. Specify a different type.](#)**
+
+     - **Location in Git:** [`backend/middleware/
+authMiddleware.ts`](#)
+     - **Justification:** ...
 
 - ...
