@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { IUser, User } from '../models/user';
-import jwt from 'jsonwebtoken';
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
@@ -114,7 +113,7 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const timeMap: { [key: string]: number } = {
+        const timeMap: Record<string, number> = {
             "Short (<30 min)": 15,
             "Medium (30-60 min)": 45,
             "Long (>60 min)": 90
