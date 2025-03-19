@@ -37,9 +37,11 @@
 All Backend Tests are located under  `backend/tests`
 
 We assume that you have MongoDB installed and running in your machine.
-
-First cd into the backend directory, and create an .env file with the following properties:
+First clone the reporsitory as follows:
+```sh
+git clone https://github.com/example/your-project.git Trailblazers
 ```
+Then cd into the backend directory, and create an .env file with the following properties:
 DB_URI: mongodb://localhost:27017/tests
 PORT: 3000
 GOOGLE_CLIENT_ID: << Your GOOGLE CLIENT ID >> 
@@ -48,7 +50,6 @@ IS_TESTING: true
 ```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
-git clone https://github.com/example/your-project.git Trailblazers
 cd Trailblazers/backend
 npx ts-jest config:init 
 npm test # Make sure to add the .env file before running this command
@@ -171,9 +172,9 @@ _(Placeholder for screenshots of Codacyâ€™s Issues page)_
 
 ### 5.4. Justifications for Unfixed Issues
 
-  1. **Code Pattern: [Usage of Deprecated Modules](#)**
+  1. **@typescript eslint: [No explicit any](#)**
 
-     - **Location in Git:** [`src/services/chatService.js#L31`](#)
+     - **Location in Git:** [`backend`](#)
      - **Justification:** ...
 
   2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
@@ -186,5 +187,3 @@ APIService.kt`](#)
 
      - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
      - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
-
-- ...
