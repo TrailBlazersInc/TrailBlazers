@@ -33,6 +33,7 @@
 
 #### 2.1.2. Commit Hash Where Tests Run
 
+ `cb88cf814d7dcd177065e583fbc9fbe61421085f`
 
 #### 2.1.3. Explanation on How to Run the Tests
 All Backend Tests are located under  `backend/tests`
@@ -163,7 +164,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
 ### 5.1. Commit Hash Where Codacy Ran
 
-`[Insert Commit SHA here]`
+`cb88cf814d7dcd177065e583fbc9fbe61421085f`
 
 ### 5.2. Unfixed Issues per Codacy Category
 
