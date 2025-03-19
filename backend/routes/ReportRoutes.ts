@@ -1,5 +1,7 @@
 import { ReportController } from "../controllers/ReportControllers";
 import { body, param } from 'express-validator';
+import {Request, Response} from 'express';
+import mongoose from "mongoose";
 
 const controllers = new ReportController()
 
@@ -7,13 +9,13 @@ export const ReportRoutes = [
     {
         method: "get",
         route: "/report",
-        action: controllers.getReports,
+        action: (req: Request, res: Response) => controllers.getReports(req, res),
         validation: []
     },
     {
         method: "post",
         route: "/report/:email",
-        action: controllers.postReport,
+        action: (req: Request, res: Response) => controllers.postReport(req, res),
         validation: [
             param("email").isEmail(),
             body("aggressor_email").isEmail(),

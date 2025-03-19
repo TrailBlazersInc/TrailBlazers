@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { authenticate } from '../controllers/authControllers';
+import { Authenticate } from '../controllers/authControllers';
 import { body } from 'express-validator';
 
-const controller = new authenticate();
+const controller = new Authenticate();
 
 export const AuthRoutes = [
     {

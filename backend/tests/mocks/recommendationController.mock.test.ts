@@ -2,7 +2,6 @@ import { describe, expect, test, jest } from '@jest/globals';
 import request from 'supertest';
 import { server } from '../..'; // Adjust the path as necessary
 import { User } from '../../models/user'; // User model
-import { RecommendationController } from '../../controllers/RecommendationController'; // Adjust the path as necessary
 import mongoose from 'mongoose';
 
 const validEmail = "mockUser@example.com";

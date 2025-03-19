@@ -1,6 +1,6 @@
-import {describe, expect, jest, test} from "@jest/globals";
+import {describe, expect, test} from "@jest/globals";
 import { server } from "../..";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import request from 'supertest';
 import { Chat } from "../../models/chat"
 import { Message } from "../../models/message";

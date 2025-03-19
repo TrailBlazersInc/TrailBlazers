@@ -11,7 +11,7 @@ export class MessagingControllers {
 			const user = await User.findOne<IUser>({ email: email });
 			if (user) {
 				const chats = await Chat.find<IChat>({ members: user.email });
-				let formatedChats: any[] = [];
+				let formatedChats: unknown[] = [];
 				for (let i = 0; i < chats.length; i++) {
 					let members = chats[i].members;
 					let chat = {
@@ -23,7 +23,7 @@ export class MessagingControllers {
 					if (members.length == 2) {
 						let buddy_email_index = members[0] === email ? 1 : 0;
 						let buddy = await User.findOne({
-							email: members[buddy_email_index],
+							email: sanitizeText(members[buddy_email_index]),
 						});
 						if (buddy) {
 							chat.title = buddy.first_name;
@@ -44,17 +44,15 @@ export class MessagingControllers {
 	}
 	async getChatMembers(req: Request, res: Response) {
 		try {
-			let members: any[] = [];
+			let members: unknown[] = [];
 			let chat = await Chat.findOne<IChat>({ _id: req.params.chatId });
 			if (!chat) {
 				return res.status(400).send("Invalid chat id");
 			}
 
 			let chatMembers = chat.members;
-			console.log(chatMembers);
 
 			for (let i = 0; i < chatMembers.length; i++) {
-				console.log(chatMembers[i]);
 				let user = await User.findOne<IUser>({ email: chatMembers[i] });
 				if(user){
 					members.push({ name: user.first_name, email: user.email });
@@ -128,7 +126,6 @@ export class MessagingControllers {
 
 	async postChat(req: Request, res: Response) {
 		try {
-			console.log("entering Post chat");
 			const email = req.params.email;
 			const user = await User.findOne({ email });
 			if (!user) {
@@ -140,7 +137,6 @@ export class MessagingControllers {
 				members: [email],
 				messages: [],
 			});
-			console.log(chat);
 			const newChat = await chat.save();
 
 			const formattedChat = {
@@ -189,7 +185,6 @@ export class MessagingControllers {
 				members: [email, targetEmail],
 				messages: [],
 			});
-			console.log(chat);
 			chat = await chat.save();
 
 			let formattedChat = {
@@ -241,9 +236,7 @@ export class MessagingControllers {
 		try {
 			let email = req.params.email;
 			let chat = await Chat.findOne({ _id: req.body.chatId });
-			console.log(chat);
 			let user = await User.findOne({ email: email });
-			console.log(user);
 			if (!chat) {
 				return res.status(400).send("Invalid chat id");
 			}

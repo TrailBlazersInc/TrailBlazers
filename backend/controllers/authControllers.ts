@@ -9,7 +9,7 @@ dotenv.config();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 //https://stackoverflow.com/questions/58666691/verify-google-id-token-with-node-js
-export class authenticate {
+export class Authenticate {
     async authId(req: Request, res: Response) {
         let new_user = false;
         const { googleId, admin } = req.body;

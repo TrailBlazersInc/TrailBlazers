@@ -1,9 +1,7 @@
 import {describe, expect, jest, test} from "@jest/globals";
 import request from "supertest"
 import {server} from "../.."
-import {MessagingControllers} from "../../controllers/MessagingControllers"
 import {Chat} from "../../models/chat"
-import { Message } from "../../models/message";
 import { User } from "../../models/user";
 import mockChats from "../mock_data/tests.chats.json";
 import mockUsers from "../mock_data/tests.users.json";
@@ -11,11 +9,7 @@ import mongoose from "mongoose";
 
 const validEmail = "someone@gmail.com"
 const validEmail2 = "lad@gmail.com"
-const validEmail3 = "person@gmail.com"
-const fakeEmail = "nonExistent@gmail.com"
-const invalidChatId = "000000000000000000000000"
 const validMessageId = "000000000000000000000001"
-const invalidMessageId = "000000000000000000000000"
 const newChatName = "::::Hello"
 const someContent = "hello my friend, how is your day?"
 
