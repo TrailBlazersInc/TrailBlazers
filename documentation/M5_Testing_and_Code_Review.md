@@ -37,11 +37,12 @@
 All Backend Tests are located under  `backend/tests`
 
 We assume that you have MongoDB installed and running in your machine.
+
 First clone the reporsitory as follows:
 ```sh
-git clone https://github.com/example/your-project.git Trailblazers
+git clone https://github.com/TrailBlazersInc/TrailBlazers.git Trailblazers
 ```
-Then cd into the backend directory, and create an .env file with the following properties:
+Then cd into `Trailblazers/backend` directory, and create an .env file with the following properties:
 ```sh
 D`B_URI: mongodb://localhost:27017/tests
 PORT: 3000
@@ -51,7 +52,6 @@ IS_TESTING: true
 ```
 Make sure to replace << Your GOOGLE CLIENT ID >> with your own google OAuth web client ID. Then to start the test run the following commands:
 ```sh
-cd Trailblazers/backend
 npx ts-jest config:init 
 npm test # Make sure to add the .env file before running this command
 ```
