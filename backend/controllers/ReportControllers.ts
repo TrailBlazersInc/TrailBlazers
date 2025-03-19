@@ -19,12 +19,12 @@ export class ReportController {
             console.log("posting report")
             const email = req.params.email
             const { aggressor_email, description } = req.body;
-            let user = await User.findOne({ email: email })
+            let user = await User.findOne({ email })
             if (!user) {
                 return res.status(404).send('User not found' );
             }
             let report = new Report({
-                description: description,
+                description,
                 aggressorEmail: aggressor_email,
                 reporterEmail: email
             });

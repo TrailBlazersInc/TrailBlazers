@@ -62,11 +62,11 @@ export class RecommendationController {
     
             // Find and update user
             const user = await User.findOneAndUpdate(
-                { email: email },
+                { email },
                 { 
                     $set: { 
-                        latitude: latitude, 
-                        longitude: longitude 
+                        latitude, 
+                        longitude 
                     } 
                 },
                 { new: true } // Return the updated document

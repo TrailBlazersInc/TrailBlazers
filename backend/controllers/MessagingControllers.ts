@@ -8,7 +8,7 @@ export class MessagingControllers {
 	async getChats(req: Request, res: Response) {
 		const email: String = req.params.email;
 		try {
-			const user = await User.findOne<IUser>({ email: email });
+			const user = await User.findOne<IUser>({ email });
 			if (user) {
 				const chats = await Chat.find<IChat>({ members: user.email });
 				let formatedChats: unknown[] = [];
@@ -160,7 +160,7 @@ export class MessagingControllers {
 		try {
 			const email = req.params.email;
 			const targetEmail = req.body.target_email;
-			const user = await User.findOne({ email: email });
+			const user = await User.findOne({ email });
 			const user2 = await User.findOne({ email: targetEmail });
 
 			if (!user) {
@@ -240,7 +240,7 @@ export class MessagingControllers {
 		try {
 			let email = req.params.email;
 			let chat = await Chat.findOne({ _id: req.body.chatId });
-			let user = await User.findOne({ email: email });
+			let user = await User.findOne({ email });
 			if (!chat) {
 				return res.status(400).send("Invalid chat id");
 			}

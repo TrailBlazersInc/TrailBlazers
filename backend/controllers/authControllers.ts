@@ -37,8 +37,8 @@ export class Authenticate {
             user = new User ({
               email: response.email,
               social_id: response.sub,
-              first_name: first_name,
-              last_name: last_name,
+              first_name,
+              last_name,
               pace: 1,
               distance: "Short",
               time: "Short",

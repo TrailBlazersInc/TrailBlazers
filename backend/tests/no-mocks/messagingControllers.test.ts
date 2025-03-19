@@ -322,7 +322,7 @@ describe("PUT /chat/:email", ()=>{
         //Expected output: Chat object with 3 members and no messages
         let chat = await Chat.findOne({title: mockChats[0].title})
         let chatId: string = chat?._id.toString().toString() ?? " ";
-        const res = await request(server).put(`/chat/${validEmail2}`).send({chatId: chatId})
+        const res = await request(server).put(`/chat/${validEmail2}`).send({chatId})
         
         expect(res.status).toBe(200)
         expect(mongoose.Types.ObjectId.isValid(res.body?.id)).toBe(true)
@@ -361,7 +361,7 @@ describe("PUT /chat/:email", ()=>{
         let chat = await Chat.findOne({title: mockChats[0].title})
         let chatId = chat?._id.toString() ?? " ";
 
-        const res = await request(server).put(`/chat/${fakeEmail}`).send({ chatId: chatId })
+        const res = await request(server).put(`/chat/${fakeEmail}`).send({ chatId })
         expect(res.status).toBe(400)
         expect(res.text).toBe("Invalid email")
     })
