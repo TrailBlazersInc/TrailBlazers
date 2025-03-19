@@ -133,7 +133,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
     | 3. User presses the save button. | Click "Save Changes" button. |
     | 4. The app shows a message telling the user the changes were changed successfully. | Check dialog is opened with text: “Please enter a valid pace”. |
   - **Test Logs:**
-
+![alt text](images/ManageProffileEspressoTest.png)
 - **Use Case: Recommendation**
 
   - **Expected Behaviors:**
