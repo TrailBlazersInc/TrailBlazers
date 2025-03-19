@@ -70,18 +70,19 @@ npm test # Make sure to add the .env file before running this command
 
 | **Non-Functional Requirement**  | **Location in Git**                              |
 | ------------------------------- | ------------------------------------------------ |
-| **Performance (Recommendations Response Time)** | [`backend/tests/nonfunctional/response_time.test.js`](#) |
+| **Recommendation Usability** | [`android_app/app/src/androidTest/java/com/example/cpen321project/RecommendationTest.kt#L109`](#) |
 | **Performance (Chat Updates Response Time)** | [`android_app/app/src/androidTest/java/com/example/cpen321project/MessagingTest.kt`](#) |
 | **Chat Data Security**          | [`tests/nonfunctional/chat_security.test.js`](#) |
 
 ### 3.2. Test Verification and Logs
 
-- **Performance (Response Time)**
+- **Recommendation Usability**
 
-  - **Verification:** This test suite simulates multiple concurrent API calls using Jest along with a load-testing utility to mimic real-world user behavior. The focus is on key endpoints such as user login and study group search to ensure that each call completes within the target response time of 2 seconds under normal load. The test logs capture metrics such as average response time, maximum response time, and error rates. These logs are then analyzed to identify any performance bottlenecks, ensuring the system can handle expected traffic without degradation in user experience.
+  - **Verification:** This test suite simulates a user to get the top 5 recommendation list. The focus is on parsing user's weight for location, speed and distance to the backend and the matching algorithm will be executed to display the recommendation list within the target response time of 4 seconds. We use Espresso's onView().check(matches(isDisplayed())) to ensure the timer does not stop until the component is well displayed for the user. The test logs let us know if the system is executed within out expected response time.
+
   - **Log Output**
     ```
-    [Placeholder for response time test logs]
+    Test 3: Successfully get recommendation in 379ms!
     ```
 
 - **Chat Data Security**
@@ -115,9 +116,21 @@ npm test # Make sure to add the .env file before running this command
     | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
 
   - **Test Logs:**
-  ![alt text](images/MessagingEspressoExecutionLog.png)
+    ![Messaging Espresso Result] (images/MessagingEspressoExecutionLog.png)
 
-- **...**
+- **Use Case: Recommendation**
+
+  - **Expected Behaviors:**
+
+    | **Scenario Steps** | **Test Case Steps** |
+    | ------------------ | ------------------- |
+    | 1. User Enters the Chat Overview               | click button "My groups in the main page" |
+    | 2. User Selects Chat | click on the first DM chat available from the overview |
+    | 3. User enters message into the textbox and clicks on send | Input a "hello, howe are you?" and click send |
+    | 4. Message is displayed on the chat | Assert that a new message with content hello, howe are you?" is displayed |
+
+  - **Test Logs:**
+    ![Recommendation Espresso Result] (images/RecommendationEspressoExecutionLog.png)
 
 ---
 
