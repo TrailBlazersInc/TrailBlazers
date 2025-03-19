@@ -14,18 +14,19 @@ export class RecommendationController {
             }
 
             const { 
-                locationWeight = 0.4, 
+                locationWeight, 
                 timeWeight = 0.3, 
-                speedWeight = 0.2,
+                speedWeight,
                 availabilityWeight = 0.1,
-                userLocation, 
-                userAvailability, 
-                userSpeed 
+                userAvailability,  
             } = req.body;
 
-            const effectiveLocation = userLocation || user.location;
+            const effectiveLocation = {
+                latitude: user.latitude,
+                longitude: user.longitude
+            };
             const effectiveAvailability = userAvailability || user.availability;
-            const effectiveSpeed = userSpeed !== undefined ? userSpeed : user.pace;
+            const effectiveSpeed = user.pace;
 
             const thresholdTime = 30;
             const thresholdSpeed = 2;
@@ -118,12 +119,15 @@ export class RecommendationController {
         };
 
         const matches = allUsers.map(buddy => {
-            const buddyLocation = buddy.location;
+            const buddyLocation = {
+                latitude: buddy.latitude,
+                longitude: buddy.longitude
+            };
             const buddyAvailability = buddy.availability;
             const buddySpeed = buddy.pace || 5;
             const buddyTime = buddy.time || "Medium (30-60 min)";
             
-            const distanceScore = userLocation ? this.calculateDistance(userLocation, buddyLocation) : 0;
+            const distanceScore = this.calculateDistance(userLocation, buddyLocation);
             const speedDifference = Math.abs(userSpeed - buddySpeed);
             
             const commonAvailability = this.calculateAvailabilityScore(userAvailability, buddyAvailability);
@@ -159,7 +163,7 @@ export class RecommendationController {
             return null;
         })
         .filter(match => match !== null)
-        .sort((a, b) => (b.matchScore || 0) - (a?.matchScore || 0))
+        .sort((a, b) => (b.matchScore) - (a.matchScore))
         .slice(0, 5);
 
         return matches;
