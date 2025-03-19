@@ -127,8 +127,6 @@ export class RecommendationController {
             "Long (>60 min)": 90
         };
 
-        const validTimes = new Set(Object.keys(timeMap));
-
         const matches = allUsers.map(buddy => {
             const buddyLocation = {
                 latitude: buddy.latitude,
@@ -145,7 +143,7 @@ export class RecommendationController {
 
             // Calculate time difference using the time map
             const userTimeValue = timeMap[currentUser.time] || 45;
-            const buddyTimeValue = validTimes.has(buddyTime) ? timeMap[buddyTime] : 45;
+            const buddyTimeValue = timeMap[buddyTime];
             const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
 
             if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
@@ -185,12 +183,16 @@ export class RecommendationController {
         buddyAvailability: Availability
     ): number {
         const days: Day[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-    
         let commonDays = 0;
         let totalDays = days.length;
     
-        days.forEach((day: Day) => {
-            if (userAvailability[day] && buddyAvailability[day]) {
+        // days.forEach((day: Day) => {
+        //     if (userAvailability[day] && buddyAvailability[day]) {
+        //         commonDays++;
+        //     }
+        // });
+        Object.entries(userAvailability).forEach(([day, value]) => {
+            if (value && buddyAvailability[day as Day]) {
                 commonDays++;
             }
         });
