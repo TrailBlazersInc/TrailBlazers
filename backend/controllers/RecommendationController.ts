@@ -186,7 +186,7 @@ export class RecommendationController {
         let totalDays = days.size;
     
         days.forEach(day => {
-            if (userAvailability[day] && buddyAvailability[day]) {
+            if (userAvailability[`${day}`] && buddyAvailability[`${day}`]) {
                 commonDays++;
             }
         });
