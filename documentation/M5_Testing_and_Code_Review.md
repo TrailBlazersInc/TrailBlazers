@@ -44,7 +44,7 @@ git clone https://github.com/TrailBlazersInc/TrailBlazers.git Trailblazers
 ```
 Then cd into `Trailblazers/backend` directory, and create an .env file with the following properties:
 ```sh
-D`B_URI: mongodb://localhost:27017/tests
+DB_URI: mongodb://localhost:27017/tests
 PORT: 3000
 GOOGLE_CLIENT_ID: << "Your GOOGLE CLIENT ID" >> 
 JWT_SECRET: helloWorld
