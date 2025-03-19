@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { ConnectMongoDB } from "./services";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -36,6 +36,7 @@ Routes.forEach((route) => {
 	let middlewares: ((
 		req: Request,
 		res: Response,
+		next: NextFunction
     ) => express.Response | undefined)[] = [];
 
 	if (!isTesting) {
@@ -46,7 +47,7 @@ Routes.forEach((route) => {
 		route.route,
 		...middlewares,
 		route.validation,
-		async (req: Request, res: Response) => {
+		async (req: Request, res: Response, next: NextFunction) => {
 			const errors = validationResult(req);
 
 			if (!errors.isEmpty()) {
@@ -54,7 +55,7 @@ Routes.forEach((route) => {
 			}
 
 			try {
-				await route.action(req, res);
+				await route.action(req, res, next);
 			} catch (error) {
 				res.status(500);
 			}

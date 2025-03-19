@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { IUser, User } from '../models/user';
 
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
-    postRecommendations = async (req: Request, res: Response) => {
+    postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userEmail = req.params.email;
             
@@ -46,10 +46,11 @@ export class RecommendationController {
         } catch (error) {
             console.error("Error processing recommendations:", error);
             res.status(500).json({ status: 'error', error: 'Failed to process recommendations' });
+            next(error);
         }
     }
 
-    postLocation = async (req: Request, res: Response) => {
+    postLocation = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { email } = req.params;
             const { latitude, longitude } = req.body;
@@ -82,6 +83,7 @@ export class RecommendationController {
         } catch (error) {
             console.error("Error updating user location:", error);
             res.status(500).json({ error: "Failed to update location" });
+            next(error);
         }
     }
 
