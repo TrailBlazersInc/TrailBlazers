@@ -53,11 +53,7 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, ReportUserActivity::class.java)
             intent.putExtra("tkn", tkn)
             intent.putExtra("email", email)
-            try {
-                startActivity(intent)
-            } catch (e: Exception) {
-                val errorMessage = "Error starting ReportUserActivity: ${e.message}"
-            }
+            startActivity(intent)
         }
     }
 }

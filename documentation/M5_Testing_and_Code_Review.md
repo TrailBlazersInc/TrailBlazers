@@ -178,19 +178,20 @@ _(Placeholder for screenshots of Codacyâ€™s Issues page)_
 
   1. **@typescript eslint: [No explicit any](#)**
 
+    1.
      - **Location in Git:** [`backend/index.ts`](#)
      - **Justification:** Since we are using exclusively our own routes and do not need to fetch it from some outter source and we are doing this only to set up the server, it is not necessary to heavily type the express application.
+    2.
+    - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
+     - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
+  
 
   2. **Too many functions inside a/an file/class/object/interface always indicate a violation of the single responsibility principle. Maybe the file/class/object/interface wants to manage too many things at once.**
 
      - **Location in Git:** [`android_app/app/src/main/java/com/example/cpen321project/APIService.kt`](#)
      - **Justification:** ApiService is used for all of our API request functions, we can not reduce the amount of API request functions we have for it.
 
-  3. **@typescript eslint: [No explicit any](#)**
 
-     - **Location in Git:** [`backend/middleware/authMiddleware.ts`](#)
-     - **Justification:** Since this is middleware we want the response to be fast so it doesn't slow down the response time of the requests. By using any we are prioritizing speed and since we are not using strict mode in our typescript config it is unnecessary to add type safety to any.
-  
-  4. **Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.**
+  3. **Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.**
      - **Location in Git:** [`backend/index.ts`](#)
      - **Justification:** Since the try catch is already handled inside the function, and it is only used to start the server, there is no need to specify void on startServer().
