@@ -12,12 +12,12 @@ export class MessagingControllers {
 			if (user) {
 				const chats = await Chat.find<IChat>({ members: user.email });
 				let formatedChats: unknown[] = [];
-				for (let i = 0; i < chats.length; i++) {
-					let members = chats[i].members;
-					let chat = {
-						id: chats[i]._id.toString(),
-						title: sanitizeText(chats[i].title),
-						members: Number.isInteger(chats[i].members?.length) ? chats[i].members.length : 0,
+				chats.forEach(async (chat) =>{
+					let members: string[] = chat.members;
+					let formattedChat = {
+						id: chat._id.toString(),
+						title: sanitizeText(chat.title),
+						members: members.length,
 					};
 					// Change the chat title to the other user's name
 					if (members.length == 2) {
@@ -35,8 +35,8 @@ export class MessagingControllers {
 							chat.title = buddy.first_name;
 						}
 					}
-					formatedChats[i] = chat;
-				}
+					formatedChats.push(chat);
+				})
 				return res.status(200).json(formatedChats);
 			} else {
 				return res.status(400).send("Invalid email");
@@ -55,13 +55,12 @@ export class MessagingControllers {
 
 			let chatMembers = chat.members;
 
-			for (let i = 0; i < chatMembers.length; i++) {
-				let chatMember = sanitizeText(chatMembers[i])
-				let user = await User.findOne<IUser>({ email: chatMember });
+			chatMembers.forEach(async(member) =>{
+				let user = await User.findOne<IUser>({ email: member });
 				if(user){
 					members.push({ name: user.first_name, email: user.email });
 				}
-			}
+			})
 
 			return res.status(200).json(members);
 		} catch (error) {
