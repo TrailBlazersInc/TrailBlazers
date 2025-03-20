@@ -1,6 +1,21 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
+export type PUser = {
+  name: string, 
+  email: string
+}
+
+export type Availability = {
+  monday: boolean,
+  tuesday: boolean,
+  wednesday: boolean,
+  thursday: boolean,
+  friday: boolean,
+  saturday: boolean,
+  sunday: boolean
+}
+
 export interface IUser  extends Document{
     _id: mongoose.Types.ObjectId,
     email: string,
@@ -10,15 +25,7 @@ export interface IUser  extends Document{
     pace: number,
     distance: string,
     time: string,
-    availability: {
-      monday: boolean,
-      tuesday: boolean,
-      wednesday: boolean,
-      thursday: boolean,
-      friday: boolean,
-      saturday: boolean,
-      sunday: boolean
-    },
+    availability: Availability,
     longitude: string,
     latitude: string,
     banned: boolean,

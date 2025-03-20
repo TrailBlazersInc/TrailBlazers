@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { IUser, User } from '../models/user';
+import { IUser, User, Availability } from '../models/user';
 
-type Day = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+const thresholdTime = 30;
+const thresholdSpeed = 25;
 
-type Availability = {
-    [key in Day]: boolean;
-};
-
-type JoggingTime = "Short (<30 min)" | "Medium (30-60 min)" | "Long (>60 min)";
+enum JoggingTime {
+    "Short (<30 min)" = 0,
+    "Medium (30-60 min)" = 45,
+    "Long (>60 min)" = 90
+}
 
 type Time = {
     [key in JoggingTime]: number;
@@ -31,15 +32,17 @@ export class RecommendationController {
                 availabilityWeight = 0.1,
             } = req.body;
 
+            console.log("lw", locationWeight);
+            console.log("tw", timeWeight);
+            console.log("sw", speedWeight);
+            console.log("aw", availabilityWeight);
+
             const effectiveLocation = {
                 latitude: user.latitude,
                 longitude: user.longitude
             };
             const effectiveAvailability = user.availability;
             const effectiveSpeed = user.pace;
-
-            const thresholdTime = 30;
-            const thresholdSpeed = 2;
 
             const recommendations = await this.findJogBuddies(
                 user, 
@@ -127,12 +130,6 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const timeMap: Time = {
-            "Short (<30 min)": 15,
-            "Medium (30-60 min)": 45,
-            "Long (>60 min)": 90
-        };
-
         const matches = allUsers.map(buddy => {
             const buddyLocation = {
                 latitude: buddy.latitude,
@@ -143,46 +140,36 @@ export class RecommendationController {
             const buddyTime = buddy.time;
             
             const distanceScore = this.calculateDistance(userLocation, buddyLocation);
-            const speedDifference = Math.abs(userSpeed - buddySpeed);
+            const speedDifference = Math.min(Math.abs(userSpeed - buddySpeed), thresholdSpeed);
             
             const commonAvailability = this.calculateAvailabilityScore(userAvailability, buddyAvailability);
 
             // Calculate time difference using the time map
-            const userTimeValue = timeMap[currentUser.time as JoggingTime] || 45;            
-            let buddyTimeValue = 45; // Default value
-            
-            Object.entries(timeMap).forEach(([timeOption, minutes]) => {
-                if (buddyTime === timeOption) {
-                    buddyTimeValue = minutes;
-                }
-            });
+            const userTimeValue = JoggingTime[currentUser.time as keyof typeof JoggingTime];            
+            const buddyTimeValue = JoggingTime[buddyTime as keyof typeof JoggingTime];
+            const timeDifference = Math.min(Math.abs(userTimeValue - buddyTimeValue), thresholdTime);
 
-            const timeDifference = Math.abs(userTimeValue - buddyTimeValue);
+            const locationScore = 1 / (1 + distanceScore);
+            const speedScore = 1 / (1 + speedDifference);
+            const timeScore = 1 / (1 + timeDifference);
+            const availabilityScore = commonAvailability;
 
-            if (speedDifference <= thresholdSpeed && timeDifference <= thresholdTime) {
-                const locationScore = 1 / (1 + distanceScore);
-                const speedScore = 1 / (1 + speedDifference);
-                const timeScore = 1 / (1 + timeDifference);
-                const availabilityScore = commonAvailability;
+            const matchScore = 
+                (locationScore * weightLocation) + 
+                (timeScore * weightTime) +
+                (speedScore * weightSpeed) +
+                (availabilityScore * weightAvailability);
 
-                const matchScore = 
-                    (locationScore * weightLocation) + 
-                    (timeScore * weightTime) +
-                    (speedScore * weightSpeed) +
-                    (availabilityScore * weightAvailability);
-
-                return {
-                    email: buddy.email,
-                    firstName: buddy.first_name,
-                    lastName: buddy.last_name,
-                    pace: buddy.pace,
-                    distance: buddy.distance,
-                    time: buddy.time,
-                    availability: buddy.availability,
-                    matchScore
-                };
-            }
-            return null;
+            return {
+                email: buddy.email,
+                firstName: buddy.first_name,
+                lastName: buddy.last_name,
+                pace: buddy.pace,
+                distance: buddy.distance,
+                time: buddy.time,
+                availability: buddy.availability,
+                matchScore
+            };
         })
         .filter(match => match !== null)
         .sort((a, b) => (b.matchScore) - (a.matchScore))
@@ -195,15 +182,9 @@ export class RecommendationController {
         userAvailability: Availability, 
         buddyAvailability: Availability
     ): number {
-        const days: Day[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-        let commonDays = 0;
-        let totalDays = days.length;
+        let totalDays = 7;
     
-        Object.entries(userAvailability).forEach(([day, value]) => {
-            if (value && buddyAvailability[day as Day]) {
-                commonDays++;
-            }
-        });
+        let commonDays: number = Object.entries(userAvailability).filter(([day, value]) => value && buddyAvailability[day as keyof Availability]).length;
     
         return commonDays / totalDays;
     }
