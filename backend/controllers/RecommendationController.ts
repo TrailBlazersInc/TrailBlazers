@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { IUser, User, Availability } from '../models/user';
+import { IUser, User, Availability, Location } from '../models/user';
+import { getFriends } from '../utils/userUtils'
+import { earthRadiusKm, getBoundingBox } from '../utils/locationUtils';
 
 const thresholdTime = 30;
 const thresholdSpeed = 25;
 
 enum JoggingTime {
     "Short (<30 min)" = 0,
-    "Medium (30-60 min)" = 45,
-    "Long (>60 min)" = 90
+    "Medium (30-60 min)" = 10,
+    "Long (>60 min)" = 20
 }
 
 type Time = {
@@ -25,22 +27,12 @@ export class RecommendationController {
                 return res.status(404).json({ error: "User not found" });
             }
 
-            const { 
-                locationWeight, 
-                timeWeight = 0.3, 
-                speedWeight,
-                availabilityWeight = 0.1,
-            } = req.body;
+            const locationWeight =  req.body.locationWeight;
+            const speedWeight = req.body.speedWeight;
+            const timeWeight = req.body.distanceWeight;
+            const availabilityWeight = 5;
 
-            console.log("lw", locationWeight);
-            console.log("tw", timeWeight);
-            console.log("sw", speedWeight);
-            console.log("aw", availabilityWeight);
-
-            const effectiveLocation = {
-                latitude: user.latitude,
-                longitude: user.longitude
-            };
+            const effectiveLocation: Location = user.loc;
             const effectiveAvailability = user.availability;
             const effectiveSpeed = user.pace;
 
@@ -52,9 +44,7 @@ export class RecommendationController {
                 locationWeight, 
                 timeWeight, 
                 speedWeight,
-                availabilityWeight,
-                thresholdTime, 
-                thresholdSpeed
+                availabilityWeight
             );
 
             res.status(200).json({ status: 'success', recommendations });
@@ -68,11 +58,12 @@ export class RecommendationController {
     postLocation = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { email } = req.params;
-            const { latitude, longitude } = req.body;
-    
-            // Validate input
-            if (latitude === undefined || longitude === undefined) {
-                return res.status(400).json({ error: "Latitude and longitude are required" });
+            const latitude: number = req.body.latitude;
+            const longitude: number = req.body.longitude;
+
+            let loc: Location = {
+                latitude,
+                longitude
             }
     
             // Find and update user
@@ -80,8 +71,7 @@ export class RecommendationController {
                 { email },
                 { 
                     $set: { 
-                        latitude, 
-                        longitude 
+                        loc
                     } 
                 },
                 { new: true } // Return the updated document
@@ -93,10 +83,9 @@ export class RecommendationController {
     
             res.status(200).json({ 
                 message: "Location updated successfully", 
-                location: user.location 
+                location: user.loc 
             });
         } catch (error) {
-            console.error("Error updating user location:", error);
             res.status(500).json({ error: "Failed to update location" });
             next(error);
         }
@@ -104,26 +93,13 @@ export class RecommendationController {
 
     private async findJogBuddies(
         currentUser: IUser, 
-        userLocation: {
-            latitude: string;
-            longitude: string;
-        }, 
-        userAvailability: {
-            monday: boolean;
-            tuesday: boolean;
-            wednesday: boolean;
-            thursday: boolean;
-            friday: boolean;
-            saturday: boolean;
-            sunday: boolean;
-        }, 
+        userLocation: Location, 
+        userAvailability: Availability,
         userSpeed: number,
         weightLocation: number,
         weightTime: number,
         weightSpeed: number,
-        weightAvailability: number,
-        thresholdTime: number,
-        thresholdSpeed: number
+        weightAvailability: number
     ) {
         const allUsers = await User.find({
             email: { $ne: currentUser.email },
@@ -131,10 +107,7 @@ export class RecommendationController {
         });
 
         const matches = allUsers.map(buddy => {
-            const buddyLocation = {
-                latitude: buddy.latitude,
-                longitude: buddy.longitude
-            };
+            const buddyLocation: Location = buddy.loc;
             const buddyAvailability = buddy.availability;
             const buddySpeed = buddy.pace;
             const buddyTime = buddy.time;
@@ -154,11 +127,13 @@ export class RecommendationController {
             const timeScore = 1 / (1 + timeDifference);
             const availabilityScore = commonAvailability;
 
+            const totalWeight = weightAvailability + weightLocation + weightSpeed + weightTime
+
             const matchScore = 
-                (locationScore * weightLocation) + 
+                ((locationScore * weightLocation) + 
                 (timeScore * weightTime) +
                 (speedScore * weightSpeed) +
-                (availabilityScore * weightAvailability);
+                (availabilityScore * weightAvailability)) / totalWeight * 100;
 
             return {
                 email: buddy.email,
@@ -168,7 +143,7 @@ export class RecommendationController {
                 distance: buddy.distance,
                 time: buddy.time,
                 availability: buddy.availability,
-                matchScore
+                matchScore: Number(matchScore.toPrecision(2))
             };
         })
         .filter(match => match !== null)
@@ -189,25 +164,18 @@ export class RecommendationController {
         return commonDays / totalDays;
     }
 
-    private calculateDistance(location1: {
-        latitude: string, 
-        longitude: string
-    }, location2: {
-        latitude: string, 
-        longitude: string
-    }): number {
-        const R = 6371;
-        const dLat = this.toRadians(Number(location2.latitude) - Number(location1.latitude));
-        const dLon = this.toRadians(Number(location2.longitude) - Number(location1.longitude));
+    private calculateDistance(location1: Location, location2: Location): number {
+        const dLat = this.toRadians(location2.latitude - location1.latitude);
+        const dLon = this.toRadians(location2.longitude - location1.longitude);
         
         const a = 
             Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(this.toRadians(Number(location1.latitude))) * 
-            Math.cos(this.toRadians(Number(location2.latitude))) * 
+            Math.cos(this.toRadians(location1.latitude)) * 
+            Math.cos(this.toRadians(location2.latitude)) * 
             Math.sin(dLon/2) * Math.sin(dLon/2);
             
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
+        return earthRadiusKm * c;
     }
 
     private toRadians(degrees: number): number {

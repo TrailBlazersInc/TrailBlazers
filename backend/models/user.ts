@@ -6,6 +6,11 @@ export type PUser = {
   email: string
 }
 
+export type Location = {
+  latitude: number,
+  longitude: number
+}
+
 export type Availability = {
   monday: boolean,
   tuesday: boolean,
@@ -16,7 +21,7 @@ export type Availability = {
   sunday: boolean
 }
 
-export interface IUser  extends Document{
+export interface IUser extends Document{
     _id: mongoose.Types.ObjectId,
     email: string,
     social_id: string,
@@ -26,8 +31,7 @@ export interface IUser  extends Document{
     distance: string,
     time: string,
     availability: Availability,
-    longitude: string,
-    latitude: string,
+    loc: Location,
     banned: boolean,
     admin: boolean
   }
@@ -49,8 +53,10 @@ const UserSchema = new Schema<IUser>({
       saturday: Boolean,
       sunday: Boolean
     },
-    longitude: String,
-    latitude: String,
+    loc: {
+      latitude: Number,
+      longitude: Number
+    },
     banned: Boolean,
     admin: Boolean
 })
