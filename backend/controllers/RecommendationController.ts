@@ -141,7 +141,6 @@ export class RecommendationController {
                 matchScore: Number(matchScore.toPrecision(3))
             };
         })
-        .filter(match => match !== null)
         .sort((a, b) => (b.matchScore) - (a.matchScore))
         .slice(0, 5);
 
