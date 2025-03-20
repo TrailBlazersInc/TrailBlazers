@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-export type PMessage = {
+export interface PMessage {
     id: string,
 	sender_email: string,
 	sender: string,

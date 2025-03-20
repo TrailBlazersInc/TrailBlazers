@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { IUser, User, Availability, Location } from '../models/user';
-import { getFriends } from '../utils/userUtils'
-import { earthRadiusKm, getBoundingBox } from '../utils/locationUtils';
+import { earthRadiusKm } from '../utils/locationUtils';
 
 const thresholdTime = 30;
 const thresholdSpeed = 25;

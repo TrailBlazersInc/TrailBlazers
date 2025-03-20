@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-export type PUser = {
+export interface PUser {
   name: string, 
   email: string
 }
 
-export type Location = {
+export interface Location {
   latitude: number,
   longitude: number
 }
 
-export type Availability = {
+export interface Availability {
   monday: boolean,
   tuesday: boolean,
   wednesday: boolean,

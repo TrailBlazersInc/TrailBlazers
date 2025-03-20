@@ -1,6 +1,6 @@
 import mongoose, {Schema, Document} from 'mongoose';
 
-export type PChat = {
+export interface PChat {
     id: string,
     title: string,
     members: number
