@@ -11,10 +11,6 @@ enum JoggingTime {
     "Long (>60 min)" = 20
 }
 
-type Time = {
-    [key in JoggingTime]: number;
-}
-
 export class RecommendationController {
     // Using arrow function to preserve 'this' context
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
@@ -142,7 +138,7 @@ export class RecommendationController {
                 distance: buddy.distance,
                 time: buddy.time,
                 availability: buddy.availability,
-                matchScore: Number(matchScore.toPrecision(2))
+                matchScore: Number(matchScore.toPrecision(3))
             };
         })
         .filter(match => match !== null)
