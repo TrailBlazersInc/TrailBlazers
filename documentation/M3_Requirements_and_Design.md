@@ -8,6 +8,8 @@
  - Updated Dependency Diagram to show link between userDB and user Component. 14/02/2025
  - Functional Requirement 2 renamed to Sign In from Sign Up. 14/02/2025
  - Updated the functional requirements for Recommend Jogger Buddies. 15/03/2025
+ - Updated the main component (interfaces) of Recommendation. 21/09/2025
+ - Updated the write up for non functional requirements of Recommendation Usability. 21/09/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -170,8 +172,8 @@ An application that connects nearby users to jog/run together adapting to their 
 1. **Security**  
     - **Description**: The application will ensure that user data and communications are encrypted, and secure protocols (e.g., HTTPS) will be used.
     - **Justification**: Security is a key aspect of any application that handles user data. It ensures that users' personal information is protected from unauthorized access and potential breaches. This is crucial for building trust and maintaining user confidence in the application.
-2. **Finding Buddies Performance** 
-    - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 15 seconds.
+2. **Recommendation Usability** 
+    - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 4 seconds after clicking the "Get recommendations" button.
     - **Justification**: The finding application must be responsive and having customers wait for long periods of time negatively affetcts their experience as an user. Therefore, it is important to ensure that the most complex functionality is capped to a reasonable response time. To improve performance, when the functionality is taking too long, it might return the list with the remaining users  unsorted or return a shorter list of found users.
 
 
@@ -217,19 +219,14 @@ The design focuses on enabling the general user to
         7. **`Message postMessage(String email, string chatId, string content)`** 
             - **Purpose**: Creates a message with the specified content and user and adds it to the chat with id chatId.
         8.  **`Chat addUser(String email, string chatId)`** 
-            - **Purpose**: Adds user with the specified email to the chat.
-        
+            - **Purpose**: Adds user with the specified email to the chat.     
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
-        1. **`bool authenticated(String userId, String tkn)`**
-        - **Purpose**: Validates the user’s authentication token before processing their request.
-
-        1. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
-        - **Purpose**: Retrieves joggers located within a specified distance from the user.
-
-        1. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
-        - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
+        1. **`Recommendation postLocation(Location location, double maxUsers)`**
+        - **Purpose**: Post weight of location, speed and distance and pass the weights to findJogBuddies function to retrieve the top 5 recommended joggers.
+        2. **`Recommendation postRecommendations(String latitude, String longitude)`**
+        - **Purpose**: Post longitude and latitude to update location of user.
 
 
 ### **4.2. Databases**
