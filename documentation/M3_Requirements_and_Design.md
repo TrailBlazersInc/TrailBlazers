@@ -5,9 +5,14 @@
  - Updated Dependency Diagram to show link between userDB and user Component 03/08/2025
  - Updated the Messaging interface to align to implementation. 03/14/2025
  - Updated Usecase diagram and Functional Requirement names to align to use cases. 03/15/2025
- - Updated Dependency Diagram to show link between userDB and user Component. 14/02/2025
- - Functional Requirement 2 renamed to Sign In from Sign Up. 14/02/2025
- - Updated the functional requirements for Recommend Jogger Buddies. 15/03/2025
+ - Updated Dependency Diagram to show link between userDB and user Component. 02/14/2025
+ - Functional Requirement 2 renamed to Sign In from Sign Up. 02/14/2025
+ - Updated the functional requirements for Recommend Jogger Buddies. 03/15/2025
+ - Updated the main component (interfaces) of Recommendation. 03/21/2025
+ - Updated the write up for non functional requirements of Recommendation Usability. 03/21/2025
+ - Updated the User interface to align with implementation. 03/21/2025
+ - Updated the Authentication use case to align with implementation. 03/21/2025
+ - Repalced the non-functional requirement for security with one for performance. 03/21/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -27,36 +32,21 @@ An application that connects nearby users to jog/run together adapting to their 
 ### **3.3. Functional Requirements**
 
 1. **Authenticate**:<a id="fr1"></a>
-   1. **Sign Up**:
-        - **Description**: This feature allows users to create an account on the app using Google Sign In API.
-        - **Primary actor(s)**: User
-        - **Main success scenario**:
-            1. User enters credentials in Google Sign In
-            2. The system generates a token for the user
-            3. The user is added to the User DB 
-            4. User gets confirmation the sign up was successful
-            5. New session is started
-        - **Failure scenario(s)**:
-            - 1a. Invalid email:
-                - 1a1. An error message is displayed telling user of the error
-                - 1a2. App prompts user to re-enter a valid email
-            - 3a. Unable to connect to server to add User
-                - 3a1. An error message is displayed telling user of the error
-                - 3a2. App prompts user to try again after a set time period
-    2. **Sign In**: 
+    1. **Sign In**: 
         - **Description**: This feature allows users to sign in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
             1. User enters credentials in Google Sign In
             2. The system fetches a token for the user
-            3. System checks User is in the Database
-            4. A new session is created for the user 
-            5. User gets confirmation the Login was successful
+            3. System checks User is in the Database and not banned
+            4. Adds new user if not in database
+            5. A new session is created for the user
+            6. User gets confirmation the Login was successful
         - **Failure scenario(s)**:
             - 3a. Unable to connect to server to check User data in DB
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    3. **Sign Out**:
+    2. **Sign Out**:
         - **Description**: This feature allows users to log out from the app and close their current session.
         - **Primary actor(s)**: User
         - **Main success scenario**:
@@ -170,8 +160,8 @@ An application that connects nearby users to jog/run together adapting to their 
 1. **Security**  
     - **Description**: The application will ensure that user data and communications are encrypted, and secure protocols (e.g., HTTPS) will be used.
     - **Justification**: Security is a key aspect of any application that handles user data. It ensures that users' personal information is protected from unauthorized access and potential breaches. This is crucial for building trust and maintaining user confidence in the application.
-2. **Finding Buddies Performance** 
-    - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 15 seconds.
+2. **Recommendation Usability** 
+    - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 4 seconds after clicking the "Get recommendations" button.
     - **Justification**: The finding application must be responsive and having customers wait for long periods of time negatively affetcts their experience as an user. Therefore, it is important to ensure that the most complex functionality is capped to a reasonable response time. To improve performance, when the functionality is taking too long, it might return the list with the remaining users  unsorted or return a shorter list of found users.
 
 
@@ -181,24 +171,14 @@ The design focuses on enabling the general user to
 1. **Users**
     - **Purpose**: Provide authentication, manage sessions, manage passwords, and ensure users can only access resources they have permission for. 
     - **Interfaces**:
-        1. **`Tkn Login(Email, password)`**:
-            - **Purpose**: Returns a valid token to keep session with the user if the user is able to successfully authenticate.
-        2. **`Tkn Token(auth_code: string)`**:
-           - **Purpose**: Get an authentication token directly from Google Oauth. 
-        3. **`bool Check_Credentials(token: Tkn)`**:
-            - **Purpose**: Check that the token given by Google Oauth is valid.
-        4. **`bool checkCredentials(token: Tkn)`**:
-            - **Purpose**: Check that the session token is valid and the user is not banned
+        1. **`{Tkn, admin, banned} Login(String email, String GoogleID)`**:
+            - **Purpose**: Returns a valid token to keep session with the user if the user is able to successfully authenticate. Also returns admin boolean, to detect user type and banned boolean, to ensure user has permission to access app.
+        2. **`User getUserData(String email)`**:
+           - **Purpose**: Retrieves user object corresponding to email, that contains all user data.
+        3. **`Void putUserData(String email, String distance, String time, Float pace, Array[] availability)`**:
+            - **Purpose**: Updates user object in db that corresponds to the email provided with the distance, time, pace and availability values.
         5. **`int LogoutUser()`**:
             - **Purpose**: Ends user session by invalidating session token.
-        6. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule), tkn: Tkn)`**:
-           - **Purpose**: Updates User Profile and Schedule. 
-        7. **`bool checkCredetials(userId: int, tkn Tkn)`**:
-        - **Purpose**: Check that the user is logged in and holding a valid session id.
-        8. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
-        - **Purpose**: adds an user to the chat described by the chatId to the user's profil.
-        9. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
-        - **Purpose**: adds the chat described by the chat Id to both user profiles.
 2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
@@ -217,19 +197,14 @@ The design focuses on enabling the general user to
         7. **`Message postMessage(String email, string chatId, string content)`** 
             - **Purpose**: Creates a message with the specified content and user and adds it to the chat with id chatId.
         8.  **`Chat addUser(String email, string chatId)`** 
-            - **Purpose**: Adds user with the specified email to the chat.
-        
+            - **Purpose**: Adds user with the specified email to the chat.     
 3. **Recommendations** 
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
-        1. **`bool authenticated(String userId, String tkn)`**
-        - **Purpose**: Validates the user’s authentication token before processing their request.
-
-        1. **`List<Profile> findJoggersNearby(Location location, double maxUsers)`**
-        - **Purpose**: Retrieves joggers located within a specified distance from the user.
-
-        1. **`List<Profile> findBestSuitedJoggers(UserProfile profile, List<Profile> nearbyUsers)`**
-        - **Purpose**: Applies a matching algorithm to rank and return the most compatible jogger profiles for the user.
+        1. **`Recommendation postLocation(Location location, double maxUsers)`**
+        - **Purpose**: Post weight of location, speed and distance and pass the weights to findJogBuddies function to retrieve the top 5 recommended joggers.
+        2. **`Recommendation postRecommendations(String latitude, String longitude)`**
+        - **Purpose**: Post longitude and latitude to update location of user.
 
 
 ### **4.2. Databases**
@@ -330,8 +305,8 @@ The design focuses on enabling the general user to
 
 
 ### **4.7. Non-Functional Requirements Design**
-1. [**Security: Encryption of user data**](#nfr1)
-    - **Validation**: All user data and communications will be encrypted using HTTPS to ensure secure data transmission. Passwords will be securely hashed before storage, and database encryption will be applied for sensitive information. 
+1. [**Performance: Update user preferences within 5s**](#nfr1)
+    - **Validation**: The user should be able to send the updated data to the backend and get a success or failure response within 5s. If the response takes longer than 5s the frontend will throw an error and return a failure message to the user. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
 2. [**Performance: Find Buddies Does must not take more than 15s**](#nfr2)
     - **Validation**: The time algorithm  for finding buddies will be capped to 12 seconds and will be constrained to selecting at most ten profiles from a list of at most 100 users. In addition, the front end will have a timer and return failure if no response is received by those 15 seconds. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
 
