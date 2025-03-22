@@ -136,7 +136,7 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
     | **Scenario Steps** | **Test Case Steps** |
     | ------------------ | ------------------- |
-    | 1. User enters the Recommendation Overview. | Click button "Manage Profile" at HomeActivity and it will navigate to ManageProfile. |
+    | 1. User enters the Manage Profile Overview. | Click button "Manage Profile" at HomeActivity and it will navigate to ManageProfile. |
     | 2a. User inputs invalid number for pace and tries to save changes. | Enter 25.0 into the text field for pace and click "Save Changes" button.  |
     | 2a1. The app shows an error message prompting the user for a correct value. | Check dialog is opened with text: “Please enter a valid pace”.  |
     | 2. User inputs valid pace. | Enter a randomly generated number from 1.0 to 20.0 into the text field for pace. |

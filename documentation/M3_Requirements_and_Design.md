@@ -12,6 +12,7 @@
  - Updated the write up for non functional requirements of Recommendation Usability. 21/09/2025
  - Updated the User interface to align with implementation. 03/21/2025
  - Updated the Authentication use case to align with implementation. 03/21/2025
+ - Repalced the non-functional requirement for security with one for performance. 03/21/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -304,8 +305,8 @@ The design focuses on enabling the general user to
 
 
 ### **4.7. Non-Functional Requirements Design**
-1. [**Security: Encryption of user data**](#nfr1)
-    - **Validation**: All user data and communications will be encrypted using HTTPS to ensure secure data transmission. Passwords will be securely hashed before storage, and database encryption will be applied for sensitive information. 
+1. [**Performance: Update user preferences within 5s**](#nfr1)
+    - **Validation**: The user should be able to send the updated data to the backend and get a success or failure response within 5s. If the response takes longer than 5s the frontend will throw an error and return a failure message to the user. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
 2. [**Performance: Find Buddies Does must not take more than 15s**](#nfr2)
     - **Validation**: The time algorithm  for finding buddies will be capped to 12 seconds and will be constrained to selecting at most ten profiles from a list of at most 100 users. In addition, the front end will have a timer and return failure if no response is received by those 15 seconds. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
 
