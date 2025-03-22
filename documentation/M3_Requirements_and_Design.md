@@ -5,11 +5,11 @@
  - Updated Dependency Diagram to show link between userDB and user Component 03/08/2025
  - Updated the Messaging interface to align to implementation. 03/14/2025
  - Updated Usecase diagram and Functional Requirement names to align to use cases. 03/15/2025
- - Updated Dependency Diagram to show link between userDB and user Component. 14/02/2025
- - Functional Requirement 2 renamed to Sign In from Sign Up. 14/02/2025
- - Updated the functional requirements for Recommend Jogger Buddies. 15/03/2025
- - Updated the main component (interfaces) of Recommendation. 21/09/2025
- - Updated the write up for non functional requirements of Recommendation Usability. 21/09/2025
+ - Updated Dependency Diagram to show link between userDB and user Component. 02/14/2025
+ - Functional Requirement 2 renamed to Sign In from Sign Up. 02/14/2025
+ - Updated the functional requirements for Recommend Jogger Buddies. 03/15/2025
+ - Updated the main component (interfaces) of Recommendation. 03/21/2025
+ - Updated the write up for non functional requirements of Recommendation Usability. 03/21/2025
  - Updated the User interface to align with implementation. 03/21/2025
  - Updated the Authentication use case to align with implementation. 03/21/2025
  - Repalced the non-functional requirement for security with one for performance. 03/21/2025
