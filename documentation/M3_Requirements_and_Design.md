@@ -10,6 +10,8 @@
  - Updated the functional requirements for Recommend Jogger Buddies. 15/03/2025
  - Updated the main component (interfaces) of Recommendation. 21/09/2025
  - Updated the write up for non functional requirements of Recommendation Usability. 21/09/2025
+ - Updated the User interface to align with implementation. 03/21/2025
+ - Updated the Authentication use case to align with implementation. 03/21/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -29,36 +31,21 @@ An application that connects nearby users to jog/run together adapting to their 
 ### **3.3. Functional Requirements**
 
 1. **Authenticate**:<a id="fr1"></a>
-   1. **Sign Up**:
-        - **Description**: This feature allows users to create an account on the app using Google Sign In API.
-        - **Primary actor(s)**: User
-        - **Main success scenario**:
-            1. User enters credentials in Google Sign In
-            2. The system generates a token for the user
-            3. The user is added to the User DB 
-            4. User gets confirmation the sign up was successful
-            5. New session is started
-        - **Failure scenario(s)**:
-            - 1a. Invalid email:
-                - 1a1. An error message is displayed telling user of the error
-                - 1a2. App prompts user to re-enter a valid email
-            - 3a. Unable to connect to server to add User
-                - 3a1. An error message is displayed telling user of the error
-                - 3a2. App prompts user to try again after a set time period
-    2. **Sign In**: 
+    1. **Sign In**: 
         - **Description**: This feature allows users to sign in to an existing account on the app using Google Sign In API.
         - **Primary actor(s)**: User
         - **Main success scenario**:
             1. User enters credentials in Google Sign In
             2. The system fetches a token for the user
-            3. System checks User is in the Database
-            4. A new session is created for the user 
-            5. User gets confirmation the Login was successful
+            3. System checks User is in the Database and not banned
+            4. Adds new user if not in database
+            5. A new session is created for the user
+            6. User gets confirmation the Login was successful
         - **Failure scenario(s)**:
             - 3a. Unable to connect to server to check User data in DB
                 - 3a1. An error message is displayed telling user of the error
                 - 3a2. App prompts user to try again after a set time period
-    3. **Sign Out**:
+    2. **Sign Out**:
         - **Description**: This feature allows users to log out from the app and close their current session.
         - **Primary actor(s)**: User
         - **Main success scenario**:
@@ -183,24 +170,14 @@ The design focuses on enabling the general user to
 1. **Users**
     - **Purpose**: Provide authentication, manage sessions, manage passwords, and ensure users can only access resources they have permission for. 
     - **Interfaces**:
-        1. **`Tkn Login(Email, password)`**:
-            - **Purpose**: Returns a valid token to keep session with the user if the user is able to successfully authenticate.
-        2. **`Tkn Token(auth_code: string)`**:
-           - **Purpose**: Get an authentication token directly from Google Oauth. 
-        3. **`bool Check_Credentials(token: Tkn)`**:
-            - **Purpose**: Check that the token given by Google Oauth is valid.
-        4. **`bool checkCredentials(token: Tkn)`**:
-            - **Purpose**: Check that the session token is valid and the user is not banned
+        1. **`{Tkn, admin, banned} Login(String email, String GoogleID)`**:
+            - **Purpose**: Returns a valid token to keep session with the user if the user is able to successfully authenticate. Also returns admin boolean, to detect user type and banned boolean, to ensure user has permission to access app.
+        2. **`User getUserData(String email)`**:
+           - **Purpose**: Retrieves user object corresponding to email, that contains all user data.
+        3. **`Void putUserData(String email, String distance, String time, Float pace, Array[] availability)`**:
+            - **Purpose**: Updates user object in db that corresponds to the email provided with the distance, time, pace and availability values.
         5. **`int LogoutUser()`**:
             - **Purpose**: Ends user session by invalidating session token.
-        6. **`updateUserPreferences(userId: int, newPreferences: Tuple(Profile, Schedule), tkn: Tkn)`**:
-           - **Purpose**: Updates User Profile and Schedule. 
-        7. **`bool checkCredetials(userId: int, tkn Tkn)`**:
-        - **Purpose**: Check that the user is logged in and holding a valid session id.
-        8. **`bool addUserToChatGroup(userId: int, chatId: int, tkn)`**:
-        - **Purpose**: adds an user to the chat described by the chatId to the user's profil.
-        9. **`bool addUsersToChatGroup(userId: int, budId: int, chatId: int, tkn)`**:
-        - **Purpose**: adds the chat described by the chat Id to both user profiles.
 2. **Messaging** 
     - **Purpose**: Allow users to communicate with potential jogging partners and discuss meeting time, place, etc. and set up groups
     - **Interfaces**: 
