@@ -1,5 +1,5 @@
 export const earthRadiusKm = 6371; // Earth's radius in km
-export function getBoundingBox(lat: number, lon: number, distanceKm = 10) {
+export function getBoundingBox(lat: number, lon: number, distanceKm = 10) {git p
     
   
     const latDiff = (distanceKm / earthRadiusKm) * (180 / Math.PI);
