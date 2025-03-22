@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
+export interface PMessage {
+    id: string,
+	sender_email: string,
+	sender: string,
+	content: string,
+	date: string,
+}
+
 export interface IMessage extends Document {
     _id: mongoose.Types.ObjectId;
     sender_email: string;

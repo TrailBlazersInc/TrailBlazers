@@ -1,7 +1,27 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-export interface IUser  extends Document{
+export interface PUser {
+  name: string, 
+  email: string
+}
+
+export interface Location {
+  latitude: number,
+  longitude: number
+}
+
+export interface Availability {
+  monday: boolean,
+  tuesday: boolean,
+  wednesday: boolean,
+  thursday: boolean,
+  friday: boolean,
+  saturday: boolean,
+  sunday: boolean
+}
+
+export interface IUser extends Document{
     _id: mongoose.Types.ObjectId,
     email: string,
     social_id: string,
@@ -10,17 +30,8 @@ export interface IUser  extends Document{
     pace: number,
     distance: string,
     time: string,
-    availability: {
-      monday: boolean,
-      tuesday: boolean,
-      wednesday: boolean,
-      thursday: boolean,
-      friday: boolean,
-      saturday: boolean,
-      sunday: boolean
-    },
-    longitude: string,
-    latitude: string,
+    availability: Availability,
+    loc: Location,
     banned: boolean,
     admin: boolean
   }
@@ -42,8 +53,10 @@ const UserSchema = new Schema<IUser>({
       saturday: Boolean,
       sunday: Boolean
     },
-    longitude: String,
-    latitude: String,
+    loc: {
+      latitude: Number,
+      longitude: Number
+    },
     banned: Boolean,
     admin: Boolean
 })

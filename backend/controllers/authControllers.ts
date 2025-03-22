@@ -1,10 +1,25 @@
 import { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { User } from '../models/user'
+import { User, Location, Availability } from '../models/user'
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const defaultLocation: Location = {
+  latitude: 49.2,
+  longitude: -123
+}
+
+const defaultAvailability: Availability = {
+  monday: true,
+  tuesday: true,
+  wednesday: true,
+  thursday: true,
+  friday: true,
+  saturday: true,
+  sunday: true
+}
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -42,17 +57,8 @@ export class Authenticate {
               pace: 1,
               distance: "Short",
               time: "Short",
-              availability: {
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
-                saturday: false,
-                sunday: false
-              },
-              longitude: "no access",
-              latitude: "no access",
+              availability: defaultAvailability,
+              loc: defaultLocation,
               banned: false,
               admin: false
             });

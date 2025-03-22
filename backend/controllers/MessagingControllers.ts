@@ -1,8 +1,7 @@
 import { Request, Response} from "express";
-import { Message, IMessage } from "../models/message";
-import { Chat, IChat } from "../models/chat";
-import { User, IUser } from "../models/user";
-import {sanitizeText} from "../utils/sanitize";
+import { Message, IMessage, PMessage } from "../models/message";
+import { Chat, IChat, PChat } from "../models/chat";
+import { User, IUser, PUser } from "../models/user";
 
 export class MessagingControllers {
 	async getChats(req: Request, res: Response) {
@@ -11,19 +10,19 @@ export class MessagingControllers {
 			const user = await User.findOne<IUser>({ email });
 			if (user) {
 				const chats = await Chat.find<IChat>({ members: user.email });
-				let formatedChats: unknown[] = [];
+				let formatedChats: PChat[] = [];
 				for (const chat of chats){
 					let members: string[] = chat.members;
-					let formattedChat = {
+					let formattedChat: PChat = {
 						id: chat._id.toString(),
-						title: sanitizeText(chat.title),
+						title: chat.title,
 						members: members.length,
 					};
 					// Change the chat title to the other user's name
 					if (members.length == 2) {
-						let buddy_email: string = sanitizeText(members[0])
+						let buddy_email: string = members[0]
 						if (buddy_email == email){
-							buddy_email = sanitizeText(members[1])
+							buddy_email = members[1]
 						}
 						let buddy = await User.findOne({
 							email: buddy_email,
@@ -44,7 +43,7 @@ export class MessagingControllers {
 	}
 	async getChatMembers(req: Request, res: Response) {
 		try {
-			let members: unknown[] = [];
+			let members: PUser[] = [];
 			let chat = await Chat.findOne<IChat>({ _id: req.params.chatId });
 			if (!chat) {
 				return res.status(400).send("Invalid chat id");
@@ -55,7 +54,8 @@ export class MessagingControllers {
 			for (const member of chatMembers) {
 				let user = await User.findOne<IUser>({ email: member });
 				if(user){
-					members.push({ name: user.first_name, email: user.email });
+					let member: PUser = { name: user.first_name, email: user.email }
+					members.push(member);
 				}
 			}
 
@@ -73,8 +73,8 @@ export class MessagingControllers {
 			if (!chat) {
 				return res.status(400).send("Invalid chat id");
 			}
-			let messages = chat.messages.map((message) => ({
-				id: message._id,
+			let messages: PMessage[] = chat.messages.map((message: IMessage) => ({
+				id: message._id.toString(),
 				sender_email: message.sender_email,
 				sender: message.sender,
 				content: message.content,
@@ -96,14 +96,14 @@ export class MessagingControllers {
 					_id: req.params.messageId,
 				});
 				if (referenceMessage) {
-					let filteredeMessages = chat.messages
+					let filteredeMessages: IMessage[] = chat.messages
 						.filter(
 							(msg) =>
 								msg.createdAt.getTime() > referenceMessage.createdAt.getTime()
 						)
 						.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-					let messages = filteredeMessages.map((message) => ({
-						id: message._id,
+					let messages: PMessage[] = filteredeMessages.map((message) => ({
+						id: message._id.toString(),
 						sender_email: message.sender_email,
 						sender: message.sender,
 						content: message.content,
@@ -136,7 +136,7 @@ export class MessagingControllers {
 			});
 			const newChat = await chat.save();
 
-			const formattedChat = {
+			const formattedChat: PChat = {
 				id: newChat._id.toString(),
 				title: newChat.title,
 				members: newChat.members.length,
@@ -168,7 +168,7 @@ export class MessagingControllers {
 			});
 
 			if (chat) {
-				let formattedChat = {
+				let formattedChat: PChat = {
 					id: chat._id.toString(),
 					title: user2.first_name,
 					members: chat.members.length,
@@ -183,7 +183,7 @@ export class MessagingControllers {
 			});
 			chat = await chat.save();
 
-			let formattedChat = {
+			let formattedChat: PChat = {
 				id: chat._id.toString(),
 				title: user2.first_name,
 				members: chat.members.length,
@@ -239,7 +239,7 @@ export class MessagingControllers {
 			}
 
 			if (chat.members.includes(email)) {
-				let formattedChat = {
+				let formattedChat: PChat = {
 					id: chat._id.toString(),
 					title: chat.title,
 					members: chat.members.length,
