@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CPEN321Project</string>
+    <string name="app_name">Trailblazers</string>
     <string name="sign_in_create_account">Sign In/Create Account</string>
     <string name="recommendation">Recommendation</string>
     <string name="run_distance">Run Distance:</string>
