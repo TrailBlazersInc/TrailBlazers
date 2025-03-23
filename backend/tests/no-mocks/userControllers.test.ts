@@ -46,6 +46,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await User.deleteMany({email: validEmail})
+    await User.deleteMany({social_id: "mocked_user_id"})
     await mongoose.connection.close();
     server.close();
 });

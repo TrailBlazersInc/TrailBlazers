@@ -22,6 +22,7 @@ const availability = {
   };
 
 afterAll(async () => {
+    await User.deleteMany({email: "validEmail@example.com"})
     await mongoose.connection.close();
     server.close();
 });

@@ -66,7 +66,10 @@ describe("POST /recommendation/:email", () => {
 
         const res = await request(server)
             .post(`/recommendations/${invalidEmail}`)
-            .send({});
+            .send({
+                locationWeight: 5,
+                speedWeight: 6,
+                distanceWeight: 7, });
 
         expect(res.status).toBe(404);
         expect(res.body).toHaveProperty("error", "User not found");
@@ -102,7 +105,7 @@ describe("POST /api/users/location/:email", () => {
             .send({});
 
         expect(res.status).toStrictEqual(400);
-        expect(res.body).toHaveProperty("error", "Latitude and longitude are required");
+        expect(res.body).toHaveProperty("errors", [{"location": "body", "msg": "latitude must be a number between -90 and 90", "path": "latitude", "type": "field"}, {"location": "body", "msg": "latitude must be a number between -180 and 180", "path": "longitude", "type": "field"}]);
     });
 
     test("POST /api/users/location/:email - User Not Found", async () => {

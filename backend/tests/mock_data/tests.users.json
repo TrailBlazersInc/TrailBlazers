@@ -15,6 +15,10 @@
     "friday": false,
     "saturday": true,
     "sunday": false
+  },
+  "loc": {
+    "longitude": 123.1234, 
+    "latitude": 12.1234 
   }
 },
 {
@@ -34,6 +38,10 @@
     "friday": false,
     "saturday": true,
     "sunday": false
+  },
+  "loc": {
+    "longitude": 123.1234, 
+    "latitude": 12.1234
   }
 },
 {
@@ -53,6 +61,10 @@
     "friday": false,
     "saturday": true,
     "sunday": false
+  },
+  "loc": {
+    "longitude": 123.1234, 
+    "latitude": 12.1234
   }
 }
 ]
