@@ -37,6 +37,12 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import io.socket.client.IO;
+import io.socket.client.Socket
+import io.socket.emitter.Emitter;
+import org.json.JSONArray
+import org.json.JSONException
+
 
 data class ChatMessage (
     val id: String,
@@ -55,18 +61,10 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var userToken: String
     private lateinit var userEmail: String
     private lateinit var chatId: String
+    private val socket = ChatSocket.socket
 
     private companion object {
         private const val TAG = "ChatActivity"
-    }
-
-    private val updateMessagesRunnable = object : Runnable {
-        private val updateInterval: Long = 2000
-        override fun run() {
-            updateChat(userToken, userEmail, chatId)
-            // Schedule the next update
-            handler.postDelayed(this, updateInterval)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,12 +84,28 @@ class ChatActivity : AppCompatActivity() {
         val sendMessageButton = findViewById<ImageView>(R.id.sendMessageButton)
         val chatNameTextView = findViewById<TextView>(R.id.manage_chats_title)
         val reportButton : Button = findViewById(R.id.reportButton)
+
+        socket?.on("join_chat", onJoinChat)
+        socket?.on("req-error", onReqError)
+        socket?.on("message", onNewMessage)
+
+        socket?.on(Socket.EVENT_DISCONNECT, Emitter.Listener {
+            println("Disconnected from server")
+        })
+
+        socket?.on(Socket.EVENT_CONNECT) {
+            val json = JSONObject()
+            json.put("chatId", chatId)
+            socket.emit("join_chat", json.toString())
+        }
+
+        socket?.connect()
+
         chatNameTextView.text = chatName
         recyclerView = findViewById(R.id.recyclerView)
         adapter = ChatAdapter(messages)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-        getMessages(userToken, userEmail, chatId)
 
         reportButton.setOnClickListener(){
             intent = Intent(this, ReportUserActivity::class.java)
@@ -109,17 +123,10 @@ class ChatActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-        fun getToday(): String{
-            val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")
-            val currentDateTime = LocalDateTime.now().format(formatter)
-            return currentDateTime
-        }
-
         sendMessageButton.setOnClickListener(){
             sendMessageButton.isEnabled = false
-            sendMessage(userToken, userEmail, chatId, messageInput)
-            sendMessageButton.postDelayed({ sendMessageButton.isEnabled = true }, 2000)
+            sendMessage(messageInput)
+            sendMessageButton.postDelayed({ sendMessageButton.isEnabled = true }, 5000)
         }
 
     }
@@ -148,14 +155,17 @@ class ChatActivity : AppCompatActivity() {
                     val chatMessageListType = object : TypeToken<List<ChatMessage>>() {}.type
                     val responseString = response.body()?.string() ?: return
                     val chatMessageList: List<ChatMessage> = gson.fromJson(responseString, chatMessageListType)
-                    for (chatMessage in chatMessageList){
+                    for (chatMessage in chatMessageList) {
                         val isMine: Boolean = chatMessage.sender_email == email
-                        messages.add(Message(chatMessage.sender, chatMessage.content,
-                            convertIsoToLocal(chatMessage.date), isMine ))
+                        messages.add(
+                            Message(
+                                chatMessage.sender, chatMessage.content,
+                                convertIsoToLocal(chatMessage.date), isMine
+                            )
+                        )
                         adapter.notifyItemInserted(messages.size - 1)
                         lastMessageId = chatMessage.id
                     }
-                    handler.post(updateMessagesRunnable)
                 } else {
                     Toast.makeText(this@ChatActivity, "Unable to Get Chats", Toast.LENGTH_SHORT).show()
                 }
@@ -170,85 +180,80 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)
-        handler.removeCallbacks(updateMessagesRunnable)
         super.onDestroy()
+        socket?.disconnect()
     }
 
     override fun onPause() {
         handler.removeCallbacksAndMessages(null)
-        handler.removeCallbacks(updateMessagesRunnable)
         super.onPause()
+        socket?.disconnect()
     }
 
     override fun onStop() {
         handler.removeCallbacksAndMessages(null)
-        handler.removeCallbacks(updateMessagesRunnable)
         super.onStop()
+        socket?.disconnect()
     }
 
-    private fun sendMessage(token: String, email: String, chatId: String, messageInput: EditText){
+    private fun sendMessage(content: EditText){
+        val json = JSONObject()
+        json.put("chatId", chatId)
+        json.put("email", userEmail)
+        json.put("content", content.text)
 
-        val jsonObject = JSONObject()
-        jsonObject.put("email", email)
-        jsonObject.put("content", messageInput.text)
-
-        val requestBody = RequestBody.create(
-            MediaType.parse("application/json"),
-            jsonObject.toString()
-        )
-
-        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
-
-        apiService.postMessage("Bearer $token", chatId, requestBody).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    messageInput.text.clear()
-                } else {
-                    Toast.makeText(this@ChatActivity, "Unable to Send Message", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(this@ChatActivity, "Unable to Send Message", Toast.LENGTH_SHORT).show()
-                Log.d(TAG,"Request failed: ${t.message}")
-            }
-        })
-
+        socket?.emit("message", json.toString())
+        content.text.clear()
     }
 
-    private fun updateChat(token: String, email: String, chatId: String){
+    private val onNewMessage = Emitter.Listener { args ->
+        runOnUiThread {
+            val gson = Gson()
+            val data: JSONObject = args[0] as? JSONObject ?: return@runOnUiThread
 
-        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
+            try {
+                val message: ChatMessage = gson.fromJson(data.toString(), ChatMessage::class.java)
+                val isMine: Boolean = message.sender_email == userEmail
+                messages.add(Message(message.sender, message.content,
+                    convertIsoToLocal(message.date), isMine ))
+                adapter.notifyItemInserted(messages.size - 1)
+                recyclerView.scrollToPosition(adapter.itemCount - 1)
+            } catch (e: JSONException) {
+                return@runOnUiThread
+            }
+        }
+    }
 
-        apiService.getNewMessages("Bearer $token", chatId, lastMessageId).enqueue(object :
-            Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    val gson = Gson()
-                    val chatMessageListType = object : TypeToken<List<ChatMessage>>() {}.type
-                    val responseString = response.body()?.string() ?: return
-                    val chatMessageList: List<ChatMessage> = gson.fromJson(responseString, chatMessageListType)
-                    for (chatMessage in chatMessageList){
-                        val isMine: Boolean = chatMessage.sender_email == email
-                        messages.add(Message(chatMessage.sender, chatMessage.content,
-                            convertIsoToLocal(chatMessage.date), isMine ))
-                        adapter.notifyItemInserted(messages.size - 1)
-                        recyclerView.scrollToPosition(adapter.itemCount - 1)
-                        lastMessageId = chatMessage.id
-                    }
-
-                } else {
-                    Toast.makeText(this@ChatActivity, "Unable to Update Chat", Toast.LENGTH_SHORT).show()
+    private val onJoinChat = Emitter.Listener { args ->
+        runOnUiThread {
+            Log.d(TAG, "Joined Chat")
+            Log.d(TAG, args[0].toString())
+            val gson = Gson()
+            val chatMessageListType = object : TypeToken<List<ChatMessage>>() {}.type
+            val data: JSONArray = args[0] as? JSONArray ?: return@runOnUiThread
+            try {
+                val size = messages.size
+                messages.clear()
+                adapter.notifyItemRangeRemoved(0, size)
+                val messageList: List<ChatMessage> = gson.fromJson(data.toString(), chatMessageListType)
+                for (chatMessage in  messageList){
+                    val isMine: Boolean = chatMessage.sender_email == userEmail
+                    messages.add(Message(chatMessage.sender, chatMessage.content,
+                        convertIsoToLocal(chatMessage.date), isMine ))
+                    adapter.notifyItemInserted(messages.size - 1)
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
                 }
+            } catch (e: JSONException) {
+                return@runOnUiThread
             }
+        }
+    }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(this@ChatActivity, "Unable to update Chat", Toast.LENGTH_SHORT).show()
-                Log.d(TAG,"Request failed: ${t.message}")
-            }
-        })
-
+    private val onReqError = Emitter.Listener { args ->
+        runOnUiThread {
+            val data: String = args[0] as? String ?: return@runOnUiThread
+            Log.e(TAG, data)
+        }
     }
 }
 

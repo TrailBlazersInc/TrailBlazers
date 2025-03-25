@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import http from "http";
 import https from "https";
 import fs from "fs";
+import setUpWebSocket from "./socket";
 import { validationResult } from "express-validator";
 import { authMiddleware } from "./middleware/authMiddleware";
 import { MessagingRoutes } from "./routes/MessagingRoutes";
@@ -14,12 +15,12 @@ import { RecommendationRoutes } from "./routes/RecommendationRoutes";
 import { ReportRoutes } from "./routes/ReportRoutes";
 import { BanRoutes } from "./routes/BanRoutes";
 
+
 dotenv.config();
 
 export const app = express();
 app.use(express.json());
-app.use(morgan("tiny"));
-
+app.use(morgan("dev"));
 const Routes = [
 	...MessagingRoutes,
 	...AuthRoutes,
@@ -67,32 +68,40 @@ app.get("/", (req: Request, res: Response) => {
 	res.status(200).send("hello");
 });
 
-export const server = http.createServer(app);
-
-async function startServer() {
-	try {
-		await ConnectMongoDB();
-        const port = process.env.PORT ?? 3000;
-		if (require.main === module) {
-			if (port == "443") {
-				const options = {
-					key: fs.readFileSync("/certs/privkey.pem"),
-					cert: fs.readFileSync("/certs/fullchain.pem"),
-				};
-				https.createServer(options, app).listen(process.env.PORT, () => {
-					console.log("Mongo DB Connected");
-					console.log("Listening on port 443");
-				});
-			} else {
-				app.listen(port, () => {
-					console.log("Mongo DB Connected");
-					console.log("Listening on port 3000");
-				});
-			}
-		}
-	} catch (error) {
-		console.log("error starting server");
+(async() => {
+	try{
+		await ConnectMongoDB()
+		console.log("Mongo DB Connected");
+	} catch{
+		console.log("Failed to connect to Mongo DB")
 	}
+})();
+
+
+const port = process.env.PORT ?? 3000;
+let appServer: http.Server | https.Server;
+if (port == "443") {
+	const options = {
+		key: fs.readFileSync("/certs/privkey.pem"),
+		cert: fs.readFileSync("/certs/fullchain.pem"),
+	};
+	const serverHTTPS = https.createServer(options, app);
+	setUpWebSocket(serverHTTPS)
+	
+	serverHTTPS.listen(process.env.PORT, () => {
+		console.log("Listening on port 443");
+	});
+
+	appServer = serverHTTPS;
+} else {
+	const serverHTTP = http.createServer(app);
+	setUpWebSocket(serverHTTP)
+	
+	serverHTTP.listen(port, () => {
+		console.log("Listening on port 3000");
+	});
+
+	appServer = serverHTTP;
 }
 
-startServer();
+export const server = appServer;

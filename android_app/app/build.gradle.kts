@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.androidx.espresso.contrib)
     implementation(libs.androidx.ui.test.android)
     implementation(libs.androidx.espresso.intents)
+    implementation("io.socket:socket.io-client:2.0.0")
+
 
     implementation("androidx.credentials:credentials:1.3.0")
     // optional - needed for credentials support from play services, for devices running
