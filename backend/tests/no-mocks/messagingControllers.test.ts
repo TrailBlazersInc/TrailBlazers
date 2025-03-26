@@ -1,5 +1,5 @@
 import {describe, expect, test} from "@jest/globals";
-import { server } from "../..";
+import { server, ioServer } from "../..";
 import mongoose from "mongoose";
 import request from 'supertest';
 import { Chat } from "../../models/chat"
@@ -43,6 +43,8 @@ afterAll(async () => {
     }
 
     await mongoose.connection.close()
+    server.close()
+    await ioServer.close()
 });
 
 describe("GET /chat/:email", () => {

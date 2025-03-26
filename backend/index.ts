@@ -14,6 +14,7 @@ import { UserRoutes } from "./routes/UserRoutes";
 import { RecommendationRoutes } from "./routes/RecommendationRoutes";
 import { ReportRoutes } from "./routes/ReportRoutes";
 import { BanRoutes } from "./routes/BanRoutes";
+import {Server as SocketIOServer} from "socket.io";
 
 
 dotenv.config();
@@ -80,6 +81,7 @@ app.get("/", (req: Request, res: Response) => {
 
 const port = process.env.PORT ?? 3000;
 let appServer: http.Server | https.Server;
+
 if (port == "443") {
 	const options = {
 		key: fs.readFileSync("/certs/privkey.pem"),
@@ -91,7 +93,6 @@ if (port == "443") {
 	serverHTTPS.listen(process.env.PORT, () => {
 		console.log("Listening on port 443");
 	});
-
 	appServer = serverHTTPS;
 } else {
 	const serverHTTP = http.createServer(app);
@@ -100,8 +101,9 @@ if (port == "443") {
 	serverHTTP.listen(port, () => {
 		console.log("Listening on port 3000");
 	});
-
 	appServer = serverHTTP;
 }
 
-export const server = appServer;
+let ioServer: SocketIOServer = setUpWebSocket(appServer);
+
+export {appServer as server, ioServer}

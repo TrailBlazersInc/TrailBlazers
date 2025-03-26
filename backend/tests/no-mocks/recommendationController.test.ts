@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import request from 'supertest';
-import { server } from '../..';
+import { server, ioServer } from '../..';
 import { User } from '../../models/user';
 import mongoose from 'mongoose';
 
@@ -36,6 +36,8 @@ afterAll(async () => {
     // Clean up test data for mockUser
     await User.deleteMany({ email: validEmail });
     await mongoose.connection.close()
+    server.close()
+    await ioServer.close()
 });
 
 describe("POST /recommendation/:email", () => {

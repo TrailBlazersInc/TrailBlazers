@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeAll, afterAll } from '@jest/globals';
 import request from 'supertest';
 import mongoose from 'mongoose';
-import { server } from '../../index';
+import { server, ioServer } from '../../index';
 import { User } from '../../models/user';
 import crypto from 'crypto';
 
@@ -50,6 +50,7 @@ afterAll(async () => {
     await User.deleteMany({social_id: "mocked_user_id"})
     await mongoose.connection.close();
     server.close();
+    await ioServer.close();
 });
 
 describe('GET /user/:email', () => {

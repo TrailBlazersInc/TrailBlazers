@@ -1,6 +1,6 @@
 import {describe, expect, jest, test} from "@jest/globals";
 import request from "supertest"
-import {server} from "../.."
+import {server, ioServer} from "../.."
 import {Chat} from "../../models/chat"
 import { User } from "../../models/user";
 import mockChats from "../mock_data/tests.chats.json";
@@ -15,6 +15,8 @@ const someContent = "hello my friend, how is your day?"
 
 afterAll(async () => {
     await mongoose.connection.close()
+    server.close()
+    await ioServer.close()
 });
 
 describe("GET chat/:email", () => {

@@ -1,5 +1,5 @@
 import { User } from '../../models/user';
-import { server } from '../../index';
+import { server, ioServer } from '../../index';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { describe, expect, test, afterAll, jest } from '@jest/globals';
@@ -25,6 +25,7 @@ afterAll(async () => {
     await User.deleteMany({email: "validEmail@example.com"})
     await mongoose.connection.close();
     server.close();
+    await ioServer.close();
 });
 
 describe('POST /api/v1/auth/google (mock)', () => {

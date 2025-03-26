@@ -1,6 +1,6 @@
 import { describe, expect, test, jest } from '@jest/globals';
 import request from 'supertest';
-import { server } from '../..'; // Adjust the path as necessary
+import { server, ioServer } from '../..'; // Adjust the path as necessary
 import { User } from '../../models/user'; // User model
 import mongoose from 'mongoose';
 
@@ -14,6 +14,7 @@ afterAll(async () => {
     // Ensure that mongoose disconnects properly
     await mongoose.connection.close();
     server.close();
+    await ioServer.close();
 });
 
 describe("Mocked: POST /recommendation/:email", () => {

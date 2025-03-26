@@ -1,6 +1,6 @@
 import { Server as httpServer } from "http";
 import { Server as httpsServer } from "https";
-import {  Server } from "socket.io";
+import {  Server  as SocketIOServer} from "socket.io";
 import { Message, IMessage, PMessage } from "./models/message";
 import { Chat, IChat, PChat } from "./models/chat";
 import { User, IUser, PUser } from "./models/user";
@@ -19,8 +19,8 @@ const messageReq = z.object({
 
 
 
-export default function setUpWebSocket(server: httpsServer | httpServer){
-    let io = new Server(server)
+export default function setUpWebSocket(server: httpsServer | httpServer): SocketIOServer{
+    let io = new SocketIOServer(server)
 
     io.on("connection", (socket) => {
         console.log("user joined")
@@ -120,4 +120,6 @@ export default function setUpWebSocket(server: httpsServer | httpServer){
             }
         })
     })
+
+    return io
 }
