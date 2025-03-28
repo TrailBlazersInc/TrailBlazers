@@ -11,6 +11,8 @@ const invalidEmail = "invalidmockUser@example.com";
 const distance = '5km';
 const time = '2 hour';
 const pace = 5;
+const aggressor_email = invalidEmail;
+const description = "Harrassment";
 const availability = {
     monday: true,
     tuesday: false,
@@ -95,10 +97,46 @@ describe('PUT /User/:email (mock)', () => {
     // Expected behavior: Failure to connect to database, returns error message
     // Expected output: Error 'Error Updating User'
     test('cannot find user to update User data, should return 500 and error message', async () => {
-        jest.spyOn(User, 'updateOne').mockRejectedValue(new Error('Internal Server Error'));
+        jest.spyOn(User, 'updateOne').mockImplementationOnce(() => {
+            throw new Error("Could not connect to DB");
+        });
 
         const response = await request(server).put('/User/' + invalidEmail).send({ distance , time , pace , availability });
         expect(response.status).toBe(500);
         expect(response.body.error).toBe('Error Updating User');
+    });
+});
+
+describe('PUT /ban/:email (mock)', () => {
+    // Mocked behavior: User.updateOne throws an error
+    // Input: validEmail
+    // Expected status code: 500
+    // Expected behavior: Failure to connect to database, returns error message and error type
+    // Expected output: Error Message 'Internal server error' with error type
+    test('cannot find user to update User data, should return 500 and error message', async () => {
+        jest.spyOn(User, 'updateOne').mockImplementationOnce(() => {
+            throw new Error("Could not connect to DB");
+        });
+
+        const response = await request(server).put('/ban/' + invalidEmail).send({});
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe('Internal server error');
+    });
+});
+
+describe('POST /report/:email (mock)', () => {
+    // Mocked behavior: User.findOne throws an error
+    // Input: invalidEmail with valid requestbody that contains aggressor_email and description
+    // Expected status code: 500
+    // Expected behavior: Failure to connect to database, returns error message
+    // Expected output: Error Message 'Could not Report User'
+    test('cannot find user to update User data, should return 500 and error message', async () => {
+        jest.spyOn(User, 'findOne').mockImplementationOnce(() => {
+            throw new Error("Could not connect to DB");
+        });
+
+        const response = await request(server).post('/report/' + invalidEmail).send({ aggressor_email, description });
+        expect(response.status).toBe(500);
+        expect(response.body.error).toBe('Could not Report User');
     });
 });

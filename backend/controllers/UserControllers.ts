@@ -34,7 +34,7 @@ export class UserController {
                 res.status(200).json({ message: "User banned" });
             }
         } catch (error) {
-            res.status(500).send({ message: 'Internal server error', error });
+            res.status(500).json({ error: 'Internal server error' });
         }
     }
     async getReports(req: Request, res: Response) {
@@ -64,7 +64,7 @@ export class UserController {
             await report.save();
             return res.status(200).json({ status: 'success', report });
         } catch (error){
-            return res.status(500).send("Could not Report User")
+            return res.status(500).json({ error: "Could not Report User" })
         }
         
     }
