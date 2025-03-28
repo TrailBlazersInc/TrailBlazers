@@ -12,8 +12,6 @@ import { MessagingRoutes } from "./routes/MessagingRoutes";
 import { AuthRoutes } from "./routes/authRoutes";
 import { UserRoutes } from "./routes/UserRoutes";
 import { RecommendationRoutes } from "./routes/RecommendationRoutes";
-import { ReportRoutes } from "./routes/ReportRoutes";
-import { BanRoutes } from "./routes/BanRoutes";
 import {Server as SocketIOServer} from "socket.io";
 
 
@@ -27,8 +25,6 @@ const Routes = [
 	...AuthRoutes,
 	...UserRoutes,
 	...RecommendationRoutes,
-	...ReportRoutes,
-	...BanRoutes,
 ];
 
 const publicRoutes = ["/api/v1/auth/google"];
