@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cpen321andriodapp.ApiService
@@ -22,12 +23,17 @@ class BanningUserActivity : AppCompatActivity() {
         private const val TAG = "BanningUserActivity"
     }
 
+    private val reportsList = mutableListOf<Pair<String, String>>()
+    private val reportCategories = listOf("Harassment", "Spam", "Inappropriate Content", "Other")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_banning_user)
 
         val banButton = findViewById<Button>(R.id.ban_button)
         val userSpinner = findViewById<Spinner>(R.id.user_spinner)
+        val reportsTextView = findViewById<TextView>(R.id.reports_textview)
 
         val extras = intent.extras
         val tkn = extras?.getString("tkn") ?: ""
@@ -36,8 +42,9 @@ class BanningUserActivity : AppCompatActivity() {
         val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
 
         val call = apiService.getReport("Bearer $tkn")
+        val emailSet = LinkedHashSet<String>()
 
-        val emailList = mutableListOf<String>()
+        var emailList = mutableListOf<String>()
         var userBan: String? = null
 
         call.enqueue(object : Callback<ResponseBody> {
@@ -45,20 +52,35 @@ class BanningUserActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val responseString = response.body()?.string()
                     Log.d(TAG, "Response: $responseString")
-                    val jsonArray =  JSONArray(responseString)
+                    val jsonArray = JSONArray(responseString)
 
+                    reportsList.clear()
+                    emailSet.clear()
 
                     for (i in 0 until jsonArray.length()) {
                         val report = jsonArray.getJSONObject(i)
                         val aggressorEmail = report.optString("agressrEmail", "")
+                        val description = report.optString("description", "Other")
                         if (aggressorEmail.isNotEmpty()) {
-                            emailList.add(aggressorEmail)
+                            val normalizedDescription = when {
+                                description.contains("Harassment", true) -> "Harassment"
+                                description.contains("Spam", true) -> "Spam"
+                                description.contains("Inappropriate", true) -> "Inappropriate Content"
+                                else -> "Other"
+                            }
+                            reportsList.add(Pair(aggressorEmail, description))
+                            emailSet.add(aggressorEmail)
                         }
                     }
 
-                    // Update the spinner on the main thread
+                    emailList = ArrayList(emailSet)
+
                     runOnUiThread {
-                        val adapter = ArrayAdapter(this@BanningUserActivity, android.R.layout.simple_spinner_item, emailList)
+                        val adapter = ArrayAdapter(
+                            this@BanningUserActivity,
+                            android.R.layout.simple_spinner_item,
+                            emailList
+                        )
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         userSpinner.adapter = adapter
                     }
@@ -75,17 +97,31 @@ class BanningUserActivity : AppCompatActivity() {
             }
         })
 
-        userSpinner.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
+        userSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View, position: Int, id: Long
             ) {
-                Log.d(TAG, emailList[position])
-                userBan = emailList[position]
+                val selectedEmail = parent.getItemAtPosition(position).toString()
+                userBan = selectedEmail
+
+                val userReports = reportsList.filter { it.first == selectedEmail }
+
+                val counts = reportCategories.associateWith { category ->
+                    userReports.count { it.second == category }
+                }
+
+                val countsText = buildString {
+                    counts.forEach { (category, count) ->
+                        append("$category: $count\n\n")
+                    }
+                }
+
+                reportsTextView.text = countsText
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do Nothing
+                reportsTextView.text = ""
             }
         }
 
@@ -104,6 +140,8 @@ class BanningUserActivity : AppCompatActivity() {
                     }
                     else {
                         Log.d(TAG, "Request failed: ${response.code()}")
+                        Toast.makeText(this@BanningUserActivity, "User already banned", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -113,39 +151,4 @@ class BanningUserActivity : AppCompatActivity() {
             })
         }
     }
-
-//    private fun banUser(userId: String, tkn: String, email: String) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val jsonObject = JSONObject()
-//                jsonObject.put("bannedUserId", userId)
-//                jsonObject.put("token", tkn)
-//                jsonObject.put("email", email)
-//
-//                val requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), jsonObject.toString())
-//
-//                val client = OkHttpClient()
-//                val request = Request.Builder()
-//                    .url("http://10.0.2.2:3000/ban") // Replace with actual API endpoint
-//                    .post(requestBody)
-//                    .build()
-//
-//                val response = client.newCall(request).execute()
-//                if (response.isSuccessful) {
-//                    runOnUiThread {
-//                        Toast.makeText(this@BanningUserActivity, "User banned successfully", Toast.LENGTH_SHORT).show()
-//                        finish()
-//                    }
-//                } else {
-//                    runOnUiThread {
-//                        Toast.makeText(this@BanningUserActivity, "Failed to ban user", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                runOnUiThread {
-//                    Toast.makeText(this@BanningUserActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    }
 }
