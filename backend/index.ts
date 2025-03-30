@@ -9,7 +9,6 @@ import setUpWebSocket from "./socket";
 import { validationResult } from "express-validator";
 import { authMiddleware } from "./middleware/authMiddleware";
 import { MessagingRoutes } from "./routes/MessagingRoutes";
-import { AuthRoutes } from "./routes/authRoutes";
 import { UserRoutes } from "./routes/UserRoutes";
 import { RecommendationRoutes } from "./routes/RecommendationRoutes";
 import {Server as SocketIOServer} from "socket.io";
@@ -22,7 +21,6 @@ app.use(express.json());
 app.use(morgan("dev"));
 const Routes = [
 	...MessagingRoutes,
-	...AuthRoutes,
 	...UserRoutes,
 	...RecommendationRoutes,
 ];

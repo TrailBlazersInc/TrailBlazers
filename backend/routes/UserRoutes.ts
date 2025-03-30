@@ -6,6 +6,12 @@ const controller = new UserController();
 
 export const UserRoutes = [
     {
+        method: 'post',
+        route: '/api/v1/auth/google',
+        action: (req: Request, res: Response) => controller.authId(req, res),
+        validation: []
+    },
+    {
         method: 'get',
         route: '/User/:email',
         action: (req: Request, res: Response) => controller.getUserData(req, res),
