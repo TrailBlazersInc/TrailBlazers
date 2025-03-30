@@ -1,5 +1,6 @@
 package com.example.cpen321project
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,6 +47,13 @@ class BanningUserActivity : AppCompatActivity() {
 
         var emailList = mutableListOf<String>()
         var userBan: String? = null
+
+        findViewById<Button>(R.id.home_admin_button).setOnClickListener() {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("tkn", tkn)
+            intent.putExtra("email", email)
+            startActivity(intent)
+        }
 
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
