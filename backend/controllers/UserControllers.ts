@@ -27,7 +27,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export class UserController {
     async authId(req: Request, res: Response) {
         let new_user = false;
-        const { googleId, admin } = req.body;
+        const { googleId } = req.body;
         if (!googleId) {
             return res.status(400).json({ status: 'error', error: 'ID is required' });
         }
@@ -37,9 +37,8 @@ export class UserController {
                 idToken: googleId,
                 audience: process.env.GOOGLE_CLIENT_ID,
             });
-            console.log(ticket)
+
             const response = ticket.getPayload();
-            console.log(response)
 
             if (!response) {
                 return res.status(400).json({ status: 'error', error: 'Bad Request' });
@@ -73,16 +72,9 @@ export class UserController {
             }
 
             const token = jwt.sign({ id: user.social_id }, jwtSecret, { expiresIn: '12h' });
-            var newValues = { $set: {admin: false } };
-            if (admin) {
-                newValues = { $set: {admin: true } };
-                await User.updateOne({ email: response.email }, newValues);
-                res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: true });
-            }
-            else {
-                await User.updateOne({ email: response.email }, newValues);
-                res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: false });
-            }
+
+            res.status(200).json({ status: 'success', token, new_user, banned: user.banned, admin: user.admin });
+
         } catch (error) {
             console.error("GoogleAuth error:", error);
             res.status(500).json({ status: 'error', error: 'Internal Server Error' });

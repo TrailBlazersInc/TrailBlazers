@@ -54,9 +54,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-
-        val admin = findViewById<Switch>(R.id.admin_switch)
-
         findViewById<Button>(R.id.Sign_In_Button).setOnClickListener() {
             Log.d(TAG, "Sign In Button Clicked")
             Log.d(TAG, "WEB_CLIENT_ID: ${BuildConfig.WEB_CLIENT_ID}")
@@ -77,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                         request = request,
                         context = this@MainActivity,
                     )
-                    handleSignIn(result, admin.isChecked)
+                    handleSignIn(result)
                 } catch (e: GetCredentialException) {
                     handleFailure(e)
                 }
@@ -90,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Error Getting Credential", Toast.LENGTH_SHORT).show()
     }
 
-    private fun handleSignIn(result: GetCredentialResponse, admin: Boolean) {
+    private fun handleSignIn(result: GetCredentialResponse) {
         // Handle the successfully returned credential.
         val credential = result.credential
 
@@ -110,7 +107,6 @@ class MainActivity : AppCompatActivity() {
 
                         val jsonObject = JSONObject()
                         jsonObject.put("googleId", idToken)
-                        jsonObject.put("admin", admin)
 
                         val requestBody = RequestBody.create(
                             MediaType.get("application/json; charset=utf-8"),
@@ -135,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                                             userToken = tkn
                                             userEmail = googleIdTokenCredential.id
 
-                                            //TO DO: IF statement for if account already exists or not to take to different page
                                             runOnUiThread {
                                                 if(banned){
                                                     Toast.makeText(this@MainActivity, "This account has been banned", Toast.LENGTH_SHORT).show()

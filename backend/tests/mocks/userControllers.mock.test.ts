@@ -36,7 +36,7 @@ describe('POST /api/v1/auth/google (mock)', () => {
         //Expected Status Code: 500
         //Expected Behavior: Returns Error Message
         //Expected output: Error 'Internal Server Error'
-        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'invalid_mock_token', admin : false });
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'invalid_mock_token' });
         expect(response.status).toBe(500);
         expect(response.body.error).toBe('Internal Server Error');
     });
@@ -45,42 +45,42 @@ describe('POST /api/v1/auth/google (mock)', () => {
         //Expected Status Code: 400
         //Expected Behavior: Returns Error Message
         //Expected output: Error 'Bad Request'
-        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'empty_payload', admin : false });
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'empty_payload' });
         expect(response.status).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-    test('Valid Standard User Request', async () => {
-        //Input: Valid GoogleID and false flag for admin
+    test('Valid User Request', async () => {
+        //Input: Valid GoogleID
         //Expected Status Code: 200
         //Expected Behavior: Sends back sessionID and user info
-        //Expected output: Token for SessionID, user object, flag for banned, false flag for admin
-        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'valid_mock_token', admin : false });
+        //Expected output: Token for SessionID, user object, flag for banned
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'valid_mock_token' });
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('status', 'success');
         expect(response.body).toHaveProperty('token');
         expect(response.body).toHaveProperty('new_user');
         expect(response.body).toHaveProperty('banned');
-        expect(response.body).toHaveProperty('admin', false);
+        expect(response.body).toHaveProperty('admin');
     });
-    test('Valid Admin Request', async () => {
-        //Input: Valid GoogleID and true flag for admin
+    test('Valid User Request with No name', async () => {
+        //Input: Valid GoogleID
         //Expected Status Code: 200
-        //Expected Behavior: Sends back sessionID and user info
-        //Expected output: Token for SessionID, user object, flag for banned, true flag for admin
-        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'no_name', admin : true });
+        //Expected Behavior: Sends back sessionID and user info and creates a new user in UserDB with default name "Guest User"
+        //Expected output: Token for SessionID, user object, flag for banned
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId : 'no_name' });
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('status', 'success');
         expect(response.body).toHaveProperty('token');
         expect(response.body).toHaveProperty('new_user');
         expect(response.body).toHaveProperty('banned');
-        expect(response.body).toHaveProperty('admin', true);
+        expect(response.body).toHaveProperty('admin');
     });
     test('JWT_SECRET is missing', async () => {
         const originalJwtSecret = process.env.JWT_SECRET;
         
         delete process.env.JWT_SECRET;
     
-        const response = await request(server).post('/api/v1/auth/google').send({ googleId: 'valid_mock_token', admin: false });
+        const response = await request(server).post('/api/v1/auth/google').send({ googleId: 'valid_mock_token' });
     
         process.env.JWT_SECRET = originalJwtSecret;
     
