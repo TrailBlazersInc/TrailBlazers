@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0000FF</color>
     <color name="textbox_grey">#F9F4F5</color>
     <color name="home_indicator">#00000000</color>
 </resources>
