@@ -15,7 +15,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
-import com.example.cpen321andriodapp.ApiService
+import com.example.cpen321andriodapp.UserService
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                         // Use googleIdTokenCredential and extract id to validate and
                         // authenticate on your server.
 
-                        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
+                        val apiService = RetrofitClient.getClient(this).create(UserService::class.java)
 
                         val googleIdTokenCredential = GoogleIdTokenCredential
                             .createFrom(credential.data)
