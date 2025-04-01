@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -308,7 +309,13 @@ class Recommendation : AppCompatActivity() {
         val distanceWeight = inputDistanceWeight.text.toString().toIntOrNull()
         val availabilityWeight = inputAvailabilityWeight.text.toString().toIntOrNull()
 
-        if (locationWeight == null || speedWeight == null || distanceWeight == null || availabilityWeight == null) {
+        if (locationWeight == null || speedWeight == null) {
+            showSnackbar("Please enter valid weights (0-10)")
+            invalidWeightsErrorShown = true
+            return
+        }
+
+        if (distanceWeight == null || availabilityWeight == null) {
             showSnackbar("Please enter valid weights (0-10)")
             invalidWeightsErrorShown = true
             return
@@ -339,79 +346,9 @@ class Recommendation : AppCompatActivity() {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         progressBar.visibility = View.GONE
                         if (response.isSuccessful) {
-                            val responseString = response.body()?.string()
-                            Log.d(TAG, "API Response: $responseString")
-
-                            try {
-                                val jsonObject = JSONObject(responseString.toString())
-
-                                // Check if there's a recommendation
-                                if (jsonObject.has("recommendation")) {
-                                    val rec = jsonObject.getJSONObject("recommendation")
-                                    val recommendationsList = mutableListOf<RecommendationItem>()
-
-                                    // Parse the single recommendation
-                                    val score = rec.getDouble("matchScore")
-                                    Log.d(TAG, "matchScore: $score")
-                                    val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
-                                    val pace = rec.getInt("pace")
-                                    val email = rec.getString("email")
-
-                                    // Parse availability if it exists
-                                    val availability = if (rec.has("availability")) {
-                                        val availabilityObj = rec.getJSONObject("availability")
-                                        Availability(
-                                            monday = availabilityObj.optBoolean("monday", false),
-                                            tuesday = availabilityObj.optBoolean("tuesday", false),
-                                            wednesday = availabilityObj.optBoolean("wednesday", false),
-                                            thursday = availabilityObj.optBoolean("thursday", false),
-                                            friday = availabilityObj.optBoolean("friday", false),
-                                            saturday = availabilityObj.optBoolean("saturday", false),
-                                            sunday = availabilityObj.optBoolean("sunday", false)
-                                        )
-                                    } else {
-                                        // Default availability if not provided
-                                        Availability(false, false, false, false, false, false, false)
-                                    }
-
-                                    recommendationsList.add(
-                                        RecommendationItem(
-                                            rank = 1, // Only one recommendation, so rank is 1
-                                            score = score,
-                                            email = email,
-                                            name = name,
-                                            pace = pace,
-                                            distance = rec.optString("distance", "N/A"),
-                                            time = rec.optString("time", "N/A"),
-                                            latitude = rec.optDouble("latitude", 0.0),
-                                            longitude = rec.optDouble("longitude", 0.0),
-                                            availability = availability
-                                        )
-                                    )
-                                    Log.d("availability:", availability.toString())
-
-                                    // Update the RecyclerView with the single recommendation
-                                    this@Recommendation.recommendationsList = recommendationsList
-                                    updateRecyclerView(recommendationsList)
-                                    resultTextView.text = "Found your perfect jogging match!"
-
-                                    // Make the View on Map button visible now that we have a match
-                                    viewOnMapButton.visibility = View.VISIBLE
-                                } else {
-                                    // No recommendation available
-                                    resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
-                                    viewOnMapButton.visibility = View.GONE
-                                    noMatchesFound = true
-                                }
-
-                            } catch (e: org.json.JSONException) {
-                                Log.e(TAG, "JSON parsing error: ${e.message}")
-                                resultTextView.text = "Error parsing response: ${e.message}"
-                            }
+                            handleSuccessfulResponse(response)
                         } else {
-                            Log.e(TAG, "API call failed")
-                            resultTextView.text = "Error: ${response.code()}"
-                            apiCallFailed = true
+                            handleErrorResponse(response)
                         }
                     }
 
@@ -427,6 +364,89 @@ class Recommendation : AppCompatActivity() {
             progressBar.visibility = View.GONE
             resultTextView.text = "Error: User not authenticated!"
         }
+    }
+
+    private fun handleSuccessfulResponse(response: Response<ResponseBody>) {
+        val responseString = response.body()?.string()
+        Log.d(TAG, "API Response: $responseString")
+
+        try {
+            val jsonObject = JSONObject(responseString.toString())
+
+            // Check if there's a recommendation
+            if (jsonObject.has("recommendation")) {
+                val rec = jsonObject.getJSONObject("recommendation")
+                val recommendationsList = mutableListOf<RecommendationItem>()
+
+                // Parse recommendation details
+                val score = rec.getDouble("matchScore")
+                val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
+                val pace = rec.getInt("pace")
+                val email = rec.getString("email")
+                val availability = parseAvailability(rec)
+
+                recommendationsList.add(
+                    RecommendationItem(
+                        rank = 1, // Only one recommendation, so rank is 1
+                        score = score,
+                        email = email,
+                        name = name,
+                        pace = pace,
+                        distance = rec.optString("distance", "N/A"),
+                        time = rec.optString("time", "N/A"),
+                        latitude = rec.optDouble("latitude", 0.0),
+                        longitude = rec.optDouble("longitude", 0.0),
+                        availability = availability
+                    )
+                )
+                Log.d("availability:", availability.toString())
+
+                // Update the UI
+                this@Recommendation.recommendationsList = recommendationsList
+                updateRecyclerView(recommendationsList)
+                resultTextView.text = "Found your perfect jogging match!"
+                viewOnMapButton.visibility = View.VISIBLE
+            } else {
+                handleNoRecommendation()
+            }
+        } catch (e: JSONException) {
+            handleJsonParsingError(e)
+        }
+    }
+
+    private fun parseAvailability(rec: JSONObject): Availability {
+        return if (rec.has("availability")) {
+            val availabilityObj = rec.getJSONObject("availability")
+            Availability(
+                monday = availabilityObj.optBoolean("monday", false),
+                tuesday = availabilityObj.optBoolean("tuesday", false),
+                wednesday = availabilityObj.optBoolean("wednesday", false),
+                thursday = availabilityObj.optBoolean("thursday", false),
+                friday = availabilityObj.optBoolean("friday", false),
+                saturday = availabilityObj.optBoolean("saturday", false),
+                sunday = availabilityObj.optBoolean("sunday", false)
+            )
+        } else {
+            // Default availability if not provided
+            Availability(false, false, false, false, false, false, false)
+        }
+    }
+
+    private fun handleNoRecommendation() {
+        resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
+        viewOnMapButton.visibility = View.GONE
+        noMatchesFound = true
+    }
+
+    private fun handleJsonParsingError(e: JSONException) {
+        Log.e(TAG, "JSON parsing error: ${e.message}")
+        resultTextView.text = "Error parsing response: ${e.message}"
+    }
+
+    private fun handleErrorResponse(response: Response<ResponseBody>) {
+        Log.e(TAG, "API call failed")
+        resultTextView.text = "Error: ${response.code()}"
+        apiCallFailed = true
     }
 
     private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
