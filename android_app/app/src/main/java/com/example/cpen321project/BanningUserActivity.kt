@@ -11,7 +11,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.cpen321andriodapp.ApiService
+import com.example.cpen321andriodapp.UserService
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import retrofit2.Call
@@ -40,7 +40,7 @@ class BanningUserActivity : AppCompatActivity() {
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
 
-        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(UserService::class.java)
 
         val call = apiService.getReport("Bearer $tkn")
         val emailSet = LinkedHashSet<String>()
@@ -49,9 +49,8 @@ class BanningUserActivity : AppCompatActivity() {
         var userBan: String? = null
 
         findViewById<Button>(R.id.home_admin_button).setOnClickListener() {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("tkn", tkn)
-            intent.putExtra("email", email)
+            val intent = Intent(this, MainActivity::class.java)
+            //Sign Out code
             startActivity(intent)
         }
 

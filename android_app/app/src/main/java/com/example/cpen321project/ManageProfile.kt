@@ -15,7 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.cpen321andriodapp.ApiService
+import com.example.cpen321andriodapp.UserService
 import com.example.cpen321project.MainActivity.Companion
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
@@ -96,7 +96,7 @@ class ManageProfile : AppCompatActivity() {
     }
     private fun updateUser(token: String, email: String, requestBody: RequestBody){
 
-        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(UserService::class.java)
 
         apiService.updateUser("Bearer $token", email, requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -133,7 +133,7 @@ class ManageProfile : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val apiService = retrofit.create(ApiService::class.java)
+        val apiService = retrofit.create(UserService::class.java)
 
         apiService.getUser("Bearer $token", email).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
