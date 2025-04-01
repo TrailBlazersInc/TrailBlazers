@@ -11,6 +11,14 @@ enum JoggingTime {
     "Long (>60 min)" = 20
 }
 
+type UserPreferences = Record<string, string[]>;
+
+type UserScores = Record<string, Record<string, number>>;
+
+type UserProposals = Record<string, number>;
+
+type UserMatches = Record<string, string | null>;
+
 export class RecommendationController {
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -76,8 +84,8 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const preferences: Record<string, string[]> = {};
-        const scores: Record<string, Record<string, number>> = {};
+        const preferences: UserPreferences = {};
+        const scores: UserScores = {};
 
         for (const userA of [currentUser, ...allUsers]) {
             scores[userA.email] = {};
@@ -115,10 +123,10 @@ export class RecommendationController {
         }
 
         const unmatched = new Set([currentUser.email, ...allUsers.map(u => u.email)]);
-        const proposals: Record<string, number> = Object.fromEntries(
+        const proposals: UserProposals = Object.fromEntries(
             Array.from(unmatched).map(email => [email, 0])
         );        
-        const matches: Record<string, string | null> = Object.fromEntries(
+        const matches: UserMatches = Object.fromEntries(
             Array.from(unmatched).map(user => [user, null])
         );
 
