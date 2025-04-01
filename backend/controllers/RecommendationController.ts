@@ -111,8 +111,8 @@ export class RecommendationController {
                 
                 scores[userA.email][userB.email] = Number(totalScore.toPrecision(3));
             }
-            const userScores = scores[userA.email] ?? {}; // Ensure scores exist
-            preferences[userA.email] = Object.keys(userScores).sort((a, b) => (userScores[b] ?? 0) - (userScores[a] ?? 0));
+
+            preferences[userA.email] = Object.keys(scores[userA.email]).sort((a, b) => scores[userA.email][b] - scores[userA.email][a]);
         }
 
         const unmatched = new Set<string>([currentUser.email, ...allUsers.map(u => u.email)]);
@@ -126,8 +126,7 @@ export class RecommendationController {
 
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
-                const hasProposedToAll = proposals[proposer] >= preferences[proposer].length;
-                if (hasProposedToAll) {
+                if (proposals[proposer] >= preferences[proposer].length) {
                     unmatched.delete(proposer);
                     continue;
                 }
@@ -152,8 +151,7 @@ export class RecommendationController {
         const bestMatchEntry = Object.entries(matches)
             .filter(([, user]) => user && user === currentUser.email)
             .map(([buddy]) => {
-                const matchedUser = allUsers.find(u => u.email === buddy);
-                if (!matchedUser) return null;
+                const matchedUser = allUsers.find(u => u.email === buddy)!;
                 return {
                     email: matchedUser.email,
                     firstName: matchedUser.first_name,
