@@ -12,23 +12,13 @@ enum JoggingTime {
 }
 
 // Define custom interfaces for type safety
-interface UserPreferences {
-    [key: string]: string[];
-}
+type UserPreferences = Record<string, string[]>;
 
-interface UserScores {
-    [key: string]: {
-        [key: string]: number;
-    };
-}
+type UserScores = Record<string, Record<string, number>>;
 
-interface UserProposals {
-    [key: string]: number;
-}
+type UserProposals = Record<string, number>;
 
-interface UserMatches {
-    [key: string]: string | null;
-}
+type UserMatches = Record<string, string | null>;
 
 export class RecommendationController {
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
@@ -151,12 +141,6 @@ export class RecommendationController {
 
         while (unmatchedSet.size > 0) {
             for (const proposer of Array.from(unmatchedSet)) {
-                // Check for undefined or invalid preferences to avoid index errors
-                if (!preferences[proposer] || proposals[proposer] >= preferences[proposer].length) {
-                    unmatchedSet.delete(proposer);
-                    continue;
-                }
-
                 const preferred = preferences[proposer][proposals[proposer]];
                 proposals[proposer]++; // Increment after accessing to avoid race conditions
 
@@ -165,11 +149,6 @@ export class RecommendationController {
                     unmatchedSet.delete(proposer);
                 } else {
                     const currentMatch = matches[preferred];
-                    // Safety check to avoid undefined access
-                    if (!currentMatch || !scores[preferred] || !scores[preferred][proposer] || !scores[preferred][currentMatch]) {
-                        continue;
-                    }
-                    
                     if (scores[preferred][proposer] > scores[preferred][currentMatch]) {
                         unmatchedSet.add(currentMatch);
                         matches[preferred] = proposer;
