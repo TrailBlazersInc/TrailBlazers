@@ -11,7 +11,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.lifecycleScope
 import com.example.cpen321andriodapp.UserService
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import retrofit2.Call
@@ -49,9 +53,16 @@ class BanningUserActivity : AppCompatActivity() {
         var userBan: String? = null
 
         findViewById<Button>(R.id.home_admin_button).setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)
-            //Sign Out code
-            startActivity(intent)
+            lifecycleScope.launch {
+                val credentialManager = CredentialManager.create(this@BanningUserActivity)
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
+                clearUserSession()
+                val intent = Intent(this@BanningUserActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
+                startActivity(intent)
+                finish()
+            }
         }
 
         call.enqueue(object : Callback<ResponseBody> {
@@ -157,5 +168,11 @@ class BanningUserActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+    private fun clearUserSession() {
+        val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }
