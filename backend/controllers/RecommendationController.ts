@@ -89,7 +89,7 @@ export class RecommendationController {
         for (const userA of [currentUser, ...allUsers]) {
             const userAEmail = userA.email;
             scores.set(userAEmail, new Map());
-            const userScores = scores.get(userAEmail) as Map<string, number>;          
+            const userScores = scores.get(userAEmail)!;          
 
             for (const userB of allUsers) {
                 const userBEmail = userB.email;
@@ -139,7 +139,7 @@ export class RecommendationController {
         // Run Gale-Shapley algorithm
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
-                const proposerPrefs = preferences.get(proposer) as string[];
+                const proposerPrefs = preferences.get(proposer)!;
                 
                 const proposalCount = proposals.get(proposer) || 0;
                 if (proposalCount >= proposerPrefs.length) {
@@ -148,7 +148,8 @@ export class RecommendationController {
                 }
 
                 // Get the next preferred partner
-                const preferred = proposerPrefs[proposalCount];
+                const preferredIndex = Math.min(proposalCount, proposerPrefs.length - 1);
+                const preferred = proposerPrefs[preferredIndex]; 
                 proposals.set(proposer, proposalCount + 1);
 
                 // Check if preferred is already matched
@@ -161,12 +162,14 @@ export class RecommendationController {
                 } else {
                     // If already matched, check if new proposer is preferred
                     const preferredScores = scores.get(preferred);
-                    if (preferredScores && 
-                        preferredScores.get(proposer)! > preferredScores.get(currentMatch)!) {
-                        // If new proposer is preferred, update matches
-                        unmatched.add(currentMatch);
-                        matches.set(preferred, proposer);
-                        unmatched.delete(proposer);
+                    if (preferredScores) {
+                        const proposerScore = preferredScores.get(proposer) ?? 0;
+                        const currentMatchScore = preferredScores.get(currentMatch) ?? 0;
+                        
+                        if (proposerScore > currentMatchScore) {
+                            // If new proposer is preferred, update matches
+                            unmatched.add(currentMatch);
+                        }
                     }
                 }
             }
