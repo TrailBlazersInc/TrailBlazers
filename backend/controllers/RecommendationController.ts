@@ -11,6 +11,25 @@ enum JoggingTime {
     "Long (>60 min)" = 20
 }
 
+// Define custom interfaces for type safety
+interface UserPreferences {
+    [key: string]: string[];
+}
+
+interface UserScores {
+    [key: string]: {
+        [key: string]: number;
+    };
+}
+
+interface UserProposals {
+    [key: string]: number;
+}
+
+interface UserMatches {
+    [key: string]: string | null;
+}
+
 export class RecommendationController {
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -76,8 +95,11 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const preferences: Record<string, string[]> = {};
-        const scores: Record<string, Record<string, number>> = {};
+        // Create arrays to store emails for validation
+        const validUserEmails: string[] = [currentUser.email, ...allUsers.map(u => u.email)];
+        
+        const preferences: UserPreferences = {};
+        const scores: UserScores = {};
 
         for (const userA of [currentUser, ...allUsers]) {
             scores[userA.email] = {};
@@ -114,39 +136,56 @@ export class RecommendationController {
                 .map(([email]) => email);
         }
 
-        const unmatched = new Set([currentUser.email, ...allUsers.map(u => u.email)]);
-        const proposals: Record<string, number> = Object.fromEntries(
-            Array.from(unmatched).map(email => [email, 0])
-        );        
-        const matches: Record<string, string | null> = Object.fromEntries(
-            Array.from(unmatched).map(user => [user, null])
-        );
+        // Use Set with only valid emails to avoid injection
+        const unmatchedSet = new Set<string>(validUserEmails);
+        
+        // Initialize with only valid keys from validUserEmails
+        const proposals: UserProposals = {};
+        const matches: UserMatches = {};
+        
+        // Safely initialize with only validated emails
+        for (const email of validUserEmails) {
+            proposals[email] = 0;
+            matches[email] = null;
+        }
 
-        while (unmatched.size > 0) {
-            for (const proposer of Array.from(unmatched)) {
-                if (proposals[proposer] >= preferences[proposer].length) {
-                    unmatched.delete(proposer);
+        while (unmatchedSet.size > 0) {
+            for (const proposer of Array.from(unmatchedSet)) {
+                // Check for undefined or invalid preferences to avoid index errors
+                if (!preferences[proposer] || proposals[proposer] >= preferences[proposer].length) {
+                    unmatchedSet.delete(proposer);
                     continue;
                 }
 
-                const preferred = preferences[proposer][proposals[proposer]++];
+                const preferred = preferences[proposer][proposals[proposer]];
+                proposals[proposer]++; // Increment after accessing to avoid race conditions
 
                 if (!matches[preferred]) {
                     matches[preferred] = proposer;
-                    unmatched.delete(proposer);
-                } else if (scores[preferred][proposer] > scores[preferred][matches[preferred]]) {
-                    unmatched.add(matches[preferred]);
-                    matches[preferred] = proposer;
-                    unmatched.delete(proposer);
+                    unmatchedSet.delete(proposer);
+                } else {
+                    const currentMatch = matches[preferred];
+                    // Safety check to avoid undefined access
+                    if (!currentMatch || !scores[preferred] || !scores[preferred][proposer] || !scores[preferred][currentMatch]) {
+                        continue;
+                    }
+                    
+                    if (scores[preferred][proposer] > scores[preferred][currentMatch]) {
+                        unmatchedSet.add(currentMatch);
+                        matches[preferred] = proposer;
+                        unmatchedSet.delete(proposer);
+                    }
                 }
             }
         }
 
-        return Object.entries(matches)
+        // Find matches for current user
+        const matchResults = Object.entries(matches)
             .filter(([, user]) => user === currentUser.email)
             .map(([buddy]) => {
-                const matchedUsers = allUsers.filter(u => u.email === buddy);
-                const matchedUser = matchedUsers[0]; // Always defined to avoid error
+                const matchedUsers = allUsers.filter(u => u.email === buddy);                
+                const matchedUser = matchedUsers[0];
+                
                 return {
                     email: matchedUser.email,
                     firstName: matchedUser.first_name,
@@ -157,7 +196,9 @@ export class RecommendationController {
                     availability: matchedUser.availability,
                     matchScore: scores[currentUser.email][buddy]
                 };
-            })[0];
+            })
+            
+        return matchResults[0];
     }
 
     private calculateAvailabilityScore(userAvailability: Availability, buddyAvailability: Availability): number {
