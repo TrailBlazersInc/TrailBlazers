@@ -134,8 +134,8 @@ export class RecommendationController {
                 if (!matches[preferred]) {
                     matches[preferred] = proposer;
                     unmatched.delete(proposer);
-                } else if (scores[preferred][proposer] > scores[preferred][matches[preferred] as string]) {
-                    unmatched.add(matches[preferred] as string);
+                } else if (scores[preferred][proposer] > scores[preferred][matches[preferred]]) {
+                    unmatched.add(matches[preferred]);
                     matches[preferred] = proposer;
                     unmatched.delete(proposer);
                 }
