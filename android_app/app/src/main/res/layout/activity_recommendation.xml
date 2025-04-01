@@ -62,6 +62,21 @@
         android:hint="Enter a value (0-10)"
         android:inputType="number"/>
 
+    <!-- Input for Weight of Availability -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight for Availability:"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/inputAvailabilityWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a value (0-10)"
+        android:inputType="number"/>
+
     <Button
         android:id="@+id/getLocationPermissionButton"
         android:layout_width="wrap_content"
