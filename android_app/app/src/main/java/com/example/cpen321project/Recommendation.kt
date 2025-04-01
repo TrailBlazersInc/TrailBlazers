@@ -348,7 +348,9 @@ class Recommendation : AppCompatActivity() {
                         if (response.isSuccessful) {
                             handleSuccessfulResponse(response)
                         } else {
-                            handleErrorResponse(response)
+                            Log.e(TAG, "API call failed")
+                            resultTextView.text = "Error: ${response.code()}"
+                            apiCallFailed = true
                         }
                     }
 
@@ -407,10 +409,13 @@ class Recommendation : AppCompatActivity() {
                 resultTextView.text = "Found your perfect jogging match!"
                 viewOnMapButton.visibility = View.VISIBLE
             } else {
-                handleNoRecommendation()
+                resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
+                viewOnMapButton.visibility = View.GONE
+                noMatchesFound = true
             }
         } catch (e: JSONException) {
-            handleJsonParsingError(e)
+            Log.e(TAG, "JSON parsing error: ${e.message}")
+            resultTextView.text = "Error parsing response: ${e.message}"
         }
     }
 
@@ -430,23 +435,6 @@ class Recommendation : AppCompatActivity() {
             // Default availability if not provided
             Availability(false, false, false, false, false, false, false)
         }
-    }
-
-    private fun handleNoRecommendation() {
-        resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
-        viewOnMapButton.visibility = View.GONE
-        noMatchesFound = true
-    }
-
-    private fun handleJsonParsingError(e: JSONException) {
-        Log.e(TAG, "JSON parsing error: ${e.message}")
-        resultTextView.text = "Error parsing response: ${e.message}"
-    }
-
-    private fun handleErrorResponse(response: Response<ResponseBody>) {
-        Log.e(TAG, "API call failed")
-        resultTextView.text = "Error: ${response.code()}"
-        apiCallFailed = true
     }
 
     private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
