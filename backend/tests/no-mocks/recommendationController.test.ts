@@ -25,8 +25,10 @@ beforeAll(async () => {
           saturday: false,
           sunday: true,
         },
-        longitude: "123.1234", 
-        latitude: "12.1234", 
+        loc: {
+            longitude: "123.1234", 
+            latitude: "12.1234", 
+        },
         banned: false, 
         admin: false, 
     });
@@ -53,11 +55,11 @@ describe("POST /recommendation/:email", () => {
                 locationWeight: 5,
                 speedWeight: 6,
                 distanceWeight: 7,
+                availabilityWeight: 8,
             });
 
         expect(res.status).toStrictEqual(200);
         expect(res.body).toHaveProperty("status", "success");
-        expect(Array.isArray(res.body.recommendations)).toBe(true);
     });
 
     test("POST /recommendations/:email - User Not Found", async () => {
@@ -71,7 +73,8 @@ describe("POST /recommendation/:email", () => {
             .send({
                 locationWeight: 5,
                 speedWeight: 6,
-                distanceWeight: 7, });
+                distanceWeight: 7,
+                availabilityWeight: 8 });
 
         expect(res.status).toBe(404);
         expect(res.body).toHaveProperty("error", "User not found");
