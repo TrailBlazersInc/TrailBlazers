@@ -142,7 +142,7 @@ export class RecommendationController {
         // Run Gale-Shapley algorithm
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
-                const proposerPrefs = preferences.get(proposer)!;
+                const proposerPrefs = preferences.get(proposer);
                 if (!proposerPrefs) {
                     return null;
                 }
