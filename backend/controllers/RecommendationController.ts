@@ -89,7 +89,7 @@ export class RecommendationController {
         for (const userA of [currentUser, ...allUsers]) {
             const userAEmail = userA.email;
             scores.set(userAEmail, new Map());
-            const userScores = scores.get(userAEmail)!;
+            const userScores = scores.get(userAEmail) as Map<string, number>;          
 
             for (const userB of allUsers) {
                 const userBEmail = userB.email;
