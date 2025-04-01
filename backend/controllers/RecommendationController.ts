@@ -82,8 +82,8 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const preferences: Record<string, string[]> = {};
-        const scores: Record<string, Record<string, number>> = {};
+        const preferences: Record<string, string[]> = Object.create(null);
+        const scores: Record<string, Record<string, number>> = Object.create(null);
 
         for (const userA of [currentUser, ...allUsers]) {
             preferences[userA.email] = [];
@@ -111,13 +111,13 @@ export class RecommendationController {
                 
                 scores[userA.email][userB.email] = Number(totalScore.toPrecision(3));
             }
-
-            preferences[userA.email] = Object.keys(scores[userA.email]).sort((a, b) => scores[userA.email][b] - scores[userA.email][a]);
+            const userScores = scores[userA.email] ?? {}; // Ensure scores exist
+            preferences[userA.email] = Object.keys(userScores).sort((a, b) => (userScores[b] ?? 0) - (userScores[a] ?? 0));
         }
 
         const unmatched = new Set<string>([currentUser.email, ...allUsers.map(u => u.email)]);
-        const proposals: Record<string, number> = {};
-        const matches: Record<string, string | null> = {};
+        const proposals: Record<string, number> = Object.create(null);
+        const matches: Record<string, string | null> = Object.create(null);
 
         for (const user of unmatched) {
             proposals[user] = 0;
@@ -126,7 +126,8 @@ export class RecommendationController {
 
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
-                if (proposals[proposer] >= preferences[proposer].length) {
+                const hasProposedToAll = proposals[proposer] >= preferences[proposer].length;
+                if (hasProposedToAll) {
                     unmatched.delete(proposer);
                     continue;
                 }
@@ -138,7 +139,7 @@ export class RecommendationController {
                     matches[preferred] = proposer;
                     unmatched.delete(proposer);
                 } else {
-                    const currentMatch = matches[preferred]!;
+                    const currentMatch = matches[preferred];
                     if (scores[preferred][proposer] > scores[preferred][currentMatch]) {
                         matches[preferred] = proposer;
                         unmatched.add(currentMatch);
@@ -149,9 +150,10 @@ export class RecommendationController {
         }
 
         const bestMatchEntry = Object.entries(matches)
-            .filter(([buddy, user]) => user && user === currentUser.email)
+            .filter(([, user]) => user && user === currentUser.email)
             .map(([buddy]) => {
-                const matchedUser = allUsers.find(u => u.email === buddy)!;
+                const matchedUser = allUsers.find(u => u.email === buddy);
+                if (!matchedUser) return null;
                 return {
                     email: matchedUser.email,
                     firstName: matchedUser.first_name,
