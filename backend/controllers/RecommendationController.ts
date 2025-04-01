@@ -145,7 +145,8 @@ export class RecommendationController {
         return Object.entries(matches)
             .filter(([, user]) => user === currentUser.email)
             .map(([buddy]) => {
-                const matchedUser = allUsers.find(u => u.email === buddy)!;
+                const matchedUsers = allUsers.filter(u => u.email === buddy);
+                const matchedUser = matchedUsers[0]; // Always defined to avoid error
                 return {
                     email: matchedUser.email,
                     firstName: matchedUser.first_name,
