@@ -11,15 +11,6 @@ enum JoggingTime {
     "Long (>60 min)" = 20
 }
 
-// Define custom interfaces for type safety
-type UserPreferences = Record<string, string[]>;
-
-type UserScores = Record<string, Record<string, number>>;
-
-type UserProposals = Record<string, number>;
-
-type UserMatches = Record<string, string | null>;
-
 export class RecommendationController {
     postRecommendations = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -85,11 +76,8 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        // Create arrays to store emails for validation
-        const validUserEmails: string[] = [currentUser.email, ...allUsers.map(u => u.email)];
-        
-        const preferences: UserPreferences = {};
-        const scores: UserScores = {};
+        const preferences: Record<string, string[]> = {};
+        const scores: Record<string, Record<string, number>> = {};
 
         for (const userA of [currentUser, ...allUsers]) {
             scores[userA.email] = {};
@@ -126,45 +114,39 @@ export class RecommendationController {
                 .map(([email]) => email);
         }
 
-        // Use Set with only valid emails to avoid injection
-        const unmatchedSet = new Set<string>(validUserEmails);
-        
-        // Initialize with only valid keys from validUserEmails
-        const proposals: UserProposals = {};
-        const matches: UserMatches = {};
-        
-        // Safely initialize with only validated emails
-        for (const email of validUserEmails) {
-            proposals[email] = 0;
-            matches[email] = null;
-        }
+        const unmatched = new Set([currentUser.email, ...allUsers.map(u => u.email)]);
+        const proposals: Record<string, number> = Object.fromEntries(
+            Array.from(unmatched).map(email => [email, 0])
+        );        
+        const matches: Record<string, string | null> = Object.fromEntries(
+            Array.from(unmatched).map(user => [user, null])
+        );
 
-        while (unmatchedSet.size > 0) {
-            for (const proposer of Array.from(unmatchedSet)) {
-                const preferred = preferences[proposer][proposals[proposer]];
-                proposals[proposer]++; // Increment after accessing to avoid race conditions
+        while (unmatched.size > 0) {
+            for (const proposer of Array.from(unmatched)) {
+                if (proposals[proposer] >= preferences[proposer].length) {
+                    unmatched.delete(proposer);
+                    continue;
+                }
+
+                const preferred = preferences[proposer][proposals[proposer]++];
 
                 if (!matches[preferred]) {
                     matches[preferred] = proposer;
-                    unmatchedSet.delete(proposer);
-                } else {
-                    const currentMatch = matches[preferred];
-                    if (scores[preferred][proposer] > scores[preferred][currentMatch]) {
-                        unmatchedSet.add(currentMatch);
-                        matches[preferred] = proposer;
-                        unmatchedSet.delete(proposer);
-                    }
+                    unmatched.delete(proposer);
+                } else if (scores[preferred][proposer] > scores[preferred][matches[preferred]]) {
+                    unmatched.add(matches[preferred]);
+                    matches[preferred] = proposer;
+                    unmatched.delete(proposer);
                 }
             }
         }
 
-        // Find matches for current user
-        const matchResults = Object.entries(matches)
+        return Object.entries(matches)
             .filter(([, user]) => user === currentUser.email)
             .map(([buddy]) => {
-                const matchedUsers = allUsers.filter(u => u.email === buddy);                
-                const matchedUser = matchedUsers[0];
-                
+                const matchedUsers = allUsers.filter(u => u.email === buddy);
+                const matchedUser = matchedUsers[0]; // Always defined to avoid error
                 return {
                     email: matchedUser.email,
                     firstName: matchedUser.first_name,
@@ -175,9 +157,7 @@ export class RecommendationController {
                     availability: matchedUser.availability,
                     matchScore: scores[currentUser.email][buddy]
                 };
-            })
-            
-        return matchResults[0];
+            })[0];
     }
 
     private calculateAvailabilityScore(userAvailability: Availability, buddyAvailability: Availability): number {
