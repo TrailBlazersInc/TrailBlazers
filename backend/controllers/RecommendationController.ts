@@ -21,15 +21,12 @@ export class RecommendationController {
                 return res.status(404).json({ error: "User not found" });
             }
 
-            const locationWeight = req.body.locationWeight;
-            const speedWeight = req.body.speedWeight;
-            const timeWeight = req.body.distanceWeight;
-            const availabilityWeight = req.body.availabilityWeight
+            const { locationWeight, speedWeight, distanceWeight, availabilityWeight } = req.body;
 
             const recommendation = await this.findJogBuddiesWithGaleShapley(
                 user, 
                 locationWeight, 
-                timeWeight, 
+                distanceWeight, 
                 speedWeight,
                 availabilityWeight
             );
@@ -45,14 +42,11 @@ export class RecommendationController {
     postLocation = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { email } = req.params;
-            const latitude: number = req.body.latitude;
-            const longitude: number = req.body.longitude;
-
-            let loc: Location = { latitude, longitude };
-    
+            const { latitude, longitude } = req.body;
+            
             const user = await User.findOneAndUpdate(
                 { email },
-                { $set: { loc } },
+                { $set: { loc: { latitude, longitude } } },
                 { new: true }
             );
     
@@ -82,47 +76,51 @@ export class RecommendationController {
             banned: { $ne: true }
         });
 
-        const preferences: Record<string, string[]> = Object.create(null);
-        const scores: Record<string, Record<string, number>> = Object.create(null);
+        const preferences: Record<string, string[]> = {};
+        const scores: Record<string, Record<string, number>> = {};
 
         for (const userA of [currentUser, ...allUsers]) {
-            preferences[userA.email] = [];
             scores[userA.email] = {};
 
             for (const userB of allUsers) {
                 if (userA.email === userB.email) continue;
 
-                // Calculate time difference using the time map
-                const userTimeValue = JoggingTime[userA.time as keyof typeof JoggingTime];            
-                const buddyTimeValue = JoggingTime[userB.time as keyof typeof JoggingTime];
-                const timeDifference = Math.min(Math.abs(userTimeValue - buddyTimeValue), thresholdTime);
+                const timeDifference = Math.min(
+                    Math.abs(
+                        JoggingTime[userA.time as keyof typeof JoggingTime] -
+                        JoggingTime[userB.time as keyof typeof JoggingTime]
+                    ),
+                    thresholdTime
+                );
 
                 const locationScore = 1 / (1 + this.calculateDistance(userA.loc, userB.loc));
                 const speedScore = 1 / (1 + Math.min(Math.abs(userA.pace - userB.pace), thresholdSpeed));
                 const timeScore = 1 / (1 + timeDifference);
-                const availabilityScore =  this.calculateAvailabilityScore(userA.availability, userB.availability);
+                const availabilityScore = this.calculateAvailabilityScore(userA.availability, userB.availability);
 
-                const totalScore =
-                    (locationScore * weightLocation +
-                        speedScore * weightSpeed +
-                        timeScore * weightTime) +
-                        availabilityScore * weightAvailability /
-                    (weightLocation + weightSpeed + weightTime) * 100;
-                
-                scores[userA.email][userB.email] = Number(totalScore.toPrecision(3));
+                scores[userA.email][userB.email] = Number(
+                    (
+                        (locationScore * weightLocation +
+                            speedScore * weightSpeed +
+                            timeScore * weightTime +
+                            availabilityScore * weightAvailability) /
+                        (weightLocation + weightSpeed + weightTime + weightAvailability) * 100
+                    ).toPrecision(3)
+                );
             }
 
-            preferences[userA.email] = Object.keys(scores[userA.email]).sort((a, b) => scores[userA.email][b] - scores[userA.email][a]);
+            preferences[userA.email] = Object.entries(scores[userA.email])
+                .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+                .map(([email]) => email);
         }
 
-        const unmatched = new Set<string>([currentUser.email, ...allUsers.map(u => u.email)]);
-        const proposals: Record<string, number> = Object.create(null);
-        const matches: Record<string, string | null> = Object.create(null);
-
-        for (const user of unmatched) {
-            proposals[user] = 0;
-            matches[user] = null;
-        }
+        const unmatched = new Set([currentUser.email, ...allUsers.map(u => u.email)]);
+        const proposals: Record<string, number> = Object.fromEntries(
+            Array.from(unmatched).map(email => [email, 0])
+        );        
+        const matches: Record<string, string | null> = Object.fromEntries(
+            Array.from(unmatched).map(user => [user, null])
+        );
 
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
@@ -131,25 +129,21 @@ export class RecommendationController {
                     continue;
                 }
 
-                const preferred = preferences[proposer][proposals[proposer]];
-                proposals[proposer]++;
+                const preferred = preferences[proposer][proposals[proposer]++];
 
                 if (!matches[preferred]) {
                     matches[preferred] = proposer;
                     unmatched.delete(proposer);
-                } else {
-                    const currentMatch = matches[preferred];
-                    if (scores[preferred][proposer] > scores[preferred][currentMatch]) {
-                        matches[preferred] = proposer;
-                        unmatched.add(currentMatch);
-                        unmatched.delete(proposer);
-                    }
+                } else if (scores[preferred][proposer] > scores[preferred][matches[preferred] as string]) {
+                    unmatched.add(matches[preferred] as string);
+                    matches[preferred] = proposer;
+                    unmatched.delete(proposer);
                 }
             }
         }
 
-        const bestMatchEntry = Object.entries(matches)
-            .filter(([, user]) => user && user === currentUser.email)
+        return Object.entries(matches)
+            .filter(([, user]) => user === currentUser.email)
             .map(([buddy]) => {
                 const matchedUser = allUsers.find(u => u.email === buddy)!;
                 return {
@@ -162,19 +156,14 @@ export class RecommendationController {
                     availability: matchedUser.availability,
                     matchScore: scores[currentUser.email][buddy]
                 };
-            })
-            
-        return bestMatchEntry[0]; // Select the best match
+            })[0];
     }
 
-    private calculateAvailabilityScore(
-        userAvailability: Availability, 
-        buddyAvailability: Availability
-    ): number {
-        let totalDays = 7;
-    
-        let commonDays: number = Object.entries(userAvailability).filter(([day, value]) => value && buddyAvailability[day as keyof Availability]).length;
-    
+    private calculateAvailabilityScore(userAvailability: Availability, buddyAvailability: Availability): number {
+        const totalDays = 7;
+        const commonDays = Object.entries(userAvailability).filter(
+            ([day, value]) => value && buddyAvailability[day as keyof Availability]
+        ).length;
         return commonDays / totalDays;
     }
 
@@ -182,14 +171,12 @@ export class RecommendationController {
         const dLat = this.toRadians(location2.latitude - location1.latitude);
         const dLon = this.toRadians(location2.longitude - location1.longitude);
         
-        const a = 
-            Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(this.toRadians(location1.latitude)) * 
-            Math.cos(this.toRadians(location2.latitude)) * 
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-            
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return earthRadiusKm * c;
+        const a = Math.sin(dLat / 2) ** 2 +
+                  Math.cos(this.toRadians(location1.latitude)) *
+                  Math.cos(this.toRadians(location2.latitude)) *
+                  Math.sin(dLon / 2) ** 2;
+        
+        return earthRadiusKm * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
     }
 
     private toRadians(degrees: number): number {
