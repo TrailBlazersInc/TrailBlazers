@@ -229,4 +229,18 @@
         app:layout_constraintTop_toBottomOf="@+id/saturday_switch"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+
+    <Button
+        android:id="@+id/signOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/sign_out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

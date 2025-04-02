@@ -15,9 +15,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.lifecycleScope
 import com.example.cpen321andriodapp.UserService
 import com.example.cpen321project.MainActivity.Companion
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -79,6 +83,19 @@ class ManageProfile : AppCompatActivity() {
                 val jsonString = """{"distance": "${runDistance ?: "0"}","time": "${runTime ?: "0"}","pace": $pace,"availability": $availabilityJson}"""
                 val requestBody = RequestBody.create(MediaType.parse("application/json"), jsonString)
                 updateUser(tkn, email, requestBody)
+            }
+        }
+
+        findViewById<Button>(R.id.signOutButton).setOnClickListener() {
+            lifecycleScope.launch {
+                val credentialManager = CredentialManager.create(this@ManageProfile)
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
+                clearUserSession()
+                val intent = Intent(this@ManageProfile, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
+                startActivity(intent)
+                finish()
             }
         }
         findViewById<Button>(R.id.home_button).setOnClickListener() {
@@ -183,5 +200,12 @@ class ManageProfile : AppCompatActivity() {
         findViewById<Switch>(R.id.friday_switch).isChecked = availability.getBoolean("friday")
         findViewById<Switch>(R.id.saturday_switch).isChecked = availability.getBoolean("saturday")
         findViewById<Switch>(R.id.sunday_switch).isChecked = availability.getBoolean("sunday")
+    }
+
+    private fun clearUserSession() {
+        val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }
