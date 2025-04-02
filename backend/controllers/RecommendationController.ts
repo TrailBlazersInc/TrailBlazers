@@ -89,7 +89,9 @@ export class RecommendationController {
         for (const userA of [currentUser, ...allUsers]) {
             const userAEmail = userA.email;
             scores.set(userAEmail, new Map());
-            const userScores = scores.get(userAEmail)!;
+            // console.log('userAEmail: ', userAEmail);
+            // console.log('scores: ', scores);
+            const userScores = scores.get(userAEmail) as Map<string, number>;
             // if (!userScores) {
             //     return null;
             // }
@@ -142,6 +144,8 @@ export class RecommendationController {
         // Run Gale-Shapley algorithm
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
+                // console.log('preferences:', preferences)
+                // console.log("proposer: ", proposer);
                 const proposerPrefs = preferences.get(proposer)!;
                 // if (!proposerPrefs) {
                 //     return null;
