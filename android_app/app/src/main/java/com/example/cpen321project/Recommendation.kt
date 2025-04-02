@@ -76,6 +76,7 @@ class Recommendation : AppCompatActivity() {
     }
 
     private lateinit var rootView: View
+    private lateinit var backButton: ImageView
     private lateinit var inputLocationWeight: EditText
     private lateinit var inputSpeedWeight: EditText
     private lateinit var inputDistanceWeight: EditText
@@ -107,6 +108,7 @@ class Recommendation : AppCompatActivity() {
         recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Initialize UI elements
+        backButton = findViewById(R.id.chevron_left)
         inputLocationWeight = findViewById(R.id.inputLocationWeight)
         inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
         inputDistanceWeight = findViewById(R.id.inputDistanceWeight)
@@ -123,6 +125,13 @@ class Recommendation : AppCompatActivity() {
 
         getLocationPermissionButton.setOnClickListener {
             checkAndUpdateLocation()
+        }
+
+        backButton.setOnClickListener {
+            intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("tkn", userToken)
+            intent.putExtra("email", userEmail)
+            startActivity(intent)
         }
 
         getRecommendationButton.setOnClickListener {
