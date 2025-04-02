@@ -83,7 +83,7 @@ class ChatActivity : AppCompatActivity() {
         val messageInput = findViewById<EditText>(R.id.messageInput)
         val sendMessageButton = findViewById<ImageView>(R.id.sendMessageButton)
         val chatNameTextView = findViewById<TextView>(R.id.manage_chats_title)
-        val reportButton : Button = findViewById(R.id.reportButton)
+        val reportButton : ImageView = findViewById(R.id.reportButton)
 
         socket?.on("join_chat", onJoinChat)
         socket?.on("req-error", onReqError)

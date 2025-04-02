@@ -27,7 +27,6 @@ export default function setUpWebSocket(server: httpsServer | httpServer): Socket
         socket.on("join_chat", async(rawdata) => {
             try{
             let data = JSON.parse(rawdata)
-            console.log("data", data)
             const result = joinChatReq.safeParse(data)
 
             if(!result.success){
@@ -66,7 +65,6 @@ export default function setUpWebSocket(server: httpsServer | httpServer): Socket
 
         socket.on("message", async (rawData) => {
             try {
-                console.log(rawData)
                 let data = JSON.parse(rawData)
                 const result = messageReq.safeParse(data)
                 if (!result.success){
@@ -115,7 +113,6 @@ export default function setUpWebSocket(server: httpsServer | httpServer): Socket
                 io.to(data.chatId).emit('message', formattedMessage)
 
             } catch (error) {
-                console.log(error)
                 socket.emit("req-error", "Server Error")
             }
         })

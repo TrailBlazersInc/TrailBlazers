@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.espresso.contrib)
     implementation(libs.androidx.ui.test.android)
     implementation(libs.androidx.espresso.intents)
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation("io.socket:socket.io-client:2.0.0")
 
 

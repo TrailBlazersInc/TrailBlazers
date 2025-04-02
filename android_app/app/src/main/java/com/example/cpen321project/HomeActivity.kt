@@ -49,11 +49,5 @@ class HomeActivity : AppCompatActivity() {
             //Sign Out code
             startActivity(intent)
         }
-        findViewById<Button>(R.id.reportUsersButton).setOnClickListener() {
-            val intent = Intent(this, ReportUserActivity::class.java)
-            intent.putExtra("tkn", tkn)
-            intent.putExtra("email", email)
-            startActivity(intent)
-        }
     }
 }
