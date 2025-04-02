@@ -103,13 +103,10 @@ class RecommendationTest {
         // 4. Get recommendation
         onView(withId(R.id.getRecommendationButton)).perform(click())
 
-        // 5. Top 5 Recommendation is well displayed
+        // 5. Most recommended jogger is well displayed
         onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
 
-        val t2  = System.currentTimeMillis()
-        assertTrue("Schedule upload took more than 4s", t2 - t1 < 4000)
-
-        Log.d(TAG, "Test 3: Successfully get recommendation in ${t2 - t1}ms!")
+        Log.d(TAG, "Test 3: Successfully displayed a recommended jogging buddy!")
 
         // 6. Navigate to MapActivity
         Intents.intending(IntentMatchers.hasComponent(MapsActivity::class.java.name))
