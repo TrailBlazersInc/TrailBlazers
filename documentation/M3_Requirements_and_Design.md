@@ -15,6 +15,7 @@
  - Replaced the non-functional requirement for security with one for performance. 03/21/2025
  - Updated the main complexity project design. 04/01/2025
  - Updated the non-functional requirement for recommendation usability. 04/02/2025
+ - Updated recommendation sequence diagram. 04/02/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -81,10 +82,10 @@ An application that connects nearby users to jog/run together adapting to their 
     - **Primary actor(s)**: User
     - **Main success scenario**:
         - 1. User navigates to the "Recommendation" section.
-        - 2. User inputs weight for location, speed and distance respetively within number (0-10).
+        - 2. User inputs weight for location, speed, distance and availability respectively within number (0-10).
         - 3. User clicks on the "Grant Location Permission" button to allow app to access user's location.
         - 4. User clicks on the "Get Recommendations" button.
-        - 5. System retrieves and displays the top 5 joggers matched relevant details (e.g., name, match score, pace, distance, time, availability).
+        - 5. System retrieves and displays the most matched jogger's relevant details (e.g., name, match score, pace, distance, time, availability).
         - 6. User can click the "View on Map" button to view Google Map location that display user's location and joggers nearby (if exists).
         - 7. User can click the "Message" button to direct message jogger (which will lead to chat functionality).
     - **Failure scenario(s)**:
@@ -204,7 +205,7 @@ The design focuses on enabling the general user to
     - **Purpose**: Provide users with a list of potential jogging partners based on their preferences and location.
     - **Interfaces**: 
         1. **`Recommendation postLocation(Location location, double maxUsers)`**
-        - **Purpose**: Post weight of location, speed and distance and pass the weights to findJogBuddies function to retrieve the top 5 recommended joggers.
+        - **Purpose**: Post weight of location, speed, distance and availability and pass the weights to findJogBuddies function to retrieve the top 5 recommended joggers.
         2. **`Recommendation postRecommendations(String latitude, String longitude)`**
         - **Purpose**: Post longitude and latitude to update location of user.
 
@@ -281,7 +282,7 @@ The design focuses on enabling the general user to
 
 3. [**Recommend Jogging Buddies**](#fr3)
 <div align="center">
-<img src= "images/RecommendationsSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
+<img src= "images/RecommendationSequenceDiagram.png" alt="Recommendation Sequence Diagram"/>
 </div>
 
 4. [**Join/Create and Send Messages to Chat Group**](#fr4)
