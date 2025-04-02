@@ -107,14 +107,11 @@ class Recommendation : AppCompatActivity() {
             insets
         }
         rootView = findViewById(android.R.id.content)
-
-        // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView)
         recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Initialize UI elements
         backButton = findViewById(R.id.chevron_left)
         inputLocationWeight = findViewById(R.id.inputLocationWeight)
         inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
@@ -126,7 +123,6 @@ class Recommendation : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         resultTextView = findViewById(R.id.resultTextView)
 
-        // Retrieve user token and email from intent
         userToken = intent.extras?.getString("tkn") ?: ""
         userEmail = intent.extras?.getString("email") ?: ""
 
@@ -150,7 +146,6 @@ class Recommendation : AppCompatActivity() {
             val latitudes = recommendationsList.map { it.latitude }.toDoubleArray()
             val longitudes = recommendationsList.map { it.longitude }.toDoubleArray()
 
-            // Get current user's location for MapActivity
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -173,7 +168,6 @@ class Recommendation : AppCompatActivity() {
                         startActivity(intent)
                     }
             } else {
-                // If location permission not granted, just start MapActivity with recommendations
                 intent.putExtra("latitudes", latitudes)
                 intent.putExtra("longitudes", longitudes)
                 startActivity(intent)
