@@ -12,19 +12,6 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
-    @POST("/api/v1/auth/google")
-    fun postUser(
-        @Body request: RequestBody
-    ): Call<ResponseBody>
-
-    @PUT("/User/{email}")
-    fun updateUser(
-        @Header("Authorization") token: String,
-        @Path("email") email: String,
-        @Body request: RequestBody
-    ): Call<ResponseBody>
-
-
     @POST("/recommendations/{email}")
     fun getRecommendations(
         @Header("Authorization") token: String,
@@ -84,10 +71,25 @@ interface ApiService {
         @Path("email") email : String,
         @Body request: RequestBody
     ): Call<ResponseBody>
+}
 
-    @GET("/report")
-    fun getReport(
-        @Header("Authorization") token : String
+interface UserService {
+    @POST("/api/v1/auth/google")
+    fun postUser(
+        @Body request: RequestBody
+    ): Call<ResponseBody>
+
+    @PUT("/User/{email}")
+    fun updateUser(
+        @Header("Authorization") token: String,
+        @Path("email") email: String,
+        @Body request: RequestBody
+    ): Call<ResponseBody>
+
+    @GET("/User/{email}")
+    fun getUser(
+        @Header("Authorization") token : String,
+        @Path("email") email: String
     ): Call<ResponseBody>
 
     @PUT("/ban/{email}")
@@ -96,9 +98,8 @@ interface ApiService {
         @Path("email") email: String
     ): Call<ResponseBody>
 
-    @GET("/User/{email}")
-    fun getUser(
-        @Header("Authorization") token : String,
-        @Path("email") email: String
+    @GET("/report")
+    fun getReport(
+        @Header("Authorization") token : String
     ): Call<ResponseBody>
 }

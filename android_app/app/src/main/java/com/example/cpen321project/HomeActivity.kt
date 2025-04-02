@@ -9,6 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +52,22 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.signOutButton).setOnClickListener() {
-            val intent = Intent(this, MainActivity::class.java)
-            //Sign Out code
-            startActivity(intent)
+            lifecycleScope.launch {
+                val credentialManager = CredentialManager.create(this@HomeActivity)
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
+                clearUserSession()
+                val intent = Intent(this@HomeActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
+                startActivity(intent)
+                finish()
+            }
         }
+    }
+    private fun clearUserSession() {
+        val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }

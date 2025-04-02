@@ -105,7 +105,7 @@ export class UserController {
         try {
             var newValues = { $set: {banned: true } };
             var result = await User.updateOne({ email: req.params.email }, newValues);
-            console.log(result.modifiedCount)
+            
             if(!result.acknowledged || result.modifiedCount == 0){
                 return res.status(404).json({ error: "User not found" });
             }

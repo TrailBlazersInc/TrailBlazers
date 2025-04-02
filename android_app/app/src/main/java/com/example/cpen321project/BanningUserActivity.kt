@@ -11,7 +11,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.cpen321andriodapp.ApiService
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.lifecycleScope
+import com.example.cpen321andriodapp.UserService
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import retrofit2.Call
@@ -40,7 +44,7 @@ class BanningUserActivity : AppCompatActivity() {
         val tkn = extras?.getString("tkn") ?: ""
         val email = extras?.getString("email") ?: ""
 
-        val apiService = RetrofitClient.getClient(this).create(ApiService::class.java)
+        val apiService = RetrofitClient.getClient(this).create(UserService::class.java)
 
         val call = apiService.getReport("Bearer $tkn")
         val emailSet = LinkedHashSet<String>()
@@ -49,10 +53,16 @@ class BanningUserActivity : AppCompatActivity() {
         var userBan: String? = null
 
         findViewById<Button>(R.id.home_admin_button).setOnClickListener() {
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.putExtra("tkn", tkn)
-            intent.putExtra("email", email)
-            startActivity(intent)
+            lifecycleScope.launch {
+                val credentialManager = CredentialManager.create(this@BanningUserActivity)
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
+                clearUserSession()
+                val intent = Intent(this@BanningUserActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
+                startActivity(intent)
+                finish()
+            }
         }
 
         call.enqueue(object : Callback<ResponseBody> {
@@ -158,5 +168,11 @@ class BanningUserActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+    private fun clearUserSession() {
+        val sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }

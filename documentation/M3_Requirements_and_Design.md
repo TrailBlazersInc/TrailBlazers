@@ -12,7 +12,8 @@
  - Updated the write up for non functional requirements of Recommendation Usability. 03/21/2025
  - Updated the User interface to align with implementation. 03/21/2025
  - Updated the Authentication use case to align with implementation. 03/21/2025
- - Repalced the non-functional requirement for security with one for performance. 03/21/2025
+ - Replaced the non-functional requirement for security with one for performance. 03/21/2025
+ - Updated the main complexity project design. 04/01/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -313,64 +314,91 @@ The design focuses on enabling the general user to
 
 ### **4.8. Main Project Complexity Design**
 **Jogger Recommendation System**
-- **Description**: The jogger recommendation system helps users find compatible running partners based on location, jogging speed, and preferred running time. The system processes user profiles and ranks potential jogging buddies using a weighted scoring mechanism. The recommendation process needs to be efficient, scalable, and provide relevant matches in real-time.
+- **Description**: The jogger recommendation system helps users find compatible running partners based on location, jogging speed, preferred running time, and availability. The system processes user profiles and ranks potential jogging buddies using a weighted scoring mechanism combined with the Gale-Shapley matching algorithm. The recommendation process must be efficient, scalable, and provide relevant matches in real-time.
 
 - **Why complex?**: 
-    - Geospatial Calculations: The system must compute distances between users using latitude and longitude, requiring efficient algorithms like the Haversine formula.
-    - Multi-Factor Matching: Users are not just matched based on distance but also jogging speed and time compatibility, requiring multi-variable optimization.
-    - Efficient Sorting & Filtering: Since the system might need to process thousands of users, ranking and filtering must be optimized.
-    - Scalability: As more users join, the system must handle increased computations without degrading performance.
+    - Geospatial Calculations: The system computes distances between users using latitude and longitude, requiring efficient algorithms like the Haversine formula.
+    - Multi-Factor Matching: Users are matched based on location, jogging speed, time compatibility, and availability, requiring multi-variable optimization.
+    - Stable Pairing: The Gale-Shapley algorithm ensures that matches are stable and mutually optimal.
+    - Efficient Sorting & Filtering: Since the system may process thousands of users, ranking and filtering must be optimized.
+    - Scalability: As more users join, the system must handle increased computations efficiently without degrading performance.
 
 - **Design**:
     - **Input**: 
+        - UserProfile: Includes location, availability, jogging speed, and preferred running time.
         - ShortListedBuddies: List of user profiles filtered by basic constraints (e.g., active users, within a certain radius).
-        - UserLocation: The latitude and longitude of the user.
-        - UserAvaliability: A schedule that shows times the user is available throughout the week.
-        - UserSpeed: The user’s average jogging speed.
+        - Weight Parameters: User-defined weights for location, speed, distance, and availability.
     - **Output**: 
-        - A list of the top 5 best-matched jog buddies, ranked based on a computed match score.
+        - A list of the top-matched jog buddies based on computed match scores and Gale-Shapley stable pairing.
     - **Main computational logic**: 
         - Distance Calculation: Uses the Haversine formula to compute the real-world distance between the user and each buddy.
         - Time and Speed Compatibility: Calculates the absolute difference in preferred jogging time and speed.
-        - Scoring System: Assigns weighted scores based on proximity, time similarity, and speed similarity.
-        - Sorting and Selection: Ranks the top 5 most compatible jogging partners.
+        - Availability Matching: Computes the overlap in available jogging days.
+        - Scoring System: Assigns weighted scores based on proximity, time similarity, speed similarity, and availability overlap.
+        - Preference Sorting: Each user ranks potential buddies based on calculated scores.
+        - Gale-Shapley Matching: Ensures stable and optimal buddy pairing
 
     - **Pseudo-code**: 
 
 ```
-Algorithm findJogBuddies(ShortListedBuddies, userLocation, userAvailability, userSpeed)
-    Input: 
+Algorithm findJogBuddies(ShortListedBuddies, currentUser, weightLocation, weightSpeed, weightTime, weightAvailability)
+    Input:
         ShortListedBuddies (List of profiles)
-        userLocation (latitude, longitude)
-        userAvailability
-        userSpeed
-    Output: 
-        Top 5 best-matched jog buddies
+        currentUser (UserProfile)
+        weightLocation, weightSpeed, weightTime, weightAvailability (User-defined weights)
+    Output:
+        Best-matched jogging partner for the user
 
-    Define matches as an empty list
+    Define preferences as an empty map
+    Define scores as an empty map
 
-    For each buddy in ShortListedBuddies:
-        Calculate distanceScore = calculateDistance(userLocation, buddy.location)
-        Calculate timeDifference = abs(userAvailability - buddy.Availability)
-        Calculate speedDifference = abs(userSpeed - buddy.speed)
+    For each userA in [currentUser + ShortListedBuddies]:
+        Initialize scores[userA] = {}
+        For each userB in ShortListedBuddies:
+            If userA != userB:
+                Calculate:
+                    locationScore = 1 / (1 + calculateDistance(userA.loc, userB.loc))
+                    speedScore = 1 / (1 + min(abs(userA.pace - userB.pace), thresholdSpeed))
+                    timeScore = 1 / (1 + min(abs(JoggingTime[userA.time] - JoggingTime[userB.time]), thresholdTime))
+                    availabilityScore = commonAvailabilityDays(userA, userB) / 7
+                    totalScore = (locationScore * weightLocation +
+                                  speedScore * weightSpeed +
+                                  timeScore * weightTime +
+                                  availabilityScore * weightAvailability) /
+                                 (weightLocation + weightSpeed + weightTime + weightAvailability)
+                Store totalScore in scores[userA][userB]
+        Sort preferences[userA] in descending order based on totalScore
 
-        If timeDifference ≤ thresholdTime AND speedDifference ≤ thresholdSpeed:
-            Compute matchScore = (1 / (1 + distanceScore)) * weightLocation + 
-                                (1 / (1 + timeDifference)) * weightTime + 
-                                (1 / (1 + speedDifference)) * weightSpeed
+    Apply Gale-Shapley Matching Algorithm:
+        Initialize unmatched set with all users
+        Initialize proposals map (tracks number of proposals per user)
+        Initialize matches map (stores final matches)
+        
+        While unmatched users exist:
+            For each proposer in unmatched:
+                Retrieve proposer’s preference list
+                Get next preferred match based on proposal count
+                If proposer has exhausted preference list:
+                    Remove from unmatched
+                Else:
+                    Check if preferred match is already paired
+                    If not paired:
+                        Assign proposer to preferred
+                        Remove proposer from unmatched
+                    Else:
+                        Compare proposer’s score to current match
+                        If new proposer has a higher score:
+                            Swap matches
+                            Add previous match back to unmatched
 
-            Add (buddy, matchScore) to matches list
-
-    Sort matches in descending order by matchScore
-
-    Return top 5 buddies from matches (if available)
+    Return the best-matched buddy for the current user
 End Algorithm
 
 Function calculateDistance(location1, location2)
-    Input: 
+    Input:
         location1 (lat1, lon1)
         location2 (lat2, lon2)
-    Output: 
+    Output:
         Distance between two locations in km
 
     Apply Haversine Formula:

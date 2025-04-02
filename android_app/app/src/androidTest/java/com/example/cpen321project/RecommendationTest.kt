@@ -79,6 +79,7 @@ class RecommendationTest {
         onView(withId(R.id.inputLocationWeight)).perform(replaceText("abc"), closeSoftKeyboard())
         onView(withId(R.id.inputSpeedWeight)).perform(replaceText("def"), closeSoftKeyboard())
         onView(withId(R.id.inputDistanceWeight)).perform(replaceText("ghi"), closeSoftKeyboard())
+        onView(withId(R.id.inputAvailabilityWeight)).perform(replaceText("hjk"), closeSoftKeyboard())
 
         onView(withId(R.id.getRecommendationButton)).perform(click())
         onView(withText("Please enter valid weights (0-10)")).check(matches(isDisplayed()))
@@ -87,6 +88,8 @@ class RecommendationTest {
         onView(withId(R.id.inputLocationWeight)).perform(replaceText("5"), closeSoftKeyboard())
         onView(withId(R.id.inputSpeedWeight)).perform(replaceText("6"), closeSoftKeyboard())
         onView(withId(R.id.inputDistanceWeight)).perform(replaceText("7"), closeSoftKeyboard())
+        onView(withId(R.id.inputAvailabilityWeight)).perform(replaceText("8"), closeSoftKeyboard())
+
 
         // 3. Grant location permission
         accountSelector = device.findObject(UiSelector().textContains("Only this time")) // Grant location permission for this time
