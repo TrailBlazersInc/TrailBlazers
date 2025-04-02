@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Recommendation">
 
-    <!-- Header container with proper spacing -->
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/header" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:name="com.example.cpen321project.HeaderFragment" />
 
     <!-- Main content -->
     <LinearLayout
@@ -20,13 +21,13 @@
         android:layout_height="match_parent"
         android:padding="20dp"
         android:orientation="vertical"
-        android:gravity="center">
+        android:layout_marginTop="50dp">
 
         <!-- Title row with back button -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="30dp">
 
             <ImageView
                 android:id="@+id/chevron_left"
@@ -160,4 +161,4 @@
             android:padding="16dp"
             tools:listitem="@layout/item_recommendation"/>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
