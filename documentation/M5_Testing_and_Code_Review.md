@@ -4,7 +4,8 @@
 
 | **Change Date**   | **Modified Sections** | **Rationale** |
 | ----------------- | --------------------- | ------------- |
-| _Nothing to show_ |
+| 04/02/2025 | 3.2. Test Verification and Logs | Updated the non-functional requirement according to M5 feedback
+| 04/02/2025 | 4.2. Tests | Updated the recommendation use case as weight of availability input is added
 
 ---
 
@@ -103,11 +104,11 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
 - **Recommendation Usability**
 
-  - **Verification:** This test suite simulates a user to get the top 5 recommendation list. The focus is on parsing user's weight for location, speed and distance to the backend and the matching algorithm will be executed to display the recommendation list within the target response time of 4 seconds. We use Espresso's onView().check(matches(isDisplayed())) to ensure the timer does not stop until the component is well displayed for the user. The test logs let us know if the system is executed within out expected response time.
+  - **Verification:** This test suite simulates a user request to ensure that at least one valid jogging buddy is displayed. The focus is on verifying the correct parsing of user preferences for location, speed, distance, and availability to the backend. The matching algorithm is then executed, and the UI must successfully display the most suitable jogging partner. We use Espresso's onView().check(matches(isDisplayed())) to confirm that a recommendation appears on the screen. The test logs will indicate whether the system successfully returns a match for the user.
 
   - **Log Output**
     ```
-    Test 3: Successfully get recommendation in 379ms!
+    Test 3: Successfully displayed a recommended jogging buddy!
     ```
 
 - **Manage Profile Usability**
@@ -165,11 +166,11 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
     | **Scenario Steps** | **Test Case Steps** |
     | ------------------ | ------------------- |
     | 1. User enters the Recommendation Overview. | Click button "Recommendation" at HomeActivity and it will navigates to RecommendationActivity. |
-    | 2a. User inputs invalid weight for location, speed and distance respectively. | Enter abc, def and ghi respectively.  |
-    | 2. User inputs valid weight for location, speed and distance respectively. | Enter 5, 6 and 7 respectively. |
+    | 2a. User inputs invalid weight for location, speed, distance and availability respectively. | Enter abc, def, ghi and jkl respectively.  |
+    | 2. User inputs valid weight for location, speed, distance and availability respectively. | Enter 5, 6, 7 and 8 respectively. |
     | 3. User grants location permission. | Click "Grant Location Permission" button. |
-    | 4. User get recommendation list. | Click "Get Recommendations" button and the top 5 recommendation will be displayed. |
-    | 5. User can see it's location (and location of joggers if they are nearby)  | Click "View on Map" button and it will navigate to MapActivity. |
+    | 4. User get recommendation list. | Click "Get Recommendations" button and the most matched jogger recommendation will be displayed. |
+    | 5. User can see it's location (and location of jogger if they are nearby)  | Click "View on Map" button and it will navigate to MapActivity. |
     | 6. User can direct message jogger | Click "Message" button and it will navigate to ChatActivity. |
   - **Test Logs:**
     ![Recommendation Espresso Result](images/RecommendationEspressoExecutionLog.png)

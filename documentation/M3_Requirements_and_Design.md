@@ -14,6 +14,7 @@
  - Updated the Authentication use case to align with implementation. 03/21/2025
  - Replaced the non-functional requirement for security with one for performance. 03/21/2025
  - Updated the main complexity project design. 04/01/2025
+ - Updated the non-functional requirement for recommendation usability. 04/02/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -162,8 +163,8 @@ An application that connects nearby users to jog/run together adapting to their 
     - **Description**: The application will ensure that user data and communications are encrypted, and secure protocols (e.g., HTTPS) will be used.
     - **Justification**: Security is a key aspect of any application that handles user data. It ensures that users' personal information is protected from unauthorized access and potential breaches. This is crucial for building trust and maintaining user confidence in the application.
 2. **Recommendation Usability** 
-    - **Description**: The finding Buddies buddies functionality must respond with a list of nearby joggers in at most 4 seconds after clicking the "Get recommendations" button.
-    - **Justification**: The finding application must be responsive and having customers wait for long periods of time negatively affetcts their experience as an user. Therefore, it is important to ensure that the most complex functionality is capped to a reasonable response time. To improve performance, when the functionality is taking too long, it might return the list with the remaining users  unsorted or return a shorter list of found users.
+    - **Description**: The Find Buddies functionality must ensure that at least one suitable jogging partner is displayed after clicking the "Get Recommendations" button. The system must successfully parse the user's preferences for location, speed, distance, and availability to generate a recommendation.
+    - **Justification**: The application must always provide a jogging buddy to maintain usability and user engagement. If no perfect match is found, the system should return the closest available match instead of leaving the user without recommendations. Ensuring a reliable recommendation process improves user satisfaction and trust in the app.
 
 
 ## 4. Designs Specification
