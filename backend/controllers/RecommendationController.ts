@@ -141,7 +141,7 @@ export class RecommendationController {
             for (const proposer of Array.from(unmatched)) {
                 const proposerPrefs = preferences.get(proposer)!;
                 
-                const proposalCount = proposals.get(proposer) || 0;
+                const proposalCount = proposals.get(proposer)!;
                 if (proposalCount >= proposerPrefs.length) {
                     unmatched.delete(proposer);
                     continue;
