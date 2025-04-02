@@ -99,4 +99,5 @@
     <string name="backButton">Back</string>
     <string name="mapButton">View on Map</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="trailblazers">TrailBlazers</string>
 </resources>
