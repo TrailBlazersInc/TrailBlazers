@@ -199,12 +199,33 @@ class Recommendation : AppCompatActivity() {
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
                 // Show rationale and request permissions
-                showLocationPermissionRationale()
+                AlertDialog.Builder(this)
+                    .setMessage("Location permission is required to update and show your location")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                        requestPermissions(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ),
+                            LOCATION_PERMISSION_REQUEST_CODE
+                        )
+                    }.setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                        showSnackbar("Please grant the location permissions")
+                        locationPermissionDenied = true
+                    }.show()
             }
 
             else -> {
                 // Request permissions
-                requestLocationPermissions()
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
             }
         }
     }
@@ -274,31 +295,6 @@ class Recommendation : AppCompatActivity() {
             }
     }
 
-
-
-    private fun requestLocationPermissions() {
-        requestPermissions(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
-    }
-
-    private fun showLocationPermissionRationale() {
-        AlertDialog.Builder(this)
-            .setMessage("Location permission is required to update and show your location")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                requestLocationPermissions()
-            }.setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-                showSnackbar("Please grant the location permissions")
-                locationPermissionDenied = true
-            }.show()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -362,7 +358,55 @@ class Recommendation : AppCompatActivity() {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         progressBar.visibility = View.GONE
                         if (response.isSuccessful) {
-                            handleSuccessfulResponse(response)
+                            val responseString = response.body()?.string()
+                            Log.d(TAG, "API Response: $responseString")
+
+                            try {
+                                val jsonObject = JSONObject(responseString.toString())
+
+                                // Check if there's a recommendation
+                                if (jsonObject.has("recommendation")) {
+                                    val rec = jsonObject.getJSONObject("recommendation")
+                                    val recommendationsList = mutableListOf<RecommendationItem>()
+
+                                    // Parse recommendation details
+                                    val score = rec.getDouble("matchScore")
+                                    val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
+                                    val pace = rec.getInt("pace")
+                                    val email = rec.getString("email")
+                                    val availability = parseAvailability(rec)
+
+                                    recommendationsList.add(
+                                        RecommendationItem(
+                                            rank = 1, // Only one recommendation, so rank is 1
+                                            score = score,
+                                            email = email,
+                                            name = name,
+                                            pace = pace,
+                                            distance = rec.optString("distance", "N/A"),
+                                            time = rec.optString("time", "N/A"),
+                                            latitude = rec.optDouble("latitude", 0.0),
+                                            longitude = rec.optDouble("longitude", 0.0),
+                                            availability = availability
+                                        )
+                                    )
+                                    Log.d("availability:", availability.toString())
+
+                                    // Update the UI
+                                    this@Recommendation.recommendationsList = recommendationsList
+                                    recommendationAdapter = RecommendationAdapter(recommendationsList, userToken, userEmail, this@Recommendation)
+                                    recommendationRecyclerView.adapter = recommendationAdapter
+                                    resultTextView.text = "Found your perfect jogging match!"
+                                    viewOnMapButton.visibility = View.VISIBLE
+                                } else {
+                                    resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
+                                    viewOnMapButton.visibility = View.GONE
+                                    noMatchesFound = true
+                                }
+                            } catch (e: JSONException) {
+                                Log.e(TAG, "JSON parsing error: ${e.message}")
+                                resultTextView.text = "Error parsing response: ${e.message}"
+                            }
                         } else {
                             Log.e(TAG, "API call failed")
                             resultTextView.text = "Error: ${response.code()}"
@@ -384,57 +428,6 @@ class Recommendation : AppCompatActivity() {
         }
     }
 
-    private fun handleSuccessfulResponse(response: Response<ResponseBody>) {
-        val responseString = response.body()?.string()
-        Log.d(TAG, "API Response: $responseString")
-
-        try {
-            val jsonObject = JSONObject(responseString.toString())
-
-            // Check if there's a recommendation
-            if (jsonObject.has("recommendation")) {
-                val rec = jsonObject.getJSONObject("recommendation")
-                val recommendationsList = mutableListOf<RecommendationItem>()
-
-                // Parse recommendation details
-                val score = rec.getDouble("matchScore")
-                val name = "${rec.getString("firstName")} ${rec.getString("lastName")}"
-                val pace = rec.getInt("pace")
-                val email = rec.getString("email")
-                val availability = parseAvailability(rec)
-
-                recommendationsList.add(
-                    RecommendationItem(
-                        rank = 1, // Only one recommendation, so rank is 1
-                        score = score,
-                        email = email,
-                        name = name,
-                        pace = pace,
-                        distance = rec.optString("distance", "N/A"),
-                        time = rec.optString("time", "N/A"),
-                        latitude = rec.optDouble("latitude", 0.0),
-                        longitude = rec.optDouble("longitude", 0.0),
-                        availability = availability
-                    )
-                )
-                Log.d("availability:", availability.toString())
-
-                // Update the UI
-                this@Recommendation.recommendationsList = recommendationsList
-                updateRecyclerView(recommendationsList)
-                resultTextView.text = "Found your perfect jogging match!"
-                viewOnMapButton.visibility = View.VISIBLE
-            } else {
-                resultTextView.text = "No suitable jogger match found. Please try again later or adjust your preferences."
-                viewOnMapButton.visibility = View.GONE
-                noMatchesFound = true
-            }
-        } catch (e: JSONException) {
-            Log.e(TAG, "JSON parsing error: ${e.message}")
-            resultTextView.text = "Error parsing response: ${e.message}"
-        }
-    }
-
     private fun parseAvailability(rec: JSONObject): Availability {
         return if (rec.has("availability")) {
             val availabilityObj = rec.getJSONObject("availability")
@@ -451,11 +444,6 @@ class Recommendation : AppCompatActivity() {
             // Default availability if not provided
             Availability(false, false, false, false, false, false, false)
         }
-    }
-
-    private fun updateRecyclerView(recommendationsList: List<RecommendationItem>) {
-        recommendationAdapter = RecommendationAdapter(recommendationsList, userToken, userEmail, this)
-        recommendationRecyclerView.adapter = recommendationAdapter
     }
 }
 
