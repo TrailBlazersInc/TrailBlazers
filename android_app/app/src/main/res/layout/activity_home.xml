@@ -7,57 +7,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
-    <include layout="@layout/header" />
 
-    <Button
-        android:id="@+id/manageProfileButton"
-        android:layout_width="wrap_content"
+    <!-- Header -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/manage_profile"
-        app:layout_constraintBottom_toTopOf="@+id/recommendationButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groups_button" />
-
-    <Button
-        android:id="@+id/recommendationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/recommendation"
-        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/manageProfileButton" />
-
-    <Button
-        android:id="@+id/signOutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sign_out"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendationButton" />
-
-    <Button
-        android:id="@+id/groups_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="My Groups"
-        app:layout_constraintBottom_toTopOf="@+id/manageProfileButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.874" />
-
-    <Button
-        android:id="@+id/reportUsersButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/report_users"
-        app:layout_constraintBottom_toTopOf="@+id/signOutButton"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendationButton" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Button container for vertical centering -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Buttons arranged in a centered vertical sequence -->
+        <Button
+            android:id="@+id/groups_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="My Groups"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/manageProfileButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_profile"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/groups_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/recommendationButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/recommendation"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/manageProfileButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/reportUsersButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/report_users"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/recommendationButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/signOutButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_out"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/reportUsersButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
