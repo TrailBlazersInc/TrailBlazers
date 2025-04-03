@@ -112,6 +112,7 @@ class ChatActivity : AppCompatActivity() {
             intent.putExtra("tkn", userToken)
             intent.putExtra("chatId", chatId)
             intent.putExtra("email", userEmail)
+            intent.putExtra("chatName", chatName )
             startActivity(intent)
         }
 

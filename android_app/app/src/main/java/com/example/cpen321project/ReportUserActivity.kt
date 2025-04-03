@@ -1,5 +1,6 @@
 package com.example.cpen321project
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -38,12 +39,14 @@ class ReportUserActivity : AppCompatActivity() {
     private var chatUsers: MutableList<chatUser> = mutableListOf()
     lateinit var userEmail: String
     lateinit var userToken: String
+    lateinit var chatName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_user)
 
         val reportButton = findViewById<Button>(R.id.report_button)
+        val cancelButton = findViewById<Button>(R.id.cancel_button)
         val reasonSpinner = findViewById<Spinner>(R.id.reason_spinner)
         val userSpinner = findViewById<Spinner>(R.id.user_spinner)
 
@@ -51,6 +54,8 @@ class ReportUserActivity : AppCompatActivity() {
         userToken = extras?.getString("tkn") ?: ""
         chatId = extras?.getString("chatId") ?: ""
         userEmail = extras?.getString("email") ?: ""
+        setUsers(userSpinner)
+        chatName = extras?.getString("chatName") ?: ""
         setUsers(userSpinner)
 
         reportButton.setOnClickListener {
@@ -68,6 +73,15 @@ class ReportUserActivity : AppCompatActivity() {
             } catch (e: JsonParseException) {
                 Log.e("Report User", "JSON parsing error: ${e.message}", e)
             }
+        }
+
+        cancelButton.setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra("tkn", userToken)
+            intent.putExtra("email", userEmail)
+            intent.putExtra("chatName", chatName)
+            intent.putExtra("chatId", chatId)
+            startActivity(intent)
         }
     }
 

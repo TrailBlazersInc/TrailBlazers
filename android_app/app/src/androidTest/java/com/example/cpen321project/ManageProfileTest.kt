@@ -63,7 +63,7 @@ class ManageProfileTest {
         // Wait for HomeActivity to load
         Thread.sleep(5000)
         // Click "Manage Profile" Button in HomeActivity
-        onView(withId(R.id.manageProfileButton)).perform(click())
+        onView(withId(R.id.profile)).perform(click())
 
         onView(withId(R.id.editTextNumberDecimal))
             .perform(clearText(), typeText("25.0"))
@@ -118,7 +118,7 @@ class ManageProfileTest {
         // Wait for HomeActivity to load
         Thread.sleep(5000)
         // Click "Manage Profile" Button in HomeActivity
-        onView(withId(R.id.manageProfileButton)).perform(click());
+        onView(withId(R.id.profile)).perform(click());
 
         val randomDecimal = String.format("%.1f", Random.Default.nextDouble(1.0, 20.0));
         onView(withId(R.id.editTextNumberDecimal)).perform(clearText(), typeText(randomDecimal));

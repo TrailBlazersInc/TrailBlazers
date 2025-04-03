@@ -2,8 +2,8 @@ import { Server as httpServer } from "http";
 import { Server as httpsServer } from "https";
 import {  Server  as SocketIOServer} from "socket.io";
 import { Message, IMessage, PMessage } from "./models/message";
-import { Chat, IChat, PChat } from "./models/chat";
-import { User, IUser, PUser } from "./models/user";
+import { Chat, IChat} from "./models/chat";
+import { User, IUser} from "./models/user";
 import z from "zod";
 import mongoose from "mongoose";
 
@@ -96,9 +96,6 @@ export default function setUpWebSocket(server: httpsServer | httpServer): Socket
 
                 message = await message.save();
 
-                if(!message){
-                    socket.emit("req-error", "Server error")
-                }
                 chat.messages.push(message._id);
                 chat = await chat.save();
 
