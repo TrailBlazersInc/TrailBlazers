@@ -15,7 +15,8 @@
  - Replaced the non-functional requirement for security with one for performance. 03/21/2025
  - Updated the main complexity project design. 04/01/2025
  - Updated recommendation sequence diagram. 04/02/2025
-  - Updated the non-functional requirements. 04/03/2025
+ - Updated Usecase diagram. 04/02/2025
+ - Updated the non-functional requirements. 04/03/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
