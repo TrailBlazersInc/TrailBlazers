@@ -105,7 +105,7 @@ class RecommendationTest {
 
         // 5. Most recommended jogger is well displayed
         onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
-
+        val t2  = System.currentTimeMillis()
         assertTrue("Schedule upload took more than 4s", t2 - t1 < 4000)
 
         Log.d(TAG, "Test 3: Successfully get recommendation in ${t2 - t1}ms!")
