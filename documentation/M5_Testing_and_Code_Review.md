@@ -201,7 +201,8 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
   6. **Forbidden non-null assertion.**
 ![alt text](images/sixthCodacyIssue.png)
 
-
+ 7. **Expression with Labels increase complexity**
+![](images/codacy_increase_complexity.png)
 ### 5.4. Justifications for Unfixed Issues
 
   1. **@typescript eslint: [No explicit any](#)** 
@@ -226,3 +227,6 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
 
      - **Location in Git:** [`backend/controllers/RecommendationController.ts`](#)
      - **Justification:** I tried to resolve this non-null assertion issue by adding an if statement to return null when [`userScores` or `proposerPrefs` or `proposalCount`] is empty but the return null line of code is not covered in jest test. This means that [`userScores` or `proposerPrefs` or `proposalCount`] will never be null. Hence, I think this is a false positive by Codacy.
+  5. **Expression with labels increase complexity**
+  - **Location in Git:**[`android_app/app/src/main/java/com/example/cpen321project/ChatActivity.kt`](#)  
+  - **Justification:** Since this code that is sinchronously fetching messages inside a thread it is important to specify that the UI thread, so that it gracefully ends execusion, in the return statement. 
