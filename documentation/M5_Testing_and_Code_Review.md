@@ -4,8 +4,8 @@
 
 | **Change Date**   | **Modified Sections** | **Rationale** |
 | ----------------- | --------------------- | ------------- |
-| 04/02/2025 | 3.2. Test Verification and Logs | Updated the non-functional requirement according to M5 feedback
 | 04/02/2025 | 4.2. Tests | Updated the recommendation use case as weight of availability input is added
+| 04/03/2025 | 3.2. Test Verification and Logs | Updated the non-functional requirement according to M5 feedback
 
 ---
 
@@ -111,12 +111,13 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
     Test 3: Successfully displayed a recommended jogging buddy!
     ```
 
-- **Manage Profile Usability**
-  - **Verification:** This test suite simulates updated the pace number entry and saving the changes to your profile. The focus of this test is on parsing updated user information to the backend and updating the database. The test lets us know if the system is executed within our expected response time.
+- **Recommendation Performance**
+
+  - **Verification:** This test suite simulates a user request to ensure that a valid jogging buddy is displayed within 4 seconds. As this is the core functionality of our application, we prioritize delivering a smooth and seamless user experience by ensuring that recommendations are generated and displayed as quickly as possible.
+
   - **Log Output**
     ```
-    Response Time: $responseTime ms
-    Test 2: Successfully checked response time for updated profile
+    Test 3: Successfully get recommendation in 379ms!
     ```
 
 ---

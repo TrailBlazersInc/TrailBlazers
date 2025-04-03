@@ -14,8 +14,8 @@
  - Updated the Authentication use case to align with implementation. 03/21/2025
  - Replaced the non-functional requirement for security with one for performance. 03/21/2025
  - Updated the main complexity project design. 04/01/2025
- - Updated the non-functional requirement for recommendation usability. 04/02/2025
  - Updated recommendation sequence diagram. 04/02/2025
+  - Updated the non-functional requirements. 04/03/2025
 
 ## 2. Project Description
 An application that connects nearby users to jog/run together adapting to their schedule and distance willing to travel.
@@ -308,10 +308,11 @@ The design focuses on enabling the general user to
 
 
 ### **4.7. Non-Functional Requirements Design**
-1. [**Performance: Update user preferences within 5s**](#nfr1)
-    - **Validation**: The user should be able to send the updated data to the backend and get a success or failure response within 5s. If the response takes longer than 5s the frontend will throw an error and return a failure message to the user. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
-2. [**Performance: Find Buddies Does must not take more than 15s**](#nfr2)
-    - **Validation**: The time algorithm  for finding buddies will be capped to 12 seconds and will be constrained to selecting at most ten profiles from a list of at most 100 users. In addition, the front end will have a timer and return failure if no response is received by those 15 seconds. This will ensure that in case of losing connection, there is a timeout for reconnection attempts.
+1. [**Recommendation Usability: Ensure at least one match is always displayed**](#nfr3)  
+   - **Validation**: The system must guarantee that users receive at least one recommended jogging buddy. This is achieved through a robust matching algorithm that dynamically adjusts ranking criteria based on available user data. The system will prioritize the best possible match and ensure that even in sparse user environments, a recommendation is always presented.
+
+2. [**Recommendation Performance: Display recommendation within 4 seconds**](#nfr4)  
+   - **Validation**: The recommendation system must generate and display jogging partner suggestions within 4 seconds. To meet this requirement, the backend processing must be optimized, reducing unnecessary computations and leveraging indexing techniques for faster data retrieval. This ensures a seamless and efficient user experience when searching for jogging partners.
 
 
 ### **4.8. Main Project Complexity Design**
