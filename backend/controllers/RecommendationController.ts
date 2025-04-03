@@ -89,12 +89,7 @@ export class RecommendationController {
         for (const userA of [currentUser, ...allUsers]) {
             const userAEmail = userA.email;
             scores.set(userAEmail, new Map());
-            // console.log('userAEmail: ', userAEmail);
-            // console.log('scores: ', scores);
-            const userScores = scores.get(userAEmail) as Map<string, number>;
-            // if (!userScores) {
-            //     return null;
-            // }
+            const userScores = scores.get(userAEmail)!;
 
             for (const userB of allUsers) {
                 const userBEmail = userB.email;
@@ -144,22 +139,17 @@ export class RecommendationController {
         // Run Gale-Shapley algorithm
         while (unmatched.size > 0) {
             for (const proposer of Array.from(unmatched)) {
-                // console.log('preferences:', preferences)
-                // console.log("proposer: ", proposer);
                 const proposerPrefs = preferences.get(proposer)!;
-                // if (!proposerPrefs) {
-                //     return null;
-                // }
                 
-                const proposalCount = proposals.get(proposer) || 0;
+                const proposalCount = proposals.get(proposer)!;
                 if (proposalCount >= proposerPrefs.length) {
                     unmatched.delete(proposer);
                     continue;
                 }
 
                 // Get the next preferred partner
-                const preferredIndex = Math.min(proposalCount, proposerPrefs.length - 1);
-                const preferred = proposerPrefs[preferredIndex]; 
+                const preferredIndex = String(Math.min(proposalCount, proposerPrefs.length - 1));
+                const preferred = proposerPrefs[parseInt(preferredIndex)]; 
                 proposals.set(proposer, proposalCount + 1);
 
                 // Check if preferred is already matched
