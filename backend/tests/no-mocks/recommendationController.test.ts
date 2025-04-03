@@ -7,36 +7,114 @@ import mongoose from 'mongoose';
 const validEmail = "mockUser@example.com";
 const invalidEmail = "fakeMockUser@example.com";
 
+// Create multiple test users to ensure matching works
+const testUsers = [
+    {
+      email: validEmail,
+      first_name: "Mock", 
+      last_name: "User", 
+      pace: 6, 
+      distance: "10km",
+      time: "Medium (30–60 min)",
+      availability: {
+        monday: true,
+        tuesday: false,
+        wednesday: true,
+        thursday: false,
+        friday: true,
+        saturday: false,
+        sunday: true,
+      },
+      loc: {
+        longitude: 123.1234, 
+        latitude: 12.1234, 
+      },
+      banned: false, 
+      admin: false, 
+    },
+    {
+      email: "buddy1@example.com",
+      first_name: "Buddy", 
+      last_name: "One", 
+      pace: 7, 
+      distance: "5km",
+      time: "Short (<30 min)",
+      availability: {
+        monday: true,
+        tuesday: true,
+        wednesday: false,
+        thursday: false,
+        friday: true,
+        saturday: true,
+        sunday: false,
+      },
+      loc: {
+        longitude: 123.1244, 
+        latitude: 12.1244, 
+      },
+      banned: false, 
+      admin: false, 
+    },
+    {
+      email: "buddy2@example.com",
+      first_name: "Buddy", 
+      last_name: "Two", 
+      pace: 5, 
+      distance: "15km",
+      time: "Long (>60 min)",
+      availability: {
+        monday: false,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: false,
+        saturday: true,
+        sunday: false,
+      },
+      loc: {
+        longitude: 123.1334, 
+        latitude: 12.1334, 
+      },
+      banned: false, 
+      admin: false, 
+    },
+    {
+      email: "banned@example.com",
+      first_name: "Banned", 
+      last_name: "User", 
+      pace: 6, 
+      distance: "10km",
+      time: "Medium (30–60 min)",
+      availability: {
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: true,
+        sunday: true,
+      },
+      loc: {
+        longitude: 123.1234, 
+        latitude: 12.1234, 
+      },
+      banned: true, 
+      admin: false, 
+    }
+  ];
+
 beforeAll(async () => {
     // Insert test data for mockUser
-    await User.create({
-        email: validEmail,
-        first_name: "Mock", 
-        last_name: "User", 
-        pace: 6, 
-        distance: "10km",
-        time: "1 hour",
-        availability: {
-          monday: true,
-          tuesday: false,
-          wednesday: true,
-          thursday: false,
-          friday: true,
-          saturday: false,
-          sunday: true,
-        },
-        loc: {
-            longitude: "123.1234", 
-            latitude: "12.1234", 
-        },
-        banned: false, 
-        admin: false, 
-    });
+    await User.insertMany(testUsers);
 });
 
 afterAll(async () => {
     // Clean up test data for mockUser
-    await User.deleteMany({ email: validEmail });
+    await User.deleteMany({ 
+        email: { 
+          $in: testUsers.map(user => user.email) 
+        } 
+    });
     await mongoose.connection.close()
     server.close()
     await ioServer.close()

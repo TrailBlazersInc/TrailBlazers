@@ -8,6 +8,8 @@
 | 04/03/2025 | 3.2. Test Verification and Logs | Updated the non-functional requirement according to M5 feedback
 | 04/03/2025 | 3.2. Justifications for Unfixed Issues | Updated the remaining Codacy Issues and Justifications for them
 | 04/03/2025 | 3.2. Tests | Added Report and Ban Test Locations
+| 04/04/2025 | 2.3 2.4 Jest Test Images | Updated the latest jest test results images
+| 04/04/2025 | 5.2 Codacy Image | Updated the latest codacy issue image
 
 ---
 
@@ -88,8 +90,6 @@ npm test # Make sure to add the .env file before running this command
 
 ### 2.3. Jest Coverage Report Screenshots With Mocks
 ![Jest Tests](images/jest_tests.png)
-
-Please note that our team was not required to test BanControllers, BanRoutes, ReportRoutes, nor ReportControllers due to team reduction.
 
 ### 2.4. Jest Coverage Report Screenshots Without Mocks
 
@@ -228,5 +228,5 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
      - **Location in Git:** [`backend/controllers/RecommendationController.ts`](#)
      - **Justification:** I tried to resolve this non-null assertion issue by adding an if statement to return null when [`userScores` or `proposerPrefs` or `proposalCount`] is empty but the return null line of code is not covered in jest test. This means that [`userScores` or `proposerPrefs` or `proposalCount`] will never be null. Hence, I think this is a false positive by Codacy.
   4. **Expression with labels increase complexity**
-  - **Location in Git:**[`android_app/app/src/main/java/com/example/cpen321project/ChatActivity.kt`](#)  
-  - **Justification:** Since this code that is sinchronously fetching messages inside a thread it is important to specify that the UI thread, so that it gracefully ends execusion, in the return statement. 
+      - **Location in Git:**[`android_app/app/src/main/java/com/example/cpen321project/ChatActivity.kt`](#)  
+      - **Justification:** Since this code that is sinchronously fetching messages inside a thread it is important to specify that the UI thread, so that it gracefully ends execusion, in the return statement. 
