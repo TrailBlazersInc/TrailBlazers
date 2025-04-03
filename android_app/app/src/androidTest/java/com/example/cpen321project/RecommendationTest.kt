@@ -106,6 +106,9 @@ class RecommendationTest {
         // 5. Most recommended jogger is well displayed
         onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
 
+        assertTrue("Schedule upload took more than 4s", t2 - t1 < 4000)
+
+        Log.d(TAG, "Test 3: Successfully get recommendation in ${t2 - t1}ms!")
         Log.d(TAG, "Test 3: Successfully displayed a recommended jogging buddy!")
 
         // 6. Navigate to MapActivity
