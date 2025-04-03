@@ -65,11 +65,9 @@ class ManageProfile : AppCompatActivity() {
         setupSpinner(findViewById(R.id.RunDistance), runDistanceArray) { selectedDistance ->
             runDistance = selectedDistance
         }
-
         setupSpinner(findViewById(R.id.RunTime), runTimeArray) { selectedTime ->
             runTime = selectedTime
         }
-
         fetchUserData(tkn, email)
 
         findViewById<Button>(R.id.save_button).setOnClickListener() {
@@ -85,18 +83,8 @@ class ManageProfile : AppCompatActivity() {
                 updateUser(tkn, email, requestBody)
             }
         }
-
         findViewById<Button>(R.id.signOutButton).setOnClickListener() {
-            lifecycleScope.launch {
-                val credentialManager = CredentialManager.create(this@ManageProfile)
-                credentialManager.clearCredentialState(ClearCredentialStateRequest())
-
-                clearUserSession()
-                val intent = Intent(this@ManageProfile, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
-                startActivity(intent)
-                finish()
-            }
+            signOutHelper()
         }
         findViewById<Button>(R.id.home_button).setOnClickListener() {
             val intent = Intent(this, HomeActivity::class.java)
@@ -104,13 +92,26 @@ class ManageProfile : AppCompatActivity() {
             intent.putExtra("email", email)
             startActivity(intent)
         }
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
     }
+    
+    private fun signOutHelper(){
+        lifecycleScope.launch {
+            val credentialManager = CredentialManager.create(this@ManageProfile)
+            credentialManager.clearCredentialState(ClearCredentialStateRequest())
+
+            clearUserSession()
+            val intent = Intent(this@ManageProfile, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK // Clears activity stack
+            startActivity(intent)
+            finish()
+        }
+    }
+
     private fun updateUser(token: String, email: String, requestBody: RequestBody){
 
         val apiService = RetrofitClient.getClient(this).create(UserService::class.java)

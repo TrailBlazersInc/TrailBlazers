@@ -36,12 +36,13 @@
                 android:id="@+id/recommendationButton"
                 android:orientation="horizontal">
 
+                <!-- Icon gotten from: https://www.flaticon.com/free-icon/add-friend_4458537 -->
                 <ImageView
                     android:id="@+id/imageView3"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="91dp"
+                    android:layout_height="81dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/recommendations"
+                    app:srcCompat="@drawable/recommendation_icon"
                     tools:layout_editor_absoluteY="203dp" />
 
                 <Button
@@ -64,6 +65,7 @@
         android:id="@+id/groups_button"
         android:orientation="horizontal">
 
+        <!-- Icon gotten from: https://www.flaticon.com/free-icon/speech-bubbles_268988 -->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
