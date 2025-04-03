@@ -32,5 +32,5 @@ export class OAuth2Client {
       }
       return null;
     });
-  }
+  } 
   
