@@ -194,6 +194,12 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
   ![alt text](images/secondCodacyIssue.png)
   3. **Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.**
   ![alt text](images/thirdCodacyIssue.png)
+  4. **Forbidden non-null assertion.**
+![alt text](images/fourthCodacyIssue.png)
+  5. **Forbidden non-null assertion.**
+![alt text](images/fifthCodacyIssue.png)
+  6. **Forbidden non-null assertion.**
+![alt text](images/sixthCodacyIssue.png)
 
 
 ### 5.4. Justifications for Unfixed Issues
@@ -215,3 +221,8 @@ Please note that our team was not required to test BanControllers, BanRoutes, Re
   3. **Promises must be awaited, end with a call to .catch, end with a call to .then with a rejection handler or be explicitly marked as ignored with the `void` operator.**
      - **Location in Git:** [`backend/index.ts`](#)
      - **Justification:** Since the try catch is already handled inside the function, and it is only used to start the server, there is no need to specify void on startServer().
+
+  4. **Forbidden non-null assertion.**
+
+     - **Location in Git:** [`backend/controllers/RecommendationController.ts`](#)
+     - **Justification:** I tried to resolve this non-null assertion issue by adding an if statement to return null when [`userScores` or `proposerPrefs` or `proposalCount`] is empty but the return null line of code is not covered in jest test. This means that [`userScores` or `proposerPrefs` or `proposalCount`] will never be null. Hence, I think this is a false positive by Codacy.

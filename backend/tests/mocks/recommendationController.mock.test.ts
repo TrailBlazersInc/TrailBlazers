@@ -11,7 +11,6 @@ beforeEach(() => {
 });
 
 afterAll(async () => {
-    // Ensure that mongoose disconnects properly
     await mongoose.connection.close();
     server.close();
     await ioServer.close();
@@ -19,12 +18,6 @@ afterAll(async () => {
 
 describe("Mocked: POST /recommendation/:email", () => {
     test("Database throws error while getting recommendations", async () => {
-        // Mocked behavior: User.findOne throws an error
-        // Input: validEmail with valid weights for recommendations
-        // Expected status code: 500
-        // Expected behavior: Should return error response due to database failure
-        // Expected output: Error response with status 500 and error message "Failed to process recommendations"
-
         jest.spyOn(User, 'findOne').mockImplementationOnce(() => {
             throw new Error("Forced error while finding user");
         });
@@ -35,6 +28,7 @@ describe("Mocked: POST /recommendation/:email", () => {
                 locationWeight: 5,
                 speedWeight: 6,
                 distanceWeight: 7,
+                availabilityWeight: 4,
             });
 
         expect(res.status).toStrictEqual(500);
@@ -44,12 +38,6 @@ describe("Mocked: POST /recommendation/:email", () => {
 
 describe("Mocked: POST /api/users/location/:email", () => {
     test("Failed to update user location (database error)", async () => {
-        // Mocked behavior: User.findOneAndUpdate throws an error
-        // Input: validEmail with latitude and longitude for the location update
-        // Expected status code: 500
-        // Expected behavior: Should return error response due to database failure
-        // Expected output: Error response with status 500 and error message "Failed to update location"
-
         jest.spyOn(User, 'findOneAndUpdate').mockImplementationOnce(() => {
             throw new Error("Database error while updating location");
         });
