@@ -102,22 +102,7 @@ class Recommendation : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_recommendation)
         setupWindowInsets()
-        rootView = findViewById(android.R.id.content)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView)
-        recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        backButton = findViewById(R.id.chevron_left)
-        inputLocationWeight = findViewById(R.id.inputLocationWeight)
-        inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
-        inputDistanceWeight = findViewById(R.id.inputDistanceWeight)
-        inputAvailabilityWeight = findViewById(R.id.inputAvailabilityWeight)
-        getLocationPermissionButton = findViewById(R.id.getLocationPermissionButton)
-        getRecommendationButton = findViewById(R.id.getRecommendationButton)
-        viewOnMapButton = findViewById(R.id.viewOnMapButton)
-        progressBar = findViewById(R.id.progressBar)
-        resultTextView = findViewById(R.id.resultTextView)
+        initializeViews()
 
         userToken = intent.extras?.getString("tkn") ?: ""
         userEmail = intent.extras?.getString("email") ?: ""
@@ -177,6 +162,25 @@ class Recommendation : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun initializeViews() {
+        rootView = findViewById(android.R.id.content)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView)
+        recommendationRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        backButton = findViewById(R.id.chevron_left)
+        inputLocationWeight = findViewById(R.id.inputLocationWeight)
+        inputSpeedWeight = findViewById(R.id.inputSpeedWeight)
+        inputDistanceWeight = findViewById(R.id.inputDistanceWeight)
+        inputAvailabilityWeight = findViewById(R.id.inputAvailabilityWeight)
+        getLocationPermissionButton = findViewById(R.id.getLocationPermissionButton)
+        getRecommendationButton = findViewById(R.id.getRecommendationButton)
+        viewOnMapButton = findViewById(R.id.viewOnMapButton)
+        progressBar = findViewById(R.id.progressBar)
+        resultTextView = findViewById(R.id.resultTextView)
     }
 
     private fun showSnackbar(message: String) {
