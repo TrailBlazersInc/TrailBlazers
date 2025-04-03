@@ -7,6 +7,7 @@
 | 04/02/2025 | 4.2. Tests | Updated the recommendation use case as weight of availability input is added
 | 04/03/2025 | 3.2. Test Verification and Logs | Updated the non-functional requirement according to M5 feedback
 | 04/03/2025 | 3.2. Justifications for Unfixed Issues | Updated the remaining Codacy Issues and Justifications for them
+| 04/03/2025 | 3.2. Tests | Added Report and Ban Test Locations
 
 ---
 
@@ -46,6 +47,12 @@
 `/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure |
 | **POST /api/v1/auth/google** | [`backend/tests/no-mocks`
 `/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure & google-auth-library |
+| **PUT /ban/:email** | [`backend/tests/no-mocks`
+`/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure |
+| **GET /report** | [`backend/tests/no-mocks`
+`/userControllers.test.ts`](#) | [`none`](#) | None |
+| **POST /report/:email** | [`backend/tests/no-mocks`
+`/userControllers.test.ts`](#) | [`backend/tests/mocks/userControllers.mock.test.ts`](#) | Mongo DB failure |
 
 #### 2.1.2. Commit Hash Where Tests Run
 
