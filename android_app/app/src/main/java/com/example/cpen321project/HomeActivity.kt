@@ -40,7 +40,21 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        findViewById<Button>(R.id.recommendationB).setOnClickListener {
+            val intent = Intent(this, Recommendation::class.java)
+            intent.putExtra("tkn", tkn)
+            intent.putExtra("email", email)
+            startActivity(intent)
+        }
+
         findViewById<LinearLayout>(R.id.groups_button).setOnClickListener() {
+            val intent = Intent(this, ManageChats::class.java)
+            intent.putExtra("tkn", tkn)
+            intent.putExtra("email", email)
+            startActivity(intent)
+        }
+
+        findViewById<Button>(R.id.groups_b).setOnClickListener() {
             val intent = Intent(this, ManageChats::class.java)
             intent.putExtra("tkn", tkn)
             intent.putExtra("email", email)

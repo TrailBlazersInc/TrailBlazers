@@ -56,7 +56,7 @@ class MessagingTest {
         // Wait for the account selector to show up
         Thread.sleep(5000)
         val accountSelector =
-            device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
+            device.findObject(UiSelector().textContains("alexeidelrayo@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click()
         } else {
@@ -66,8 +66,8 @@ class MessagingTest {
         // Wait for HomeActivity to load
         Thread.sleep(5000)
         // Click "My Groups" Button in HomeActivity
-        onView(withId(R.id.groups_button)).perform(click())
-
+        onView(withId(R.id.groups_b)).perform(click())
+        Thread.sleep(5000)
         Intents.intended(hasComponent(ManageChats::class.java.name))
 
         onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.

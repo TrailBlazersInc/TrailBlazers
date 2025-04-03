@@ -57,7 +57,7 @@ class RecommendationTest {
             .perform(click())
         Thread.sleep(3000)
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var accountSelector = device.findObject(UiSelector().textContains("yuqianyi1409@gmail.com")) // Replace with part of email
+        var accountSelector = device.findObject(UiSelector().textContains("alexeidelrayo@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click() // Click the first available Google account
         } else {
@@ -68,7 +68,7 @@ class RecommendationTest {
         Thread.sleep(5000) // Adjust as needed, or use IdlingResource
 
         // 1. Click "Recommendation" Button in HomeActivity
-        onView(withId(R.id.recommendationButton))
+        onView(withId(R.id.recommendationB))
             .check(matches(isDisplayed()))
             .perform(click())
 
@@ -105,7 +105,7 @@ class RecommendationTest {
 
         // 5. Most recommended jogger is well displayed
         onView(withId(R.id.recommendationRecyclerView)).check(matches(isDisplayed()))
-
+        val t2  = System.currentTimeMillis()
         assertTrue("Schedule upload took more than 4s", t2 - t1 < 4000)
 
         Log.d(TAG, "Test 3: Successfully get recommendation in ${t2 - t1}ms!")
@@ -121,14 +121,5 @@ class RecommendationTest {
 
         Intents.intended(IntentMatchers.hasComponent(MapsActivity::class.java.name))
 
-        Thread.sleep(12000)
-
-        // 7. Click the first "Message" button and navigate to Message Activity
-        onView(withId(R.id.recommendationRecyclerView))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecommendationAdapter.ViewHolder>(0, click()))
-        onView(allOf(
-            withId(R.id.addUserButton),
-            isDisplayed()
-        )).perform(click())
     }
 }

@@ -2,7 +2,6 @@ package com.example.cpen321project
 
 import android.util.Log
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
@@ -53,7 +52,7 @@ class ManageProfileTest {
 
         onView(withId(R.id.Sign_In_Button)).perform(click())
         Thread.sleep(1000)
-        val accountSelector = device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
+        val accountSelector = device.findObject(UiSelector().textContains("alexeidelrayo@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click()
         } else {
@@ -70,7 +69,6 @@ class ManageProfileTest {
         Thread.sleep(1000)
 
         onView(withId(R.id.editTextNumberDecimal)).check(matches(withText("25.0")))
-        pressBack()
 
         onView(withId(R.id.save_button)).perform(click())
 
@@ -85,7 +83,6 @@ class ManageProfileTest {
         Thread.sleep(1000)
 
         onView(withId(R.id.editTextNumberDecimal)).check(matches(withText(randomDecimal)))
-        pressBack()
 
         // Click Save Button
         onView(withId(R.id.save_button)).perform(click())
@@ -108,7 +105,7 @@ class ManageProfileTest {
 
         onView(withId(R.id.Sign_In_Button)).perform(click())
         Thread.sleep(1000)
-        val accountSelector = device.findObject(UiSelector().textContains("hellothisworld2000@gmail.com")) // Replace with part of email
+        val accountSelector = device.findObject(UiSelector().textContains("alexeidelrayo@gmail.com")) // Replace with part of email
         if (accountSelector.exists()) {
             accountSelector.click()
         } else {
@@ -122,7 +119,6 @@ class ManageProfileTest {
 
         val randomDecimal = String.format("%.1f", Random.Default.nextDouble(1.0, 20.0));
         onView(withId(R.id.editTextNumberDecimal)).perform(clearText(), typeText(randomDecimal));
-        pressBack();
 
         val startTime = System.currentTimeMillis();
         onView(withId(R.id.save_button)).perform(click());
